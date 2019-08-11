@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Student;
 use App\ViewStudent;
 use App\InvoiceExt;
+use App\ConceptsInvoice;
 use DB;
 use Alert;
 use Codedge\Fpdf\Facades\Fpdf;
@@ -84,17 +85,12 @@ class InvoiceController extends Controller
      */
     public function create($id)
     {
-        //Obtener datos del estudiante y mostrarlo en la vista
-        //$data = DB::table('all_inscriptions')->where('student_id', $id)->first();
+        //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
-        $concepts = InvoiceExt::find($id);
-        // return \View::make('createInvoice')->with('data', $data);
-        return view('createInvoice', [
-            'data' => $data,
-            'concepts' => $concepts,
-         ]);
-
-        //  return view('createInvoice',['data'=>$data,'concepts'=> $concepts]);
+        $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
+        $invoice = ['data' => $data, 'concepts' => $concepts];
+        return view('createInvoice', compact('invoice'));
+         
     }
 
     /**
@@ -114,9 +110,12 @@ class InvoiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function mostrarConcepto($id)
     {
-        //
+        //Obtener información del concepto
+        $concept = ConceptsInvoice::find($id);
+        // dd($concept);
+        return view('modalConcept', compact('concept'));
     }
 
     /**

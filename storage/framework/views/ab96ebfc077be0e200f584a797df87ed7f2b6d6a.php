@@ -3,12 +3,38 @@
 
  <?php $__env->startSection('content'); ?>
 
+ 
+ 
+ 
 
 <div class="container">
   <div>
     <div class="col-md-12 col-md-offset-1">
       <div class="panel panel-default">
         <div class="panel-heading">Listar CFDI</div>
+          <!-- Filtro-->
+          <div class="row">
+            <form class="col s12">
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="rfc" type="text" class="validate">
+                  <label for="rfc">RFC</label>
+                </div>
+                <div class="input-field col s6">
+                  <input id="folio" type="text" class="validate">
+                  <label for="folio">FOLIO</label>
+                </div>
+              </div>
+
+              <div class="row hidden">
+                <div class="input-field col s6">
+                  <button id="show-list" type="submit" class="waves-effect waves-light btn-small cyan">Filtrar</button>
+                </div>
+              </div>
+            </form>
+          </div>
+               <!-- Filtro-->
+        
           <div class="panel-body">
             <form method="POST" 
                   action="http://localhost:8083/invoice/listarCFDI"
@@ -16,9 +42,9 @@
                   id="list-invoice">
               <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
               <div class="form-group">
-                <div class="col-md-6">
+                <div class="col-md-6 hidden">
                   <label for="Servidor">Servidor:</label>
-                  <select class="form-control col-md-8 selection-list" name="Servidor">
+                  <select class="form-control col-md-8 selection-list hidden" name="Servidor">
                      <option value="selecciona">Selecciona</option>
                      <option value="1" selected="true">Sandbox</option>
                      <option value="2">Producción</option>
@@ -26,18 +52,24 @@
                 </div>
                 <div class="col-md-6">
                   <br />
-                  <button id="show-list" type="submit" class="btn btn-primary">Listar</button>
+                  <button id="show-list" type="submit" class="waves-effect waves-light btn-small cyan">Filtrar</button>
                 </div>
               </div>
+              
+            
+              
+              
+              
               <?php echo $__env->make('sweet::alert', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>              
             </form>
             <br/>
             <br/>
-            <table class="table table-striped" id="table-records" style="font-size:12px;">
+           <table class="table table-striped" id="table-records" style="font-size:12px;"> 
+            
                 <thead>
                   <tr bgcolor="FFFDC1">
                     <th>Folio</th>
-                    <th>UID</th>
+                    <th>RFC</th>
                     <th>UUID</th>
                     <th>Total</th>
                     <th>FechaTimbrado</th>
@@ -45,8 +77,20 @@
                   </tr>
                 </thead>
                 <tbody>
+                 <tr bgcolor="FFFDC1">
+                    <th>Folio</th>
+                    <th>RFC</th>
+                    <th>UUID</th>
+                    <th>Total</th>
+                    <th>FechaTimbrado</th>
+                    <th>Opciones</th>
+                  </tr>
                 </tbody>
               </table>
+              
+
+    
+              
           </div>
         </div>
     </div>
@@ -56,6 +100,7 @@
 
 <?php $__env->stopSection(); ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
   
 <script>
   $(document).ready(function(){
@@ -109,14 +154,16 @@
                 for(var i = 0; i < response.data.length; i++) {
                   $('#table-records > tbody').append('<tr>' + 
                     '<td>' + response.data[i].Folio + '</td>' +
-                    '<td>' + response.data[i].UID + '</td>' +
+                    '<td>' + response.data[i].Receptor + '</td>' +
                     '<td>' + response.data[i].UUID + '</td>' +
                     '<td>' + response.data[i].Total + '</td>' +
                     '<td>' + response.data[i].FechaTimbrado + '</td>' +
                     '<td>' + 
-                    '<a href="http://localhost:8083/invoice/descargarPDF/' + response.data[i].UID + '">download</a>' +
-                     '<button data-value="' + response.data[i].UID + '" class="btn btn-default" id="download-pdf"><i>PDF</i></button>' +
-                     '<button data-value="' + response.data[i].UID + '" class="btn btn-default" id="download-xml"><i>XML</i></button>' +
+                   // '<a href="http://localhost:8083/invoice/descargarPDF/' + response.data[i].UID + '">download</a>' +<span class="tooltip" title="This is my span's tooltip message!">Some text</span>
+                     '<button data-value="' + response.data[i].UID + '" title="Descargar PDF" class="waves-effect waves-light btn-small" id="download-pdf"><i class="material-icons center">picture_as_pdf</i></button>' +
+                     '<button data-value="' + response.data[i].UID + '" title="Descargar XML" class="waves-effect waves-light btn-small light-blue darken-4" id="download-xml"><i class="material-icons center">insert_drive_file</i></button>' +
+                     '<button data-value="' + response.data[i].UID + '" title="Cancelar Factura" class="waves-effect waves-light btn-small red" id="cancel"><i class="material-icons center">close</i></button>' +
+                     '<button data-value="' + response.data[i].UID + '" title="Enviar Factura" class="waves-effect waves-light btn-small amber" id="send_email"><i class="material-icons center">email</i></button>' +
                     '</td>' +
                    '</tr>');  
                 }
@@ -207,6 +254,7 @@
     
 
   });
+
 </script>
 
 <?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

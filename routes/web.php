@@ -21,6 +21,7 @@ Route::get('formulario', 'StorageController@index');
 Route::get('invoice/index', 'InvoiceController@index');
 Route::get('invoice/conexion', 'InvoiceController@conexion');
 Route::get('invoice/create/{id}', 'InvoiceController@create');
+Route::get('invoice/mostrarConcepto/{id}', 'InvoiceController@mostrarConcepto');
 
 Route::post('storage/save', 'StorageController@save');
 Route::post('invoice/crearCFDI', 'InvoiceController@crearCFDI');

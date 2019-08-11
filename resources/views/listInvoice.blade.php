@@ -13,26 +13,26 @@
       <div class="panel panel-default">
         <div class="panel-heading">Listar CFDI</div>
           <!-- Filtro-->
-  <div class="row">
-    <form class="col s12">
-      <div class="row">
-        <div class="input-field col s6">
-          <input id="rfc" type="text" class="validate">
-          <label for="rfc">RFC</label>
-        </div>
-        <div class="input-field col s6">
-          <input id="folio" type="text" class="validate">
-          <label for="folio">FOLIO</label>
-        </div>
-      </div>
+          <div class="row">
+            <form class="col s12">
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="rfc" type="text" class="validate">
+                  <label for="rfc">RFC</label>
+                </div>
+                <div class="input-field col s6">
+                  <input id="folio" type="text" class="validate">
+                  <label for="folio">FOLIO</label>
+                </div>
+              </div>
 
-      <div class="row">
-      <div class="input-field col s6">
-<button id="show-list" type="submit" class="waves-effect waves-light btn-small cyan">Filtrar</button>
-      </div>
-      </div>
-    </form>
-  </div>
+              <div class="row hidden">
+                <div class="input-field col s6">
+                  <button id="show-list" type="submit" class="waves-effect waves-light btn-small cyan">Filtrar</button>
+                </div>
+              </div>
+            </form>
+          </div>
                <!-- Filtro-->
         
           <div class="panel-body">
@@ -52,7 +52,7 @@
                 </div>
                 <div class="col-md-6">
                   <br />
-                  <button id="show-list" type="submit" class="waves-effect waves-light btn-small cyan">Listar</button>
+                  <button id="show-list" type="submit" class="waves-effect waves-light btn-small cyan">Filtrar</button>
                 </div>
               </div>
               

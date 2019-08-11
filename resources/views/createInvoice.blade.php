@@ -5,18 +5,17 @@
 
 
 <div class="container">
- 
 <div>
   <div class="col-md-12 col-md-offset-1">
     <div class="panel panel-default">
-      <div class="panel-heading">Nuevo CFDI</div>
+      <div class="panel-heading"><h2>Nuevo CFDI</h2></div>
         <div class="panel-body">
           <form method="POST" 
                 action="http://localhost:8083/invoice/crearCFDI"
                 accept-charset="UTF-8" 
                 id="form-invoice">            
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="id" value="{{ $data->id }}">
+            <input type="hidden" name="id" value=" {{ $invoice['data']['id'] }}">
             <div class="form-group">
               <label for="Servidor">Servidor:</label>
               <select class="form-control col-md-8 selection-list" name="Servidor">
@@ -24,23 +23,7 @@
                  <option value="1" selected="true">Sandbox</option>
                  <option value="2">Producción</option>
               </select>
-            </div>
-            <!--<div class="form-group">
-              <label for="invoice_apiKey">Api key:</label>
-              <select class="form-control col-md-8 selection-list" name="apiKey">
-                 <option value="selecciona">Selecciona</option>
-                 <option value="JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh" selected="true">Sandbox</option>
-                 <option value="JDJ5JDEwJEtHL0c0RVNSUUVLS09uWDRublg3c3VncURHQklZZEVMRmJuWWFTTHpUakdVVFM0UHdJQUZp" selected="true">Producción</option>
-              </select>
-            </div>
-              <div class="form-group">
-              <label for="invoice_secretKey">Secret key:</label>
-              <select class="form-control col-md-8 selection-list" name="secretKey">
-                 <option value="selecciona">Selecciona</option>
-                 <option value="JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5" selected="true">Sandbox</option>
-                 <option value="JDJ5JDEwJEpvRDJKbHplNXJwZzh0SWVGWlRoUy50YlpRRWs5cEI2dC4uU0pMck1Ic3hXdU1Tb0p4UC5l" selected="true">Producción</option>
-              </select>
-            </div>-->             
+            </div>         
              <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
@@ -62,7 +45,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="Receptor">RFC CLIENTE/RECEPTOR</label>
-                  <input class="form-control" name="RFC" value="{{ $data->rfc }}"/>
+                  <input class="form-control" name="RFC" value="{{ $invoice['data']['rfc'] }}"/>
                   <input class="form-control hide" name="Receptor" value="5d4122f4120a4"/>
                </div>
               </div>
@@ -71,7 +54,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                  <label for="UsoCFDI">Uso de CFDI:</label>
-                 <select class="form-control col-md-8 selection-list" name="UsoCFDI" value="{{ $data->uso_cfdi }}">
+                 <select class="form-control col-md-8 selection-list" name="UsoCFDI" value="{{ $invoice['data']['uso_cfdi'] }}">
                        <option value="selecciona">Selecciona</option>
                        <option value="G01">Adquisición de mercancias</option>
                        <option value="G02">Devoluciones, descuentos o bonificaciones</option>
@@ -188,176 +171,54 @@
                 </div>
               </div>
              </div>              
-             <h2>Conceptos</h2>
+             <h3>Conceptos</h3>
              <hr/>
-
-
-
-            <table class="bordered highlight table-responsive">
+            <table class="table table-striped">
               <thead>
-                  <tr class="table-users">
+                  <tr bgcolor='FFFDC1'>
                     <th>Clave producto o servicio</th>
-                    <th>Número de identificación/SKU</th>
                     <th>Cantidad</th>
                     <th>Unidad</th>
                     <th>Descripción</th>
                     <th>Precio unitario</th>
                     <th>Importe</th>
-                    <!-- <th>Descuento</th> -->
+                    <th></th>
                   </tr>
               </thead>
               <tbody>
-                  @foreach($concepts as $concept)
+                  @foreach($invoice['concepts'] as $concept)
                   <tr>
-                      <td>{{ $concept->ClaveProdServ }}</td>
-                      <td>{{ $concept->NoIdentificacion }}</td>
-                      <td>{{ $concept->Cantidad }}</td>
-                      <td>{{ $concept->ClaveUnidad }}</td>
-                      <td>{{ $concept->Descripcion }}</td>
-                      <td>{{ $concept->ValorUnitario }}</td>
-                      <td>{{ $concept->Importe }}</td>
-                      <!-- <td>{{ $concept->Descuento }}</td> -->
+                      <td>{{ $concept['clave_sat'] }}</td>
+                      <td>{{ $concept['cantidad'] }}</td>
+                      <td>{{ $concept['unidad'] }}</td>
+                      <td>{{ $concept['descripcion'] }}</td>
+                      <td>{{ $concept['precio_unitario'] }}</td>
+                      <td>{{ $concept['importe'] }}</td>
                       <td>
-                        <a href="#updateConcept{{ $concept->Id }}" class="btn-floating btn-small waves-effect waves-light blue">
-                          <i class="material-icons">mode_edit</i>
+                        <a href="#" 
+                            class="btn-floating btn-small waves-effect waves-light blue"
+                            data-target="#updateConcept{{ $concept['id'] }}"
+                            data-toggle="modal">
+                            <i class="material-icons">mode_edit</i>
                         </a>
                       </td>
                   </tr>
-                  <div id="#updateConcept{{ $concept->Id }}" class="modal">
-                      <div class="modal-content">
-                          <div class="row">
-                              <div class="input-field col s12 m6">
-                                  <i class="material-icons prefix">account_circle</i>
-                                  <input value="{{ $concept->ClaveProductoServicio }}" title="Solo puede ingresar NÚMEROS en este campo." name="ClaveProductoServicio" type="text" class="validate" required>
-                                  <label for="ClaveProductoServicio">ClaveProductoServicio:</label>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+                  @include('modalConcept') 
                   @endforeach
               </tbody>
-          </table>
-
-
-             <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                 <label for="ClaveProdServ">Clave producto o servicio:</label>
-                 <!--<input class="form-control" name="ClaveProdServ" value="86121701" />-->
-                 <select class="form-control col-md-8 selection-list" name="ClaveProdServ">
-                       <option value="selecciona">Selecciona</option>
-                       <option value="86121701" selected="true">86121701 Programas de pregrado</option>
-                       <option value="86121702">86121702 Programas de posgrado</option>
-                       <option value="47121502">47121502 Otro</option>
-                 </select>
-                </div>
-              </div>
-              <div class="col-md-4">
-               <div class="form-group">
-                 <label for="NoIdentificacion">Número de identificación/SKU:</label>
-                 <input class="form-control" name="NoIdentificacion" />
-                </div>
-              </div>
-              <div class="col-md-4">
-               <div class="form-group">
-                 <label for="Cantidad">Cantidad:</label>
-                 <input class="form-control" name="Cantidad" value="{{ $data->cantidad }}"/>
-                </div>
-              </div>
-             </div>              
-             <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                 <label for="ClaveUnidad">Unidad:</label>
-                 <select class="form-control col-md-8 selection-list" name="ClaveUnidad">
-                       <option value="selecciona">Selecciona</option>
-                       <option value="H87">H87 Pieza</option>
-                       <option value="EA">EA Elemento (Pieza)</option>
-                       <option value="E48" selected="true">E48 Unidad de servicio	</option>
-                       <option value="KGM">KGM Kilogramo</option>
-                       <option value="GRM">GRM Gramo</option>
-                       <option value="A9">A9 Tarifa</option>
-                       <option value="MTR">MTR Metro</option>
-                       <option value="INH">INH Pulgada</option>
-                       <option value="FOT">FOT Pie</option>
-                       <option value="YRD">YRD Yarda</option>
-                       <option value="SMI">SMI Milla (milla estatal)</option>
-                       <option value="MTK">MTK Metro cuadrado</option>
-                       <option value="CMK">CMK Centímetro cuadrado</option>
-                       <option value="MTQ">MTQ Metro cúbico</option>
-                       <option value="LTR">LTR Litro	</option>
-                       <option value="GLI">GLI Galón (UK)</option>
-                       <option value="GLL">GLL Galón (EUA)</option>
-                       <option value="HUR">HUR Hora</option>
-                       <option value="DAY">DAY Día</option>
-                       <option value="ANN">ANN Año</option>
-                       <option value="C62">C62 Uno</option>
-                       <option value="5B">5B Batch</option>
-                       <option value="AB">AB Paquete a granel	</option>
-                       <option value="LO">LO Lote [unidad de adquisición]	</option>
-                       <option value="XLT">XLT Lote</option>
-                       <option value="LH">LH Hora de trabajo	</option>
-                       <option value="AS">AS Variedad</option>
-                       <option value="HEA">HEA Cabeza	</option>
-                       <option value="IE">IE Personas	</option>
-                       <option value="NMP">NMP Número de paquetes	</option>
-                       <option value="SET">SET Conjunto	</option>
-                       <option value="ZZ">ZZ Mutuamente definido	</option>
-                       <option value="XBX">XBX Caja</option>
-                       <option value="XKI">XKI Kit (Conjunto de piezas)	</option>
-                       <option value="XOK">XOK Bloque	</option> 
-                 </select>
-                </div>
-              </div>
-              <div class="col-md-4">
-               <div class="form-group">
-                 <label for="Descripcion">Descripcion:</label>
-                 <input class="form-control" name="Descripcion" value="{{ $data->descripcion }}"/>
-                </div>
-              </div>
-              <div class="col-md-4">
-               <div class="form-group">
-                 <label for="ValorUnitario">Precio Unitario:</label>
-                 <input class="form-control" name="ValorUnitario" placeholder="15000.00" value="{{ $data->valorunitario }}"/>
-                </div>
-              </div>
-             </div>              
-             <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                 <label for="Importe">Importe:</label>
-                 <input class="form-control" name="Importe" value="{{ $data->valorunitario * $data->cantidad }}" />
-                </div>
-              </div>             
-              <div class="col-md-4">
-               <div class="form-group">
-                 <label for="tipoDesc">Tipo descuento:</label>
-                 <select class="form-control col-md-8 selection-list" name="Impuesto">
-                       <option value="selecciona">Selecciona</option>
-                       <option value="porcentaje" selected="true">%</option>
-                       <option value="cantidad">$</option>
-                 </select>
-                </div>
-              </div>
-               <div class="col-md-4">
-               <div class="form-group">
-                 <label for="Descuento">Descuento:</label>
-                 <input class="form-control" name="Descuento" value="0"/>
-                </div>
-              </div>
-             </div>             
-             <h2>Complementos</h2>
+          </table>           
+             <h3>Complementos</h3>
              <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                  <label for="NombreAlumno">Nombre del Alumno:</label>
-                 <input class="form-control" name="NombreAlumno"  value="{{ $data->nombre_alumno }}"/>
+                 <input class="form-control" name="NombreAlumno"  value="{{ $invoice['data']['nombre_alumno'] }}"/>
                 </div>
               </div>             
               <div class="col-md-4">
                <div class="form-group">
                  <label for="Curp">Curp:</label>
-                 <input class="form-control" name="Curp"  value="{{ $data->curp }}"/>
+                 <input class="form-control" name="Curp"  value="{{ $invoice['data']['curp'] }}"/>
                 </div>
               </div>
               <div class="col-md-4">
@@ -378,17 +239,17 @@
               <div class="col-md-4">
                 <div class="form-group">
                  <label for="RVOE">RVOE:</label>
-                 <input class="form-control" name="RVOE" value="{{ $data->roev }}"/>
+                 <input class="form-control" name="RVOE" value="{{ $invoice['data']['roev'] }}"/>
                 </div>
               </div>             
               <div class="col-md-4">
                <div class="form-group">
                  <label for="RFCPago">RFC Pago:</label>
-                 <input class="form-control" name="RFCPago" value="{{ $data->rfc }}"/>
+                 <input class="form-control" name="RFCPago" value="{{ $invoice['data']['rfc'] }}"/>
                 </div>
               </div>
              </div>             
-             <h2>Impuestos</h2>
+             <h3>Impuestos</h3>
              <div class="row">              
               <div class="col-md-3">
                  <div class="form-group">
@@ -445,6 +306,7 @@
     });
     var formId = '#form-invoice';
 
+    //Ejecutar facturación
     $(formId).on('submit', function(e){
       e.preventDefault();
       var formData = new FormData($(this)[0]);
@@ -460,7 +322,7 @@
             var responseInvoice = JSON.parse(data);
             if (!undefined)
             {
-               if (responseInvoice.response === "warning")
+              if (responseInvoice.response === "warning")
               {
                 swal({
                   title: "¡Advertencia!",
@@ -471,10 +333,10 @@
                   button: "OK",
                 });
               }
-            
+          
               else if (responseInvoice.response === "error")
               {
-               
+              
                 swal({
                   title: "¡Ocurrió un error!",
                   text: responseInvoice.message.message ,
@@ -484,6 +346,7 @@
                   button: "OK",
                 });
               }
+
               else
               {
                 //Insertar datos factura
@@ -522,7 +385,7 @@
             else{
               swal({
                 title: "¡Ocurrió un error!",
-                text: "Favor de intentarlo más tarde.",
+                text: "Disculpe, existió un problema. Favor de intentarlo más tarde.",
                 type: "error",
                 timer: 1000
               });
@@ -530,5 +393,23 @@
           }
       });
     });
+
+    //Modal de conceptos de la factura
+    $('#updateConcept').click(function() {
+      $.ajax({
+          url : 'http://localhost:8083/invoice/mostrarConcepto/1',
+          type : 'GET',
+          dataType : 'html',
+          success : function(respuesta) {
+            debugger
+              // $('#MyProducto').html(respuesta);
+              $('#updateConcept1').modal('show');
+          },
+          error : function(xhr, status) {
+              alert('Disculpe, existió un problema. Favor de intentarlo más tarde.');
+          },
+      });
+    });
+
   });
 </script>
