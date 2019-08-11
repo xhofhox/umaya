@@ -30,7 +30,6 @@
     26 => 'App\\Providers\\RouteServiceProvider',
     27 => 'UxWeb\\SweetAlert\\SweetAlertServiceProvider',
     28 => 'Codedge\\Fpdf\\FpdfServiceProvider',
-    29 => 'Yajra\\Datatables\\DatatablesServiceProvider',
   ),
   'eager' => 
   array (
@@ -49,7 +48,6 @@
     12 => 'App\\Providers\\EventServiceProvider',
     13 => 'App\\Providers\\RouteServiceProvider',
     14 => 'UxWeb\\SweetAlert\\SweetAlertServiceProvider',
-    15 => 'Yajra\\Datatables\\DatatablesServiceProvider',
   ),
   'deferred' => 
   array (

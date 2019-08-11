@@ -183,9 +183,6 @@ return [
         //Fpdf
         Codedge\Fpdf\FpdfServiceProvider::class,
 
-        //Datatable
-        Yajra\Datatables\DatatablesServiceProvider::class,
-
     ],
 
     /*
