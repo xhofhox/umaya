@@ -40,7 +40,7 @@ Agregar campo a la tabla payments para forma de pago
     
     
     
-    
+    nota AGREGAR LA RELACION ETRE CONCEPTOS E INVOICE
     /*iNSER EN concepts_invoice*/
 INSERT INTO public.concepts_invoice(
             id, invoice_ext_id, descripcion, cantidad, unidad, precio_unitario, 
@@ -91,3 +91,58 @@ INSERT INTO public.concepts_invoice(
 (12, 4, 'PAGO AGOSTO 2019', 1, 'E48', 1200, 
             NULL, NULL, NULL, NULL, NULL, NULL, 
             NULL, '86121701', NULL);
+            
+            
+            
+            
+            
+            
+            
+            insert tabla invoice_ext 
+            
+            
+            
+            INSERT INTO public.invoices_ext(
+            id, uuid, folio, num_cert, tipo_comprobante, fecha_timbrado, 
+            condicion_pago, lugar_expedicion, regimen_fiscal, emisor_rfc, 
+            emisor_nombre, receptor_rfc, receptor_nombre, unidad_medida, 
+            uso_cfdi, "clave_prodServ", total_facturado, clave_impuesto, 
+            metodo_pago, forma_pago_id, student_id, xml_file, pdf_file, error, 
+            created_at, updated_at, relateduuid, serie, razonsocial, rfc, 
+            calle, numero, interior, colonia, codigoposal, ciudad, delegacion, 
+            estado, numregidtrib, nombre, apellidos, email, telefono, claveprodserv, 
+            cantidad, claveunidad, unidad, valorunitario, descripcion, descuento, 
+            tipo_impuestos, monto_impuesto, nombre_alumno, curp, roev, status)
+    VALUES (2, NULL, NULL, NULL, NULL, NULL, 
+            NULL, 'TUXTLA', NULL, NULL, 
+            NULL, NULL, NULL, NULL, 
+            NULL, NULL, NULL, NULL, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, NULL, NULL, NULL, 'NATIVIDAD TERAN GARCIA', 'TEGN9012227LA', 
+            'PRIVADA MORELOS', '12', NULL, 'MEXICO SUR', '75760', 'TEHUACAN', NULL, 
+            'PUEBLA', NULL, 'NATI', 'TERAN GARCIA', 'natty.teran@gmail.com', '2381330244', NULL, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, NULL, 'NATIVIDAD TERAN GARCIA', 'TEGN901222MOCRRTC8', NULL, 0),
+
+
+     (3, NULL, NULL, NULL, NULL, NULL, 
+            NULL, 'TUXTLA', NULL, NULL, 
+            NULL, NULL, NULL, NULL, 
+            NULL, NULL, NULL, NULL, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, NULL, NULL, NULL, 'MARCOS CASTILLO PARRA', 'CAPM8812227RA', 
+            'CALLE 13', '12', NULL, 'MEXICO SUR', '75760', 'TEHUACAN', NULL, 
+            'PUEBLA', NULL, 'MARCOS', 'CASTILLO PARRA', 'ing.g.adolfo@gmail.com', '2381330244', NULL, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, NULL, 'MARCOS CASTILLO PARRA', 'CAPM8812227RARRTC8', NULL, 0),
+
+     (4, NULL, NULL, NULL, NULL, NULL, 
+            NULL, 'TUXTLA', NULL, NULL, 
+            NULL, NULL, NULL, NULL, 
+            NULL, NULL, NULL, NULL, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, NULL, NULL, NULL, 'JOSE PEREZ PEREZ', 'PEPJ8905041K8', 
+            'NORTE', '77', NULL, 'AXACA SUR', '75760', 'IZUCAR DE MATAMOROS', NULL, 
+            'PUEBLA', NULL, 'JOSE', 'PEREZ PEREZ', 'adolfolm@ccc.inaoep.mx', '2381330244', NULL, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, NULL, 'JOSE PEREZ PEREZ', 'PEPJ8905041K8RRTC8', NULL, 0);
