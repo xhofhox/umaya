@@ -97,8 +97,8 @@ class StorageController extends Controller
                                 $miarray["id_recargo"] = fread($file_open, 1);
                                 $miarray["importe_neto"] = fread($file_open, 14);
                                 $miarray["alterna"] = fread($file_open, 5);
-                                $miarray["referencia"] = fread($file_open, 15);
-                                $miarray["referencia2"] = fread($file_open, 20);
+                                $miarray["referencia"] = fread($file_open, 14);
+                                $miarray["referencia2"] = fread($file_open, 21);
                                 $miarray["referencia3"] = fread($file_open, 20);
                                 $miarray["referencia4"] = fread($file_open, 20);
                                 $miarray["vencimiento"] = fread($file_open, 8);
@@ -110,11 +110,15 @@ class StorageController extends Controller
                                 //Obtener el registro correspondiente de la tabla voucher por medio de la alterna y la referencia
                                 $bank_number = $miarray["alterna"];
                                 $referencia =  $miarray["referencia"];
+                                $ref_voucher = $bank_number.$referencia;
+                                //dd ($ref_voucher);
+                                
                                 
                                 if ($bank_number != "" && $referencia != "")
                                 {
                                     $voucher = Voucher::where('bank_number', $bank_number)
-                                    ->where('referencia_voucher', $referencia)
+                                    //->where('referencia_voucher', $referencia)
+                                    ->where('referencia_voucher', $ref_voucher)
                                     ->where('status', false)
                                     ->first();
 
@@ -141,6 +145,14 @@ class StorageController extends Controller
                                         $payment->subciclo = null;
                                         $payment->campus = $voucher['campus'];
                                         $payment->matricula = null;
+                                        if ($miarray["forma_pago"] = '01')
+                                        {
+                                            $payment->payment_form = 1;
+                                        }
+                                        else 
+                                        {
+                                            $payment->payment_form = 2;
+                                        }
                                         
                                         $payment->save();
                                         
@@ -193,10 +205,13 @@ class StorageController extends Controller
                         $referencia =  $miarray["referencia"];
                         $descripcion = $miarray["descripcion"];
                         
+                         $ref_voucher = $bank_number.$referencia;
+                       // dd ($ref_voucher);
                         if (strpos($descripcion, 'DEP') !== false)
                         {
                             $voucher = Voucher::where('bank_number', $bank_number)
-                            ->where('referencia_voucher', $referencia)
+                           //->where('referencia_voucher', $referencia)
+                            ->where('referencia_voucher', $ref_voucher)
                             ->where('status', false)
                             ->first();
 
@@ -206,7 +221,7 @@ class StorageController extends Controller
                                 $payment = new Payment;
                                 $payment->subconcept_assign_id = $voucher['subconcept_assign_id'];
                                 $payment->amount = $voucher['amount'];
-                                $payment->payment_method_id = 1;
+                                $payment->payment_method_id = 5;
                                 $payment->date = date('Y-m-d', strtotime($voucher['fecha']));
                                 $payment->description = null;
                                 $payment->adjustment_description = null;
@@ -223,6 +238,30 @@ class StorageController extends Controller
                                 $payment->subciclo = null;
                                 $payment->campus = $voucher['campus'];
                                 $payment->matricula = null;
+                                
+                                
+                                switch ($descripcion) 
+                                {
+                                case "DEP EFECT ATM                           ":
+                                    $payment->payment_form = 1;
+                                    break;
+                                case "DEP CHEQUE NO                           ":
+                                    $payment->payment_form = 2;
+                                    break;
+                                }
+                                ////
+                                /*
+                                if ($miarray["forma_pago"] = "EFECT ATM                           ")
+                                        {
+                                            $payment->payment_form = 1;
+                                        }
+                                        if ($miarray["forma_pago"] = "DEP CHEQUE NO                           ")
+                                        {
+                                            $payment->payment_form = 2;
+                                        }
+                                */
+                                ////
+                                
                                 
                                 $payment->save();
                                 

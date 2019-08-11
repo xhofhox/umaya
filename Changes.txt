@@ -1,0 +1,39 @@
+CAMBIOS
+
+
+AGREGAR TABLA concepts_invoice
+
+
+create table concepts_invoice
+(
+id SERIAL PRIMARY KEY,
+invoice_ext_id integer not null,
+descripcion varchar,
+cantidad integer,
+unidad varchar,
+precio_unitario double precision not null,
+subtotal double precision,
+traslado_id integer,
+retencion_id integer,
+locales_id integer,
+descuento double precision,
+aduana_state boolean,
+sku varchar,
+clave_sat integer,
+cuenta_predial varchar
+)
+
+
+
+Agregar campo a la tabla payments para forma de pago 
+
+ alter table payments
+  add payment_form integer;
+  
+  
+  
+  Agregar forma de pago cheque 
+  
+  INSERT INTO public.payment_forms(
+            id, name, description, status, created_at, updated_at)
+    VALUES (2, CHEQUE, CHEQUE, 1, date, date);
