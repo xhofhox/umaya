@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\ConceptsInvoice' => $baseDir . '/app/ConceptsInvoice.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -3297,6 +3298,20 @@ return array(
     'UxWeb\\SweetAlert\\SweetAlertServiceProvider' => $vendorDir . '/uxweb/sweet-alert/src/SweetAlert/SweetAlertServiceProvider.php',
     'Webmozart\\Assert\\Assert' => $vendorDir . '/webmozart/assert/src/Assert.php',
     'XdgBaseDir\\Xdg' => $vendorDir . '/dnoegel/php-xdg-base-dir/src/Xdg.php',
+    'Yajra\\Datatables\\Contracts\\DataTableEngineContract' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Contracts/DataTableEngineContract.php',
+    'Yajra\\Datatables\\Datatables' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Datatables.php',
+    'Yajra\\Datatables\\DatatablesServiceProvider' => $vendorDir . '/yajra/laravel-datatables-oracle/src/DatatablesServiceProvider.php',
+    'Yajra\\Datatables\\Engines\\BaseEngine' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Engines/BaseEngine.php',
+    'Yajra\\Datatables\\Engines\\CollectionEngine' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Engines/CollectionEngine.php',
+    'Yajra\\Datatables\\Engines\\EloquentEngine' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Engines/EloquentEngine.php',
+    'Yajra\\Datatables\\Engines\\QueryBuilderEngine' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Engines/QueryBuilderEngine.php',
+    'Yajra\\Datatables\\Exception' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Exception.php',
+    'Yajra\\Datatables\\Facades\\Datatables' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Facades/Datatables.php',
+    'Yajra\\Datatables\\Helper' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Helper.php',
+    'Yajra\\Datatables\\Processors\\DataProcessor' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Processors/DataProcessor.php',
+    'Yajra\\Datatables\\Processors\\RowProcessor' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Processors/RowProcessor.php',
+    'Yajra\\Datatables\\Request' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Request.php',
+    'Yajra\\Datatables\\Transformers\\DataTransformer' => $vendorDir . '/yajra/laravel-datatables-oracle/src/Transformers/DataTransformer.php',
     'phpDocumentor\\Reflection\\DocBlock' => $vendorDir . '/phpdocumentor/reflection-docblock/src/DocBlock.php',
     'phpDocumentor\\Reflection\\DocBlockFactory' => $vendorDir . '/phpdocumentor/reflection-docblock/src/DocBlockFactory.php',
     'phpDocumentor\\Reflection\\DocBlockFactoryInterface' => $vendorDir . '/phpdocumentor/reflection-docblock/src/DocBlockFactoryInterface.php',

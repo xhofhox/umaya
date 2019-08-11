@@ -58,11 +58,12 @@
            <table class="table table-striped" id="table-records" style="font-size:12px;"> 
                 <thead>
                   <tr bgcolor="FFFDC1">
+                    <th>Razón social</th>
                     <th>Folio</th>
                     <th>RFC</th>
-                    <th>UUID</th>
                     <th>Total</th>
                     <th>FechaTimbrado</th>
+                    <th>Estado</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -70,19 +71,108 @@
                   </tr>
                 </thead>
                 <tbody>
-                 <tr bgcolor="FFFDC1">
-                    <th>Folio</th>
-                    <th>RFC</th>
-                    <th>UUID</th>
-                    <th>Total</th>
-                    <th>FechaTimbrado</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                  </tr>
+                  @foreach($list['data'] as $data)
+                    <tr>
+                      <td>{{ $data['RazonSocialReceptor'] }}</td>
+                      <td>{{ $data['Folio'] }}</td>
+                      <td>{{ $data['Receptor'] }}</td>
+                      <td>{{ $data['Total'] }}</td>
+                      <td>{{ $data['FechaTimbrado'] }}</td>
+                      <td>{{ $data['Status'] }}</td>
+                      <td width="1%">
+                        <button data-value="' + response.data[i].UID + '" title="Descargar PDF" class="waves-effect waves-light btn-small" id="download-pdf">
+                          <i class="material-icons center">picture_as_pdf</i>
+                        </button>
+                      </td>
+                      <td width="1%">
+                        <button data-value="' + response.data[i].UID + '" title="Descargar XML" class="waves-effect waves-light btn-small light-blue darken-4" id="download-xml">
+                          <i class="material-icons center">insert_drive_file</i></button>
+                      </td>
+                      <td width="1%">
+                        <button data-value="' + response.data[i].UID + '" title="Cancelar Factura" class="waves-effect waves-light btn-small red" id="cancel">
+                          <i class="material-icons center">close</i></button>
+                      </td>
+                      <td width="1%">
+                        <button data-value="' + response.data[i].UID + '" title="Enviar Factura" class="waves-effect waves-light btn-small amber" id="send_email">
+                          <i class="material-icons center">email</i></button>
+                      </td>
+                    </tr>
+                  @endforeach
                 </tbody>
               </table>
+
+              <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+            </tr>
+            <tr>
+                <td>Prescott Bartlett</td>
+                <td>Technical Author</td>
+                <td>London</td>
+                <td>27</td>
+                <td>2011/05/07</td>
+                <td>$145,000</td>
+            </tr>
+            <tr>
+                <td>Gavin Cortez</td>
+                <td>Team Leader</td>
+                <td>San Francisco</td>
+                <td>22</td>
+                <td>2008/10/26</td>
+                <td>$235,500</td>
+            </tr>
+            <tr>
+                <td>Martena Mccray</td>
+                <td>Post-Sales support</td>
+                <td>Edinburgh</td>
+                <td>46</td>
+                <td>2011/03/09</td>
+                <td>$324,050</td>
+            </tr>
+            <tr>
+                <td>Unity Butler</td>
+                <td>Marketing Designer</td>
+                <td>San Francisco</td>
+                <td>47</td>
+                <td>2009/12/09</td>
+                <td>$85,675</td>
+            </tr>
+            <tr>
+                <td>Howard Hatfield</td>
+                <td>Office Manager</td>
+                <td>San Francisco</td>
+                <td>51</td>
+                <td>2008/12/16</td>
+                <td>$164,500</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot>
+    </table>
           </div>
         </div>
     </div>
@@ -93,161 +183,8 @@
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-  
 <script>
-  $(document).ready(function(){
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    var formId = '#list-invoice';
-
-    $(formId).on('submit', function(e){
-      e.preventDefault();
-      var formData = new FormData($(this)[0]);
-      $.ajax({
-          type: $(formId).attr('method'),
-          url: $(formId).attr('action'),
-          data: formData,
-          contentType: false,
-          processData: false,
-          beforeSend: function () {
-            
-          },
-          success:  function (data) {
-            console.log(data);
-            var response = JSON.parse(data);
-            if (!undefined)
-            {
-              if (response.status === "error")
-              {
-                swal({
-                  title: "¡Ocurrió un error!",
-                  text: response.message,
-                  type: "error",
-                  icon: "error",
-                  timer: 10000,
-                  button: "OK",
-                });
-              }
-              else
-              {
-                //Mostrar facturas
-                swal({
-                  title: "¡Éxito!",
-                  text: "Total: " + response.total,
-                  type: "success",
-                  icon: "success",
-                  timer: 10000,
-                  button: "OK",
-                });
-                $('#table-records > tbody').html('');
-                for(var i = 0; i < response.data.length; i++) {
-                  $('#table-records > tbody').append('<tr>' + 
-                    '<td>' + response.data[i].Folio + '</td>' +
-                    '<td>' + response.data[i].Receptor + '</td>' +
-                    '<td>' + response.data[i].UUID + '</td>' +
-                    '<td>' + response.data[i].Total + '</td>' +
-                    '<td>' + response.data[i].FechaTimbrado + '</td>' +
-                    '<td width="1%">' + 
-                   // '<a href="http://localhost:8083/invoice/descargarPDF/' + response.data[i].UID + '">download</a>' +<span class="tooltip" title="This is my span's tooltip message!">Some text</span>
-                     '<button data-value="' + response.data[i].UID + '" title="Descargar PDF" class="waves-effect waves-light btn-small" id="download-pdf"><i class="material-icons center">picture_as_pdf</i></button>' +
-                    '</td>' +
-                    '<td width="1%">' + 
-                     '<button data-value="' + response.data[i].UID + '" title="Descargar XML" class="waves-effect waves-light btn-small light-blue darken-4" id="download-xml"><i class="material-icons center">insert_drive_file</i></button>' +
-                    '</td>' +
-                    '<td width="1%">' + 
-                    '<button data-value="' + response.data[i].UID + '" title="Cancelar Factura" class="waves-effect waves-light btn-small red" id="cancel"><i class="material-icons center">close</i></button>' +
-                    '</td>' +
-                    '<td width="1%">' + 
-                    '<button data-value="' + response.data[i].UID + '" title="Enviar Factura" class="waves-effect waves-light btn-small amber" id="send_email"><i class="material-icons center">email</i></button>' +
-                    '</td>' +
-                   '</tr>');  
-                }
-                 //Descargar Factura en formato PDF
-                 $(document).on(
-                     'click',
-                     '#download-pdf',
-                     function (event) {
-                        
-                        var cfdi_uid = $(this).attr('data-value');
-                        var servidor = $('select[name="Servidor"]').val();
-                        
-                        var data = new FormData();
-                        data.append('cfdi_uid', cfdi_uid);
-                        data.append('servidor', servidor);
-                        
-                        $.ajax({
-                            type: 'GET',
-                            url: 'http://localhost:8083/invoice/descargarPDF/' + cfdi_uid,
-                            //data: data,
-                            //dataType : 'binary',
-                            //contentType: false,
-                            contentType : 'application/pdf',
-                            processData: false,
-                            beforeSend: function () {},
-                            success:  function (data) {
-                              console.log(data);
-                              window.open(data);
-
-                              
-                              // var blob=new Blob([data]);
-                              // var link=document.createElement('a');
-                              // link.href=window.URL.createObjectURL(blob);
-                              // link.download="file.pdf";
-                              // link.click();
-                            }
-                        });
-                     }
-                 );
-                //Descargar Factura en formato XML
-                $(document).on(
-                     'click',
-                     '#download-xml',
-                     function (event) {
-                        
-                        var cfdi_uid = $(this).attr('data-value');
-                        var servidor = $('select[name="Servidor"]').val();
-                        
-                        var data = new FormData();
-                        data.append('cfdi_uid', cfdi_uid);
-                        data.append('servidor', servidor);
-                        
-                        $.ajax({
-                            type: 'POST',
-                            url: 'http://localhost:8083/invoice/descargarXML',
-                            data: data,
-                            //dataType : 'binary',
-                            contentType: false,
-                            processData: false,
-                            beforeSend: function () {},
-                            success:  function (data) {
-                              // debugger
-                              console.log(data);
-                              window.open(data);
-                              var blob=new Blob([data]);
-                              var link=document.createElement('a');
-                              link.href=window.URL.createObjectURL(blob);
-                              link.download="file.xml";
-                              link.click();
-                            }
-                        });
-                     }
-                 );
-              } //termina else
-            }
-            else{
-              swal({
-                title: "¡Ocurrió un error!",
-                text: "",
-                type: "error",
-                timer: 1000
-              });
-            }
-          }
-      });
-    });//Fin submit
+  $(document).ready(function() {
+    $('#example').DataTable();
   });
-
-</script>
+ </script>

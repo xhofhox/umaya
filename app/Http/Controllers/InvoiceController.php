@@ -25,13 +25,35 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        return \View::make('listInvoice');
+        $urlListCFDI = 'http://devfactura.in/api/v3/cfdi33/list';
+        $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
+        $secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $urlListCFDI);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Content-Type: application/json",
+            "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+            "F-Api-Key: ".$apiKey,
+            "F-Secret-Key: " .$secretKey
+        ));
+        
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return view('listInvoice')->with('list', json_decode($response, true));
+        // return \View::make('listInvoice');
     }
     
     public function conexion()
     {
         return \View::make('formInvoice');
     }
+
     public function listarCFDI(Request $request)
     {
         $urlListCFDI;
