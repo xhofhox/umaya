@@ -8,7 +8,7 @@
 <div>
   <div class="col-md-12 col-md-offset-1">
     <div class="panel panel-default">
-      <div class="panel-heading"><h2>Nuevo CFDI</h2></div>
+      <div class="panel-heading"><h3>Nuevo CFDI</h3></div>
         <div class="panel-body">
           <form method="POST" 
                 action="http://localhost:8083/invoice/crearCFDI"
@@ -171,7 +171,7 @@
                 </div>
               </div>
              </div>              
-             <h3>Conceptos</h3>
+             <h4>Conceptos</h4>
              <hr/>
             <table class="table table-striped">
               <thead>
@@ -207,7 +207,7 @@
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               </tbody>
           </table>           
-             <h3>Complementos</h3>
+             <h4>Complementos</h4>
              <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
@@ -249,7 +249,7 @@
                 </div>
               </div>
              </div>             
-             <h3>Impuestos</h3>
+             <h4>Impuestos</h4>
              <div class="row">              
               <div class="col-md-3">
                  <div class="form-group">

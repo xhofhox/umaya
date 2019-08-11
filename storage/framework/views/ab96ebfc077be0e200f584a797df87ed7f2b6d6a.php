@@ -55,17 +55,11 @@
                   <button id="show-list" type="submit" class="waves-effect waves-light btn-small cyan">Filtrar</button>
                 </div>
               </div>
-              
-            
-              
-              
-              
               <?php echo $__env->make('sweet::alert', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>              
             </form>
             <br/>
             <br/>
            <table class="table table-striped" id="table-records" style="font-size:12px;"> 
-            
                 <thead>
                   <tr bgcolor="FFFDC1">
                     <th>Folio</th>
@@ -73,7 +67,10 @@
                     <th>UUID</th>
                     <th>Total</th>
                     <th>FechaTimbrado</th>
-                    <th>Opciones</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -83,14 +80,13 @@
                     <th>UUID</th>
                     <th>Total</th>
                     <th>FechaTimbrado</th>
-                    <th>Opciones</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                   </tr>
                 </tbody>
               </table>
-              
-
-    
-              
           </div>
         </div>
     </div>
@@ -158,12 +154,18 @@
                     '<td>' + response.data[i].UUID + '</td>' +
                     '<td>' + response.data[i].Total + '</td>' +
                     '<td>' + response.data[i].FechaTimbrado + '</td>' +
-                    '<td>' + 
+                    '<td width="1%">' + 
                    // '<a href="http://localhost:8083/invoice/descargarPDF/' + response.data[i].UID + '">download</a>' +<span class="tooltip" title="This is my span's tooltip message!">Some text</span>
                      '<button data-value="' + response.data[i].UID + '" title="Descargar PDF" class="waves-effect waves-light btn-small" id="download-pdf"><i class="material-icons center">picture_as_pdf</i></button>' +
+                    '</td>' +
+                    '<td width="1%">' + 
                      '<button data-value="' + response.data[i].UID + '" title="Descargar XML" class="waves-effect waves-light btn-small light-blue darken-4" id="download-xml"><i class="material-icons center">insert_drive_file</i></button>' +
-                     '<button data-value="' + response.data[i].UID + '" title="Cancelar Factura" class="waves-effect waves-light btn-small red" id="cancel"><i class="material-icons center">close</i></button>' +
-                     '<button data-value="' + response.data[i].UID + '" title="Enviar Factura" class="waves-effect waves-light btn-small amber" id="send_email"><i class="material-icons center">email</i></button>' +
+                    '</td>' +
+                    '<td width="1%">' + 
+                    '<button data-value="' + response.data[i].UID + '" title="Cancelar Factura" class="waves-effect waves-light btn-small red" id="cancel"><i class="material-icons center">close</i></button>' +
+                    '</td>' +
+                    '<td width="1%">' + 
+                    '<button data-value="' + response.data[i].UID + '" title="Enviar Factura" class="waves-effect waves-light btn-small amber" id="send_email"><i class="material-icons center">email</i></button>' +
                     '</td>' +
                    '</tr>');  
                 }
