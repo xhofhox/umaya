@@ -56,6 +56,7 @@
 
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
   
 <script>
   $(document).ready(function(){
@@ -114,9 +115,11 @@
                     '<td>' + response.data[i].Total + '</td>' +
                     '<td>' + response.data[i].FechaTimbrado + '</td>' +
                     '<td>' + 
-                    '<a href="http://localhost:8083/invoice/descargarPDF/' + response.data[i].UID + '">download</a>' +
-                     '<button data-value="' + response.data[i].UID + '" class="btn btn-default" id="download-pdf"><i>PDF</i></button>' +
-                     '<button data-value="' + response.data[i].UID + '" class="btn btn-default" id="download-xml"><i>XML</i></button>' +
+                   // '<a href="http://localhost:8083/invoice/descargarPDF/' + response.data[i].UID + '">download</a>' +
+                     '<button data-value="' + response.data[i].UID + '" class="waves-effect waves-light btn-small" id="download-pdf"><i class="material-icons center">picture_as_pdf</i></button>' +
+                     '<button data-value="' + response.data[i].UID + '" class="waves-effect waves-light btn-small blue lighten-1" id="download-xml"><i class="material-icons center">insert_drive_file</i></button>' +
+                     '<button data-value="' + response.data[i].UID + '" class="waves-effect waves-light btn-small red" id="cancel"><i class="material-icons center">close</i></button>' +
+                     '<button data-value="' + response.data[i].UID + '" class="waves-effect waves-light btn-small" id="send_email"><i class="material-icons center">email</i></button>' +
                     '</td>' +
                    '</tr>');  
                 }
