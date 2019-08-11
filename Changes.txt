@@ -37,3 +37,57 @@ Agregar campo a la tabla payments para forma de pago
   INSERT INTO public.payment_forms(
             id, name, description, status, created_at, updated_at)
     VALUES (2, CHEQUE, CHEQUE, 1, date, date);
+    
+    
+    
+    
+    /*iNSER EN concepts_invoice*/
+INSERT INTO public.concepts_invoice(
+            id, invoice_ext_id, descripcion, cantidad, unidad, precio_unitario, 
+            subtotal, traslado_id, retencion_id, locales_id, descuento, aduana_state, 
+            sku, clave_sat, cuenta_predial)
+    VALUES (1, 1, 'PAGO JUNIO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121701', NULL),
+   (2, 1, 'PAGO JULIO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121701', NULL),
+
+  (3, 1, 'PAGO AGOSTO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121701', NULL),
+
+   (4, 1, 'PAGO SEPTIEMBRE 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121701', NULL),
+
+(5, 2, 'PAGO JUNIO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121701', NULL),
+
+(6, 2, 'PAGO JULIO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121701', NULL),
+(7, 2, 'PAGO AGOSTO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121701', NULL),
+
+  (8, 3, 'PAGO JUNIO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121702', NULL),
+
+(9, 3, 'PAGO JULIO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121702', NULL),
+
+(10, 3, 'PAGO AGOSTO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121702', NULL),
+            
+(11, 4, 'PAGO JULIO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121701', NULL),
+
+(12, 4, 'PAGO AGOSTO 2019', 1, 'E48', 1200, 
+            NULL, NULL, NULL, NULL, NULL, NULL, 
+            NULL, '86121701', NULL);
