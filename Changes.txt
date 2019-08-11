@@ -146,3 +146,11 @@ INSERT INTO public.concepts_invoice(
             'PUEBLA', NULL, 'JOSE', 'PEREZ PEREZ', 'adolfolm@ccc.inaoep.mx', '2381330244', NULL, 
             NULL, NULL, NULL, NULL, NULL, NULL, 
             NULL, NULL, 'JOSE PEREZ PEREZ', 'PEPJ8905041K8RRTC8', NULL, 0);
+            
+            
+            
+            
+            
+            
+            
+            Agregar ultimos cambios 
