@@ -12,6 +12,9 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/materialize.js') }}" defer></script>
+    <!--<script src="{{ asset('js/tooltipster.bundle.min.js') }}" defer></script>-->
+    
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
@@ -19,12 +22,19 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/materialize.css') }}" rel="stylesheet">
+   <!-- <link href="{{ asset('css/tooltipster.bundle.min.css') }}" rel="stylesheet">-->
+   
+    
+    
     <!-- <link rel=”stylesheet” href=”css/sweetalert.css”>
     <script src=”js/sweetalert.js”></script> -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!--<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>-->
+
+    
     <!--<script src="/js/materialize.js"></script>
     <script src="/css/materialize.css"></script>
        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>-->

@@ -26,7 +26,7 @@
                 </div>
                 <div class="col-md-6">
                   <br />
-                  <button id="show-list" type="submit" class="btn btn-primary">Listar</button>
+                  <button id="show-list" type="submit" class="waves-effect waves-light btn-small cyan">Listar</button>
                 </div>
               </div>
               @include('sweet::alert')              
@@ -115,11 +115,11 @@
                     '<td>' + response.data[i].Total + '</td>' +
                     '<td>' + response.data[i].FechaTimbrado + '</td>' +
                     '<td>' + 
-                   // '<a href="http://localhost:8083/invoice/descargarPDF/' + response.data[i].UID + '">download</a>' +
-                     '<button data-value="' + response.data[i].UID + '" class="waves-effect waves-light btn-small" id="download-pdf"><i class="material-icons center">picture_as_pdf</i></button>' +
-                     '<button data-value="' + response.data[i].UID + '" class="waves-effect waves-light btn-small blue lighten-1" id="download-xml"><i class="material-icons center">insert_drive_file</i></button>' +
-                     '<button data-value="' + response.data[i].UID + '" class="waves-effect waves-light btn-small red" id="cancel"><i class="material-icons center">close</i></button>' +
-                     '<button data-value="' + response.data[i].UID + '" class="waves-effect waves-light btn-small" id="send_email"><i class="material-icons center">email</i></button>' +
+                   // '<a href="http://localhost:8083/invoice/descargarPDF/' + response.data[i].UID + '">download</a>' +<span class="tooltip" title="This is my span's tooltip message!">Some text</span>
+                     '<button data-value="' + response.data[i].UID + '" title="Descargar PDF" class="waves-effect waves-light btn-small" id="download-pdf"><i class="material-icons center">picture_as_pdf</i></button>' +
+                     '<button data-value="' + response.data[i].UID + '" title="Descargar XML" class="waves-effect waves-light btn-small light-blue darken-4" id="download-xml"><i class="material-icons center">insert_drive_file</i></button>' +
+                     '<button data-value="' + response.data[i].UID + '" title="Cancelar Factura" class="waves-effect waves-light btn-small red" id="cancel"><i class="material-icons center">close</i></button>' +
+                     '<button data-value="' + response.data[i].UID + '" title="Enviar Factura" class="waves-effect waves-light btn-small amber" id="send_email"><i class="material-icons center">email</i></button>' +
                     '</td>' +
                    '</tr>');  
                 }
