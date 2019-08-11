@@ -3,15 +3,11 @@
 
  @section('content')
 
- 
- 
- 
-
 <div class="container">
   <div>
     <div class="col-md-12 col-md-offset-1">
       <div class="panel panel-default">
-        <div class="panel-heading">Listar CFDI</div>
+        <div class="panel-heading"><h3>Listado CFDI</h3></div>
           <!-- Filtro-->
           <div class="row">
             <form class="col s12">
@@ -252,9 +248,6 @@
           }
       });
     });//Fin submit
-    
-    
-
   });
 
 </script>
