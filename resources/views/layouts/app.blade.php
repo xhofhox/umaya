@@ -64,10 +64,13 @@
                   <span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="http://localhost:8083/invoice/create/0">Crear CFDI</a></li>
+                    <li><a href="http://localhost:8083/invoice/massive">Crear CFDI's Masivos</a></li>
+                    <li><a href="http://localhost:8083/invoice/createGlobal/0">Crear CFDI Global</a></li>
                     <li><a href="http://localhost:8083/invoice/index">Listar CFDI's</a></li>
-                    <li><a href="http://localhost:8083/invoice/massive">Listar CFDI's Masivos</a></li>
+                    
                   </ul>
                 </li>
+                <li class="active"><a href="http://localhost:8083/nota">Nota de Crédito</a></li>
             </ul>
         </div>
         </nav>
