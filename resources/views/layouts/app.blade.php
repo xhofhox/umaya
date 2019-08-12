@@ -63,8 +63,9 @@
                   <a class="dropdown-toggle" data-toggle="dropdown" href="#">Facturación
                   <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="http://localhost:8083/invoice/create/1">Crear CFDI</a></li>
+                    <li><a href="http://localhost:8083/invoice/create/0">Crear CFDI</a></li>
                     <li><a href="http://localhost:8083/invoice/index">Listar CFDI's</a></li>
+                    <li><a href="http://localhost:8083/invoice/massive">Listar CFDI's Masivos</a></li>
                   </ul>
                 </li>
             </ul>

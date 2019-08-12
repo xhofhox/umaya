@@ -32,29 +32,6 @@
                Filtro-->
         
           <div class="panel-body">
-            <form method="POST" 
-                  action="http://localhost:8083/invoice/listarCFDI"
-                  accept-charset="UTF-8" 
-                  id="list-invoice">
-              <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <!--  <div class="form-group">
-                <div class="col-md-6 hidden">
-                  <label for="Servidor">Servidor:</label>
-                  <select class="form-control col-md-8 selection-list hidden" name="Servidor">
-                     <option value="selecciona">Selecciona</option>
-                     <option value="1" selected="true">Sandbox</option>
-                     <option value="2">Producción</option>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <br />
-                  <button id="show-list" type="submit" class="waves-effect waves-light btn-small cyan">Filtrar</button>
-                </div>
-              </div>-->
-              @include('sweet::alert')              
-            </form>
-            <br/>
-            <br/>
            <table class="table table-striped" id="table-records" style="font-size:12px;"> 
                 <thead>
                   <tr bgcolor="FFFDC1">
@@ -113,6 +90,29 @@
 
 <script>
   $(document).ready(function() {
-    $('#table-records').DataTable();
+    $('#table-records').DataTable({
+      language: {
+                "decimal": "",
+                "fixedHeader": true,
+                "responsive": true,
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            }
+    });
   });
  </script>

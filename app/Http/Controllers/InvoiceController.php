@@ -48,6 +48,18 @@ class InvoiceController extends Controller
         return view('listInvoice')->with('list', json_decode($response, true));
         // return \View::make('listInvoice');
     }
+
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function massive()
+    {
+        $Invoices = InvoiceExt::all();
+        return \View::make('MassiveInvoice')->with('Invoices', $Invoices);
+    }
     
     public function conexion()
     {
@@ -112,6 +124,36 @@ class InvoiceController extends Controller
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
         $invoice = ['data' => $data, 'concepts' => $concepts];
         return view('createInvoice', compact('invoice'));
+         
+    }
+
+        /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editMassive($id)
+    {
+        //Obtener datos de la factura y mostrarlo en la vista
+        $data = InvoiceExt::find($id);
+        $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
+        $invoice = ['data' => $data, 'concepts' => $concepts];
+        return view('editMassiveInvoice', compact('invoice'));
+         
+    }
+
+        /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createGlobal($id)
+    {
+        //Obtener datos de la factura y mostrarlo en la vista
+        $data = InvoiceExt::find($id);
+        $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
+        $invoice = ['data' => $data, 'concepts' => $concepts];
+        return view('createGlobalInvoice', compact('invoice'));
          
     }
 

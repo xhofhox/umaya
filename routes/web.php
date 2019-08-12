@@ -19,9 +19,13 @@ Route::resource('students', 'StudentController');
 
 Route::get('formulario', 'StorageController@index');
 Route::get('invoice/index', 'InvoiceController@index');
+Route::get('invoice/massive', 'InvoiceController@massive');
 Route::get('invoice/conexion', 'InvoiceController@conexion');
 Route::get('invoice/create/{id}', 'InvoiceController@create');
 Route::get('invoice/mostrarConcepto/{id}', 'InvoiceController@mostrarConcepto');
+
+Route::get('invoice/editMassive/{id}', 'InvoiceController@editMassive');
+Route::get('invoice/createGlobal/{id}', 'InvoiceController@createGlobal');
 
 Route::post('storage/save', 'StorageController@save');
 Route::post('invoice/crearCFDI', 'InvoiceController@crearCFDI');

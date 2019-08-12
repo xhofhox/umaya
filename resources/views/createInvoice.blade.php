@@ -4,7 +4,7 @@
  @section('content')
 
 
-<div class="container">
+<div class="container"> 
 <div>
   <div class="col-md-12 col-md-offset-1">
     <div class="panel panel-default">
