@@ -41,7 +41,7 @@
                  @endforeach
                </tbody>
              </table>
-
+             <button id="save" type="submit" class="btn btn-primary">Enviar todo</button>
          </div>
        </div>
    </div>

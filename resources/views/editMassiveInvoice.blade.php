@@ -1,5 +1,4 @@
- 
- @extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 
@@ -286,7 +285,7 @@
               </div>
             </div>
            @include('sweet::alert')
-           <button id="save" type="submit" class="btn btn-primary">Enviar</button>
+           <button id="save" type="submit" class="btn btn-primary">Guardar</button>
          </form>          
          <div id="prueba"></div>
        </div>
