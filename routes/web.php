@@ -32,6 +32,8 @@ Route::post('invoice/crearCFDI', 'InvoiceController@crearCFDI');
 Route::post('invoice/actualizarRegistroFactura', 'InvoiceController@actualizarRegistroFactura');
 Route::post('invoice/listarCFDI', 'InvoiceController@listarCFDI');
 
+Route::get('invoice/creditNote/{id}', 'InvoiceController@creditNote');
+
 Route::get('invoice/descargarPDFx/{cfdi_uid}', 'InvoiceController@descargarPDFx');
 Route::get('invoice/descargarPDF/{cfdi_uid}', 'InvoiceController@descargarPDF');
 Route::post('invoice/descargarXML', 'InvoiceController@descargarXML');

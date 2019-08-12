@@ -65,6 +65,18 @@ class InvoiceController extends Controller
     {
         return \View::make('formInvoice');
     }
+    
+    public function creditNote($id)
+    {
+        //return \View::make('createCreditNote');
+        
+        //Obtener datos de la factura y mostrarlo en la vista
+        $data = InvoiceExt::find($id);
+        $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
+        $invoice = ['data' => $data, 'concepts' => $concepts];
+        return view('createCreditNote', compact('invoice'));
+    }
+
 
     public function listarCFDI(Request $request)
     {

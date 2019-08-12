@@ -70,7 +70,7 @@
                     
                   </ul>
                 </li>
-                <li class="active"><a href="http://localhost:8083/nota">Nota de Crédito</a></li>
+                <li class="active"><a href="http://localhost:8083/invoice/creditNote/0">Nota de Crédito</a></li>
             </ul>
         </div>
         </nav>
