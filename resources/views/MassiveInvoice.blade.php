@@ -17,6 +17,7 @@
                    <th>Alumno</th>
                    <th>Forma de pago</th>
                    <th>Uso CFDI</th>
+                   <th>Unidad</th>
                    <th>Importe</th>
                    <th></th>
                  </tr>
@@ -29,6 +30,7 @@
                      <td>{{ $data['nombre_alumno'] }}</td>
                      <td>{{ $data['forma_pago_id'] }}</td>
                      <td>{{ $data['uso_cfdi'] }}</td>
+                     <td>{{ $data['unidad'] }}</td><!--falta saber de donde obtenemos este dato o a que se refiere-->
                      <td>{{ $data['total_facturado'] }}</td>
                      <td width="1%">
                         <button data-value="{{ $data['id'] }}" 
