@@ -243,14 +243,15 @@
               <div class="col-md-4">
                 <div class="form-group">
                  <label for="RVOE">RVOE:</label>
-                 <input class="form-control" name="RVOE" value="{{ $invoice['data']['roev'] }}"/>
+                 <!--<input class="form-control" name="RVOE" value="{{ $invoice['data']['roev'] }}"/>-->
+                 <input class="form-control" name="RVOE" value="N/A"/>
                 </div>
               </div>             
               <div class="col-md-4">
                <div class="form-group">
                  <label for="RFCPago">RFC Pago:</label>
-                 <!--<input class="form-control" name="RFCPago" value="{{ $invoice['data']['rfc'] }}"/> -->
-                 <input class="form-control" name="RFCPago" value="N/A"/>
+                 <input class="form-control" name="RFCPago" value="{{ $invoice['data']['rfc'] }}"/>
+                 
                 </div>
               </div>
              </div>             
@@ -264,7 +265,7 @@
                        <option value="001">ISR</option>
                        <option value="002" >IVA</option>
                        <option value="003">IEPS</option>
-                       <option value="004" selected="true">Excento</option>
+                       <option value="004" selected="true">N/A</option>
                  </select>
                  </div>
                </div>

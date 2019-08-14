@@ -196,7 +196,10 @@
                      <td>{{ $concept['unidad'] }}</td>
                      <td>{{ $concept['descripcion'] }}</td>
                      <td>{{ $concept['precio_unitario'] }}</td>
-                     <td>{{ $concept['importe'] }}</td>
+                     <td>{{ intval($concept['unidad']) * intval($concept['precio_unitario'])}}</td>
+                    
+                    
+                     <!--<td>{{ $concept['importe'] }}</td>-->
                      <td>
                        <a href="#" 
                            class="btn-floating btn-small waves-effect waves-light blue"
