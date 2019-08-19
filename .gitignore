@@ -12,3 +12,7 @@ yarn-error.log
 .env
 
 storage/logs/laravel\.log
+
+\.vs/
+
+storage/

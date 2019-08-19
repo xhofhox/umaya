@@ -133,7 +133,9 @@ class InvoiceController extends Controller
     {
         //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
+        // dd($data);
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
+		//dd($concepts);
         $invoice = ['data' => $data, 'concepts' => $concepts];
         return view('createInvoice', compact('invoice'));
          
@@ -190,7 +192,7 @@ class InvoiceController extends Controller
     {
         //Obtener información del concepto
         $concept = ConceptsInvoice::find($id);
-        // dd($concept);
+        dd($concept);
         return view('modalConcept', compact('concept'));
     }
 
