@@ -66,7 +66,8 @@ class InvoiceExt extends Model
 		'nombre_alumno',
 		'curp', 
 		'roev',
-		'status'
+		'status',
+		'uid'
 	);
 
 	protected $appends = [

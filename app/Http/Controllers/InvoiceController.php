@@ -484,7 +484,7 @@ class InvoiceController extends Controller
         {
             //Insertar en tabla de Invoice_ext            
             $invoice_ext->update(['status' => 1]);
-            $invoice_ext->update(['uuid' => $request->input('uuid')]);
+           $invoice_ext->update(['uuid' => $request->input('uuid')]);
             $invoice_ext->update(['folio' => $request->input('folio')]);
 
         }          

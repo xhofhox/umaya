@@ -82,8 +82,8 @@
 								<div class="form-group">
 									<label for="Receptor">RFC CLIENTE/RECEPTOR</label>
 									<input class="form-control" name="RFC" value="{{ $invoice['data']['rfc'] }}"/>
-									<!-- <input class="form-control hide" name="Receptor" value="{{ $invoice['data']['uuid'] }}"/>  -->
-									<input class="form-control hide" name="Receptor" value="5d4122f4120a4"/>
+									 <input class="form-control hide" name="Receptor" value="{{ $invoice['data']['uid'] }}"/>  
+									<!-- <input class="form-control hide" name="Receptor" value="5d4122f4120a4"/> -->
 								</div>
 							</div>
 							<div class="col-md-6">
