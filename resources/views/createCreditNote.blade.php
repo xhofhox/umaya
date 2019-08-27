@@ -76,8 +76,8 @@
                        <option value="D07">Primas por seguros de gastos médicos.</option>
                        <option value="D08">Gastos de transportación escolar obligatoria.</option>
                        <option value="D09">Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones.</option>
-                       <option value="D10" selected="true">Pagos por servicios educativos (colegiaturas)</option>
-                       <option value="P01">Por definir</option>
+                       <option value="D10" >Pagos por servicios educativos (colegiaturas)</option>
+                       <option value="P01"selected="true">Por definir</option>
                  </select>
                </div>
               </div>
@@ -86,7 +86,7 @@
                  <label for="FormaPago">Forma de pago: </label>
                  <select class="form-control col-md-8 selection-list" name="FormaPago">
                        <option value="selecciona">Selecciona</option>
-                       <option value="01" selected="true">Efectivo </option>
+                       <option value="01" >Efectivo </option>
                        <option value="02">Cheque nominativo</option>
                        <option value="03">Transferencia electrónica de fondos</option>
                        <option value="04">Tarjeta de crédito</option>
@@ -107,7 +107,7 @@
                        <option value="29">Tarjeta de servicios</option>
                        <option value="30">Aplicación de anticipos</option>
                        <option value="31">Intermediario pagos</option>
-                       <option value="99">Por definir</option> 
+                       <option value="99" selected="true">Por definir</option> 
                  </select>
                </div>
               </div>
@@ -128,13 +128,13 @@
                  <label for="Serie">Serie:</label>
                  <select class="form-control col-md-8 selection-list" name="Serie">
                        <option value="selecciona">Selecciona</option>
-                       <option value="3413" selected="true">F</option>
+                       <option value="3413">F</option>
                        <option value="3414">R</option>
                        <option value="3415">C</option>
-                       <option value="3416">N</option>
+                       <option value="3416" selected="true">N</option>
                        <option value="3417">NOM</option>
                        <option value="3418">FH<option>
-                       <option value="3419">NC</option>
+                       <option value="3419" >NC</option>
                        <option value="3420">DO</option>
                        <option value="3421">RA</option>
                        <option value="3422">ND</option>
@@ -166,11 +166,68 @@
                  <input class="form-control" name="Cuenta" placeholder="Últimos 4 dígitos de la tarjeta o cuenta bancaria del cliente."/>
                </div>
               </div>
+              
+              
+              
+                       
+              
+              
               <div class="col-md-6">
                 <div class="form-group">  
                 </div>
               </div>
-             </div>              
+             </div>   
+             
+             
+             
+              <h4>CFDI Relacionado</h4>
+             <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                 <label for="CFDIRelacionado">CFDI Relacionado:</label>
+                 <select class="form-control col-md-8 selection-list" name="CFDIRelacionado">
+                       <option value="selecciona">Selecciona</option>
+                       <option value="1" selected="true">Si</option>
+                       <option value="2">No</option>
+                       
+                 </select>
+                </div>
+              </div>         
+              
+              
+              <div class="col-md-5">
+               <div class="form-group">
+                 <label for="NivelEducativo">Tipo de Relación:</label>
+                 <select class="form-control col-md-8 selection-list" name="NivelEducativo">
+                       <option value="selecciona">Selecciona</option>
+                       <option value="1" selected="true">Nota de cédito de los documentos relacionados</option>
+                       <option value="2">Nota de débito de los documentos relacionados</option>
+                       <option value="3">Devocución de marcancías sobre facturas o traslados previos</option>
+                       <option value="4">Sustitución de los FDI previos</option>
+                       <option value="5">Traslados de mercacías facturados previamente</option>
+                       <option value="6">Factura generada por los traslados previos</option>
+                       <option value="7">CFDI por aplicación de anticipo</option>
+                       <option value="8">Factura generada por pagos en parcialidades</option>
+                       <option value="9">Factura generada por pagos diferidos</option>
+                 </select>
+                </div>
+              </div>
+              
+              
+              
+              <div class="col-md-5">
+               <div class="form-group">
+                  <label for="CFDIRel">CFDI Relacionado:</label>
+                 <input class="form-control" name="CFDIRel" value="{{ $invoice['data']['rfc'] }}"/>
+                </div>
+              </div>
+             </div>
+             
+              
+             
+             
+             
+             
              <h4>Conceptos</h4>
              <hr/>
             <table class="table table-striped">
@@ -207,7 +264,9 @@
                   @endforeach
               </tbody>
           </table>           
-             <h4>Complementos</h4>
+           
+           <!-- 
+           <h4>Complementos</h4>
              <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
@@ -248,7 +307,19 @@
                  <input class="form-control" name="RFCPago" value="{{ $invoice['data']['rfc'] }}"/>
                 </div>
               </div>
-             </div>             
+             </div> 
+             -->
+             
+             
+             
+             
+       
+
+
+             
+             
+             
+             
              <h4>Impuestos</h4>
              <div class="row">              
               <div class="col-md-3">
