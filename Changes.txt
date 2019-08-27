@@ -154,3 +154,11 @@ INSERT INTO public.concepts_invoice(
             
             
             Agregar ultimos cambios 
+
+            
+            
+            
+            
+            
+            
+            alter table invoices_ext add uid character varying(15);
