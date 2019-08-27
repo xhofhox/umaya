@@ -25,7 +25,8 @@ class ConceptsInvoice extends Model
 		'aduana_state',  
 		'sku',  
 		'clave_sat',  
-		'cuenta_predial'
+		'cuenta_predial',
+		'valorunitario'
 	);
 
 	protected $appends = [

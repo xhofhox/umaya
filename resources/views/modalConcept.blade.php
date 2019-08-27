@@ -9,7 +9,8 @@
                 <h4 class="modal-title">Concepto</h4>
             </div>
             <div class="modal-body" style="height: 600px; overflow-y: auto; max-height: 650px;">
-                <input type="hidden" name="_token" value="{{csrf_token()}}">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+				<input type="" name="conceptId" value="{{ $concept['id'] }}">
                 <div class="row input-field col s12 m6">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -200,126 +201,9 @@
 			</div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary" >Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn-save-concept">Guardar</button>
             </div>
         </div>
     </div>
+  </form>
 </div>
-
-<script>
-  $(document).ready(function(){
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    var formId = '#form-modal-invoice';
-
-    //Ejecutar facturación
-    $(formId).on('submit', function(e){
-      e.preventDefault();
-      var formData = new FormData($(this)[0]);
-      $.ajax({
-          type: $(formId).attr('method'),
-          url: $(formId).attr('action'),
-          data: formData, 
-          contentType: false,
-          processData: false,
-          beforeSend: function () {},
-          success:  function (data) {
-            console.log(data);
-            var responseInvoice = JSON.parse(data);
-            if (!undefined)
-            {
-              if (responseInvoice.response === "warning")
-              {
-                swal({
-                  title: "¡Advertencia!",
-                  text: responseInvoice.message.message ,
-                  type: "warning",
-                  icon: "warning",
-                  timer: 10000,
-                  button: "OK",
-                });
-              }
-          
-              else if (responseInvoice.response === "error")
-              {
-              
-                swal({
-                  title: "¡Ocurrió un error!",
-                  text: responseInvoice.message.message ,
-                  type: "error",
-                  icon: "error",
-                  timer: 10000,
-                  button: "OK",
-                });
-              }
-
-              else
-              {
-                //Insertar datos factura
-                var idRegistro = location.href.split('/').pop();
-                
-                //codigo editado 
-                var data = new FormData();
-                data.append('id',idRegistro);
-                data.append('uuid',responseInvoice.UUID);
-                data.append('folio',responseInvoice.INV.Folio);
-                //aqui van los demas campos
-                
-                $.ajax({
-                    type: 'POST',
-                    url: 'http://localhost:8083/invoice/actualizarRegistroFactura',
-                    data: data, 
-                    contentType: false,
-                    processData: false,
-                    beforeSend: function () {},
-                    success:  function (response) {
-                      
-                      console.log(response);
-                    }
-                });      
-                // Fin inserción de datos
-                swal({
-                  title: "¡Éxito!",
-                  text: responseInvoice.message + ". Folio fiscal: " + responseInvoice.UUID,
-                  type: "success",
-                  icon: "success",
-                  timer: 10000,
-                  button: "OK",
-                });
-              }           
-            }
-            else{
-              swal({
-                title: "¡Ocurrió un error!",
-                text: "Disculpe, existió un problema. Favor de intentarlo más tarde.",
-                type: "error",
-                timer: 1000
-              });
-            }
-          }
-      });
-    });
-
-    //Modal de conceptos de la factura
-    $('#updateConcept').click(function() {
-      $.ajax({
-          url : 'http://localhost:8083/invoice/mostrarConcepto/1',
-          type : 'GET',
-          dataType : 'html',
-          success : function(respuesta) {
-            debugger
-              // $('#MyProducto').html(respuesta);
-              $('#updateConcept1').modal('show');
-          },
-          error : function(xhr, status) {
-              alert('Disculpe, existió un problema. Favor de intentarlo más tarde.');
-          },
-      });
-    });
-
-  });
-</script>
-

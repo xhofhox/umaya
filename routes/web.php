@@ -29,6 +29,7 @@ Route::get('invoice/createGlobal/{id}', 'InvoiceController@createGlobal');
 
 Route::post('storage/save', 'StorageController@save');
 Route::post('invoice/crearCFDI', 'InvoiceController@crearCFDI');
+Route::post('invoice/saveConcept', 'InvoiceController@saveConcept');
 Route::post('invoice/actualizarRegistroFactura', 'InvoiceController@actualizarRegistroFactura');
 Route::post('invoice/listarCFDI', 'InvoiceController@listarCFDI');
 

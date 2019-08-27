@@ -133,12 +133,15 @@ class InvoiceController extends Controller
     {
         //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
-        // dd($data);
+		$data->forma_pago_id = "0".(string)$data->forma_pago_id;
+        //dd($data);
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
 		//dd($concepts);
         $invoice = ['data' => $data, 'concepts' => $concepts];
-        return view('createInvoice', compact('invoice'));
-         
+
+		//dd($invoice);
+
+        return view('createInvoice', compact('invoice'));         
     }
 
         /**
@@ -152,8 +155,7 @@ class InvoiceController extends Controller
         $data = InvoiceExt::find($id);
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
         $invoice = ['data' => $data, 'concepts' => $concepts];
-        return view('editMassiveInvoice', compact('invoice'));
-         
+        return view('editMassiveInvoice', compact('invoice'));         
     }
 
         /**
@@ -167,8 +169,7 @@ class InvoiceController extends Controller
         $data = InvoiceExt::find($id);
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
         $invoice = ['data' => $data, 'concepts' => $concepts];
-        return view('createGlobalInvoice', compact('invoice'));
-         
+        return view('createGlobalInvoice', compact('invoice'));         
     }
 
     /**
@@ -251,14 +252,43 @@ class InvoiceController extends Controller
         //dd($response);
         
     }
+
+	public function saveConcept(Request $request)
+    {
+		//Obtener información del concepto
+		$concept = ConceptsInvoice::find($request->input('id'));
+		dd($request->input('id'));
+
+		$concept->descripcion = $request->input('descripcion');
+		$concept->cantidad = $request->input('cantidad');
+		$concept->unidad = $request->input('unidad');
+		$concept->precio_unitario = $request->input('precio_unitario');
+		$concept->subtotal = $request->input('subtotal');
+		$concept->clave_sat = $request->input('clave_sat');
+		$concept->sku = $request->input('NoIdentificacion');
+		
+		$concept->save();		
+
+		$response = array();
+        $response["message"] = 'La factura ya existe.';
+            
+        return response()->json(
+            collect([
+                'response' => 'warning',
+                'message' => $response,
+                    
+            ])->toJson()
+        ); 
+	}
     
     public function crearCFDI(Request $request)
     {
-        $id = $request -> input('id');
-        
+        $id = $request->input('id');
+
         //Verificar si la factura ya existe
         $invoice_ext = InvoiceExt::where('id', $id)->first();
-        dd($invoice_ext);
+        //dd($invoice_ext);
+
         if ($invoice_ext->status == 1)
         {
             $response = array();
@@ -335,8 +365,41 @@ class InvoiceController extends Controller
             $TipoFactor = $request->input('TipoFactor');
             $TasaOCuota = $request->input('TasaOCuota');
             $Importe = $request->input('Importe');
+
+			$Conceptos[] = array();
+
+			//Obtener los conceptos asociados a la factura
+			$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id);
+
+			
+			//$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id)->toArray();
+
+			//Recorrer los conceptos y agregar unicamente la información de utilidad
+			foreach($Concepts as $concept)
+			{
+				array_push(
+					$Conceptos,
+					array(
+						'ClaveProdServ' => $concept -> clave_sat,
+						'Cantidad' => $concept -> cantidad,
+						'ClaveUnidad' => $concept -> unidad,
+						'Unidad' => 'Unidad de servicio',
+						'ValorUnitario' => $concept -> precio_unitario,
+						'Descripcion' => $concept -> descripcion,
+						'Descuento' => $concept -> descuento,
+						'Impuestos' => [
+							'Traslados' => []
+						],
+					)
+				);
+			}
+
+			unset($Conceptos[0]);
+
+			//dd($Conceptos);
             
-            for ($x = 1; $x <= 1; $x++) {
+            /*for ($x = 1; $x <= 1; $x++) {
+				
                 $Conceptos[] = [
                     'ClaveProdServ' => $ClaveProdServ,
                     'Cantidad' => $Cantidad,
@@ -357,7 +420,7 @@ class InvoiceController extends Controller
                         ]
                     ],
                 ];
-            }
+            }*/
             
             $Receptor = $request->input('Receptor');
             $TipoDocumento = $request->input('TipoDocumento');
@@ -383,6 +446,8 @@ class InvoiceController extends Controller
                 "EnviarCorreo" => 'true',
                 "InvoiceComments" => "Prueba"
             ];
+
+			//dd($fields);
             
             $jsonfield = json_encode($fields);
             
