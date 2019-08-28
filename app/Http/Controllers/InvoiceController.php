@@ -452,8 +452,9 @@ class InvoiceController extends Controller
 					array(
 						'ClaveProdServ' => $concept -> clave_sat,
 						'Cantidad' => $concept -> cantidad,
-						'ClaveUnidad' => $concept -> unidad,
-						'Unidad' => 'Unidad de servicio',
+						'ClaveUnidad' => $concept -> claveunidad,
+						'Unidad' => $concept -> unidad,
+						//'Unidad' => 'Unidad de servicio',
 						'ValorUnitario' => $concept -> precio_unitario,
 						'Descripcion' => $concept -> descripcion,
 						'Descuento' => $concept -> descuento,

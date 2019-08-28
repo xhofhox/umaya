@@ -15,6 +15,7 @@ class ConceptsInvoice extends Model
 		'invoice_ext_id', 
 		'descripcion', 
 		'cantidad', 
+		'claveunidad',
 		'unidad',  
 		'precio_unitario',
 		'subtotal',  
@@ -26,7 +27,10 @@ class ConceptsInvoice extends Model
 		'sku',  
 		'clave_sat',  
 		'cuenta_predial',
-		'valorunitario'
+		'valorunitario',
+		'nombrealumno',
+		'curp',
+		'roev'
 	);
 
 	protected $appends = [

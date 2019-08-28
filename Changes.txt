@@ -162,3 +162,108 @@ INSERT INTO public.concepts_invoice(
             
             
             alter table invoices_ext add uid character varying(15);
+
+            
+            
+            
+            
+            
+            
+            
+        
+        
+        
+        
+        
+        
+        Tablas invoice_ext y concepts_invoice actualziadas
+        
+        
+        CREATE TABLE public.concepts_invoice2
+(
+  id integer NOT NULL ,
+  invoice_ext_id integer NOT NULL,
+  descripcion character varying,
+  cantidad integer,
+  claveunidad character varying,
+  unidad character varying,
+  precio_unitario double precision NOT NULL,
+  subtotal double precision,
+  traslado_id integer,
+  retencion_id integer,
+  locales_id integer,
+  descuento double precision,
+  aduana_state boolean,
+  sku character varying,
+  clave_sat integer,
+  cuenta_predial character varying,
+  nombre_alumno character varying(60),
+  curp character varying(60),
+  roev character varying(60),
+  CONSTRAINT concepts_invoice2_pkey PRIMARY KEY (id)
+)
+
+
+
+
+
+
+
+CREATE TABLE public.invoices_ext2
+(
+  id integer NOT NULL DEFAULT nextval('invoices_id_seq'::regclass),
+  uuid character varying(60),
+  folio character varying(15),
+  num_cert character varying(30),
+  tipo_comprobante character varying(3),
+  fecha_timbrado timestamp(0) without time zone,
+  condicion_pago character varying(60),
+  lugar_expedicion character varying(8),
+  regimen_fiscal character varying(3),
+  emisor_rfc character varying(15),
+  emisor_nombre character varying(200),
+  uso_cfdi character varying(5),
+  total_facturado double precision,
+  metodo_pago character varying(3),
+  forma_pago_id integer,
+  student_id integer,
+  created_at timestamp(0) without time zone,
+  updated_at timestamp(0) without time zone,
+  relateduuid character varying(60),
+  serie character varying(15),
+  razonsocial character varying(60),
+  rfc character varying(60),
+  calle character varying(60),
+  numero character varying(60),
+  interior character varying(60),
+  colonia character varying(60),
+  codigoposal character varying(60),
+  ciudad character varying(60),
+  delegacion character varying(60),
+  estado character varying(60),
+  numregidtrib character varying(60),
+  nombre character varying(60),
+  apellidos character varying(60),
+  email character varying(60),
+  telefono character varying(60),
+
+  
+  status smallint,
+  uid character varying(15),
+  CONSTRAINT invoices_ext2_pkey PRIMARY KEY (id),
+  CONSTRAINT invoices_forma_pago_id_foreign FOREIGN KEY (forma_pago_id)
+      REFERENCES public.sat_catalogs (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT invoices_student_id_foreign FOREIGN KEY (student_id)
+      REFERENCES public.students (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+
+
+
+            
+
+            
+            xd
+            
+            
