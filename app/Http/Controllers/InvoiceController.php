@@ -112,7 +112,8 @@ class InvoiceController extends Controller
 			header('Content-type: application/pdf');
 		}
 		else {
-			# code...
+			header('Content-type: text/xml');
+			header('Content-Disposition: attachment');
 		}
 
         return die ($response);

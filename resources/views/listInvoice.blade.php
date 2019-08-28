@@ -41,7 +41,7 @@
 										</button>
 									</td>
 									<td width="1%">
-										<button data-value="{{ $data['UID'] }}" title="Descargar XML" class="waves-effect waves-light btn-small light-blue darken-4" id="download-xml">
+										<button data-value="{{ $data['UID'] }}" title="Descargar XML" class="waves-effect waves-light btn-small light-blue darken-4 download-xml">
 											<i class="material-icons center">insert_drive_file</i>
 										</button>
 									</td>
@@ -73,15 +73,14 @@
 		//Ejecutar Datatable
 		custom.dataTable('#table-records');
 
-		//Impresión de factura en formato PDF
-		$("#table-records").on("click", ".download-pdf", function(){
-			console.log("generando...");
+		//Descargar factura
+		function downloadCFDI(format, item)
+		{
 			let pathname = window.location.pathname,
-				serverId = parseInt(pathname.split('/')[pathname.split('/').length - 1]),
-				item = $(this);
-			
+				serverId = parseInt(pathname.split('/')[pathname.split('/').length - 1]);
+			console.log(item.attr('data-value'));
 			$.ajax({
-				url: 'http://localhost:8083/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/pdf',
+				url: 'http://localhost:8083/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
 				method: 'GET',
 				xhrFields: {
 					responseType: 'blob'
@@ -92,7 +91,64 @@
 						url = window.URL.createObjectURL(response);
 
 					a.href = url;
-					a.download = folio + '.pdf';
+					a.download = folio + '.' + format;
+					document.body.append(a);
+					a.click();
+					a.remove();
+					window.URL.revokeObjectURL(url);
+				},
+				error: function (jqXHR, textStatus, errorThrown) { }
+			});
+		};
+
+		//Impresión de factura en formato PDF
+		$("#table-records").on("click", ".download-pdf", function(){
+			let pathname = window.location.pathname,
+				serverId = parseInt(pathname.split('/')[pathname.split('/').length - 1]),
+				item = $(this),
+				format = 'pdf';
+
+			$.ajax({
+				url: 'http://localhost:8083/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
+				method: 'GET',
+				xhrFields: {
+					responseType: 'blob'
+				},
+				success: function (response) {
+					let a = document.createElement('a'),
+						folio = item.parent().parent().find('td#folio').text(),
+						url = window.URL.createObjectURL(response);
+
+					a.href = url;
+					a.download = folio + '.' + format;
+					document.body.append(a);
+					a.click();
+					a.remove();
+					window.URL.revokeObjectURL(url);
+				},
+				error: function (jqXHR, textStatus, errorThrown) { }
+			});
+		});
+
+		//Impresión de factura en formato XML
+		$("#table-records").on("click", ".download-xml", function(){
+			let pathname = window.location.pathname,
+				serverId = parseInt(pathname.split('/')[pathname.split('/').length - 1]),
+				item = $(this),
+				format = 'xml';
+
+			$.ajax({
+				url: 'http://localhost:8083/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
+				method: 'GET',
+				dataType: 'xml',
+				success: function (response) {
+					debugger
+					let a = document.createElement('a'),
+						folio = item.parent().parent().find('td#folio').text(),
+						url = window.URL.createObjectURL(response);
+
+					a.href = url;
+					a.download = folio + '.' + format;
 					document.body.append(a);
 					a.click();
 					a.remove();
