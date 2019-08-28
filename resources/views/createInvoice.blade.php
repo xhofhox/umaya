@@ -293,6 +293,8 @@
                 data.append('id',idRegistro);
                 data.append('uuid',responseInvoice.UUID);
                 data.append('folio',responseInvoice.INV.Folio);
+                data.append('fechatimbrado',responseInvoice.SAT.FechaTimbrado);
+                data.append('nocertificadosat',responseInvoice.SAT.NoCertificadoSAT);
                 //aqui van los demas campos
                 
                 $.ajax({

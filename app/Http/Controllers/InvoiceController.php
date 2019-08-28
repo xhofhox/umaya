@@ -557,6 +557,8 @@ class InvoiceController extends Controller
             $invoice_ext->update(['status' => 1]);
            $invoice_ext->update(['uuid' => $request->input('uuid')]);
             $invoice_ext->update(['folio' => $request->input('folio')]);
+              $invoice_ext->update(['fecha_timbrado' => $request->input('fechatimbrado')]);
+            $invoice_ext->update(['num_cert' => $request->input('nocertificadosat')]);
 
         }          
     }
