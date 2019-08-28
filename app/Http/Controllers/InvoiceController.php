@@ -18,35 +18,106 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class InvoiceController extends Controller
 {
+	//Inicializar variables API
+	private $Host;
+	private $Endpoint;
+	private $apiKey;
+	private $secretKey;
+
+	public function __construct()
+    {
+		//sandbox
+        $this->Host = 'http://devfactura.in';
+		$this->apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
+		$this->secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
+    }
+
+	public function returnValueAPI($server_api)
+    {
+		//Verificar Servidor para obtener los datos de conexión
+        switch ($server_api) {
+            case "1": 
+				//sandbox
+                $this->Host = 'http://devfactura.in';
+				$this->apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
+				$this->secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
+                break;
+            case "2": 
+				//producción
+                $this->Host = 'https://factura.com';
+                $this->apiKey = 'JDJ5JDEwJEtHL0c0RVNSUUVLS09uWDRublg3c3VncURHQklZZEVMRmJuWWFTTHpUakdVVFM0UHdJQUZp';
+                $this->secretKey = 'JDJ5JDEwJEpvRDJKbHplNXJwZzh0SWVGWlRoUy50YlpRRWs5cEI2dC4uU0pMck1Ic3hXdU1Tb0p4UC5l';
+                break;
+        }
+    }
+
     /**
-     * Display a listing of the resource.
-     *
+     * Mostrar la lista de facturas generadas
+	 * @param int $server_api
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($server_api)
     {
-        $urlListCFDI = 'http://devfactura.in/api/v3/cfdi33/list';
-        $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
-        $secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
+        $this->returnValueAPI($server_api);
+		$this->Endpoint = '/api/v3/cfdi33/list';
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $urlListCFDI);
+        curl_setopt($ch, CURLOPT_URL, $this->Host.$this->Endpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json",
             "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-            "F-Api-Key: ".$apiKey,
-            "F-Secret-Key: " .$secretKey
+            "F-Api-Key: ".$this->apiKey,
+            "F-Secret-Key: ".$this->secretKey
         ));
         
         $response = curl_exec($ch);
+		//dd(json_decode($response, true));
         curl_close($ch);
 
         return view('listInvoice')->with('list', json_decode($response, true));
-        // return \View::make('listInvoice');
+    }
+
+	/**
+     * Descargar fatura en formato PDF/XML
+	 * @param int $server_api
+	 * @param string $cfdi_uid
+	 * @param string $format
+     * @return response
+     */
+	public function downloadCFDI($server_api, $cfdi_uid, $format)
+    {
+		$this->returnValueAPI($server_api);
+		$this->Endpoint = '/api/v3/cfdi33/'.$cfdi_uid.'/'.$format;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->Host.$this->Endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        "Content-Type: application/json",
+            "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+            "F-Api-Key: ".$this->apiKey,
+            "F-Secret-Key: ".$this->secretKey
+        ));
+
+        $response = curl_exec($ch);
+
+		if ($format == "pdf")
+		{
+			header('Content-type: application/pdf');
+		}
+		else {
+			# code...
+		}
+
+        return die ($response);
+
+        curl_close($ch);
     }
 
     
@@ -83,12 +154,12 @@ class InvoiceController extends Controller
         $urlListCFDI;
         $apiKey;
         $secretKey;
-        $Servidor = $request->input('Servidor');
+        $server_api = $request->input('Servidor');
         //$list = array();
         //$listCFDIs = array();
         
         //Verificar Servidor para obtener los datos de conexión
-        switch ($Servidor) {
+        switch ($server_api) {
             case "1": //sandbox
                 $urlListCFDI = 'http://devfactura.in/api/v3/cfdi33/list';
                 $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
@@ -287,7 +358,6 @@ class InvoiceController extends Controller
 
         //Verificar si la factura ya existe
         $invoice_ext = InvoiceExt::where('id', $id)->first();
-        //dd($invoice_ext);
 
         if ($invoice_ext->status == 1)
         {
@@ -310,10 +380,10 @@ class InvoiceController extends Controller
             $secretKey;
             $UrlConsultaCliente;
             $UrlCrearCliente;
-            $Servidor = $request->input('Servidor');
+            $server_api = $request->input('Servidor');
             
             //Verificar Servidor para obtener los datos de conexión
-            switch ($Servidor) {
+            switch ($server_api) {
                 case "1": //sandbox
                     $urlFactura = 'http://devfactura.in/api/v3/cfdi33/create';
                     $UrlConsultaCliente = 'http://devfactura.in/api/v1/clients/';
@@ -497,11 +567,11 @@ class InvoiceController extends Controller
     //     $urlDownloadCFDI;
     //     $apiKey;
     //     $secretKey;
-    //     $Servidor = $request->input('servidor');
+    //     $server_api = $request->input('servidor');
     //     $cfdi_uid = $request->input('cfdi_uid');
         
     //     //Verificar Servidor para obtener los datos de conexión
-    //     switch ($Servidor) {
+    //     switch ($server_api) {
     //         case "1": //sandbox
     //             $urlDownloadCFDI = 'http://devfactura.in/api/v3/cfdi33/'.$cfdi_uid.'/pdf';
     //             $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
@@ -534,6 +604,7 @@ class InvoiceController extends Controller
     //     curl_close($ch);
     // }
 
+	/*
     public function descargarPDF($cfdi_uid)
     {
         $ch = curl_init();
@@ -555,7 +626,7 @@ class InvoiceController extends Controller
         return response()->download($response);
         curl_close($ch);
         
-    }
+    }*/
 
     public function descargarPDFx($cfdi_uid)
     {
@@ -587,11 +658,11 @@ class InvoiceController extends Controller
         $urlDownloadCFDI;
         $apiKey;
         $secretKey;
-        $Servidor = $request->input('servidor');
+        $server_api = $request->input('servidor');
         $cfdi_uid = $request->input('cfdi_uid');
         
         //Verificar Servidor para obtener los datos de conexión
-        switch ($Servidor) {
+        switch ($server_api) {
             case "1": //sandbox
                 $urlDownloadCFDI = 'http://devfactura.in/api/v3/cfdi33/'.$cfdi_uid.'/xml';
                 $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';

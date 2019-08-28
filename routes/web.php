@@ -15,10 +15,35 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('students', 'StudentController');
+//Route::resource('students', 'StudentController');
 
+//Almacenamiento de archivos
+Route::get('storage/{archivo}', function ($archivo) {
+     $public_path = public_path();
+     $url = $public_path.'/storage/'.$archivo;
+     //verificamos si el archivo existe y lo retornamos
+     if (Storage::exists($archivo))
+     {
+       return response()->download($url);
+     }
+     //si no se encuentra lanzamos un error 404.
+     abort(404);
+ 
+});
+
+//Formulario pago por depósito
 Route::get('formulario', 'StorageController@index');
-Route::get('invoice/index', 'InvoiceController@index');
+
+//Mostrar alertas
+Route::get('alert/{AlertType}','sweetalertController@alert')->name('alert');
+
+//Mostrar listado de CFDI´s
+Route::get('invoice/index/{server_api}', 'InvoiceController@index');
+
+//Descargar factura
+Route::get('invoice/downloadCFDI/{server_api}/{cfdi_uid}/{format}', 'InvoiceController@downloadCFDI');
+
+
 Route::get('invoice/massive', 'InvoiceController@massive');
 Route::get('invoice/conexion', 'InvoiceController@conexion');
 Route::get('invoice/create/{id}', 'InvoiceController@create');
@@ -36,23 +61,10 @@ Route::post('invoice/listarCFDI', 'InvoiceController@listarCFDI');
 Route::get('invoice/creditNote/{id}', 'InvoiceController@creditNote');
 
 Route::get('invoice/descargarPDFx/{cfdi_uid}', 'InvoiceController@descargarPDFx');
-Route::get('invoice/descargarPDF/{cfdi_uid}', 'InvoiceController@descargarPDF');
+//Route::get('invoice/descargarPDF/{cfdi_uid}', 'InvoiceController@descargarPDF');
 Route::post('invoice/descargarXML', 'InvoiceController@descargarXML');
 
-Route::get('storage/{archivo}', function ($archivo) {
-     $public_path = public_path();
-     $url = $public_path.'/storage/'.$archivo;
-     //verificamos si el archivo existe y lo retornamos
-     if (Storage::exists($archivo))
-     {
-       return response()->download($url);
-     }
-     //si no se encuentra lanzamos un error 404.
-     abort(404);
- 
-});
 
-Route::get('alert/{AlertType}','sweetalertController@alert')->name('alert');
 
 Route::get('pdf/{archivo}', function($archivo){
   Fpdf::AddPage();
