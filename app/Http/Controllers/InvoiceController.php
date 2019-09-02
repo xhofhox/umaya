@@ -202,10 +202,10 @@ class InvoiceController extends Controller
         //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
 		
-		if($data != null)
+		/*if($data != null)
 		{
 			$data->forma_pago_id = "0".(string)$data->forma_pago_id;
-		}
+		}*/
 
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
 

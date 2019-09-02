@@ -68,7 +68,8 @@ class InvoiceExt extends Model
 		'roev',
 		'status',
 		'uid',
-		'id_massive_invoice'
+		'id_massive_invoice',
+		'forma_pago'
 	);
 
 	protected $appends = [
@@ -122,7 +123,7 @@ class InvoiceExt extends Model
 	function getValFormaPagoAttribute()
     {
         $name;
-        switch($this->forma_pago_id)
+        switch($this->forma_pago)
         {
           
             case "01": $name = "01 Efectivo"; break;

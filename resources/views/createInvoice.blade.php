@@ -100,7 +100,7 @@
 									<label for="FormaPago">Forma de pago: </label>
 									<select class="form-control col-md-8 selection-list" name="FormaPago">
 										<option value="selecciona">Selecciona</option>
-										<option value="{{ $invoice['data']['forma_pago_id'] }}" selected="true">{{ $invoice['data']['val_forma_pago'] }}</option>
+										<option value="{{ $invoice['data']['forma_pago'] }}" selected="true">{{ $invoice['data']['val_forma_pago'] }}</option>
 										<option value="01"> 01 Efectivo </option>
 										<option value="02">02 Cheque nominativo</option>
 										<option value="03">03 Transferencia electrónica de fondos</option>

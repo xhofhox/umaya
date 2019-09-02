@@ -122,7 +122,7 @@
 							{
 								swal({
 									title: "¡Advertencia!",
-									text: result.message ,
+									text: result.message.message,
 									type: "warning",
 									icon: "warning",
 									timer: 10000,
@@ -130,10 +130,10 @@
 								});
 							}
 							else
-							{
+							{ 
 								swal({
 									title: "¡Error!",
-									text: result.message ,
+									text: result.message.message,
 									type: "error",
 									icon: "error",
 									timer: 10000,
