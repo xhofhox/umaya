@@ -261,9 +261,12 @@ CREATE TABLE public.invoices_ext2
 
 
 
-            
+
+
+Alter table invoice_ext add column id_massive_invoice int default null
 
             
-            xd
+
+            actualizar uso clave de producto en tabla concepts_invoice
             
             
