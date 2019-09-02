@@ -21,6 +21,7 @@
 								<th>Uso CFDI</th>
 								<th>ClaveProdServ</th>
 								<th>Importe</th>
+								<th>Estado</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -35,7 +36,8 @@
 									<td>{{ $data['claveprodserv'] }}</td>
 									<!-- <td>{{ $data['val_producto_servicio'] }}</td> -->
 									<td>{{ $data['total_facturado'] }}</td>
-										<td width="1%">
+									<td>{{ $data['val_status'] }}</td>
+									<td width="1%">
 										<button data-value="{{ $data['id'] }}" 
 											title="Editar factura" 
 											class="edit waves-effect waves-light btn-small" >
@@ -76,11 +78,11 @@
 		});
 
 
-		 /*$.ajaxSetup({
+		 $.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
-		});*/
+		});
 
 		//Envío de las facturas
 		$(document).on("click", "#sendAll", function(){
@@ -97,20 +99,32 @@
 			.then((willSend) => {
 				if (willSend) {
 					$.ajax({
-						url: 'http://localhost:8083/invoice/sendCFDI/' + serverId + '/' + item.attr('data-value'),
+						url: 'http://localhost:8083/invoice/createCFDIMassive/' + serverId + '/' + key,
 						method: 'POST',
 						contentType: false,
 						processData: false,
 						success: function (data) {
-							console.log(result);
+							console.log(data);
 							var result = JSON.parse(data);
 							if(result.response === "success")
 							{
+								console.log(result.UUID);
 								swal({
 									title: "¡Éxito!",
-									text: result.message ,
+									text: result.message + ". Folio fiscal: ",
 									type: "success",
 									icon: "success",
+									timer: 10000,
+									button: "OK",
+								});
+							}
+							else if(result.response === "warning")
+							{
+								swal({
+									title: "¡Advertencia!",
+									text: result.message ,
+									type: "warning",
+									icon: "warning",
 									timer: 10000,
 									button: "OK",
 								});

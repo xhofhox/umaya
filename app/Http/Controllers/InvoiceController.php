@@ -396,6 +396,106 @@ class InvoiceController extends Controller
         return \View::make('MassiveInvoice')->with('Invoices', $Invoices);
     }
 
+	/**
+     * Generar CFDI Masivo
+	 * @param int $server_api
+	 * @param string $id_massive_invoice
+     * @return response
+     */
+    public function createCFDIMassive($server_api, $id_massive_invoice)
+    {
+		//Obtener facturas
+        $Invoices = InvoiceExt::all()
+			->where('id_massive_invoice', '=', $id_massive_invoice)
+			->where('status', '=', 0);
+        
+		//Recorrer las facturas para generarlas
+		foreach($Invoices as $invoice_ext)
+		{
+			//dd($invoice);
+			//Verificar si la factura ya existe
+			//$invoice_ext = InvoiceExt::where('id', $invoice->id)->first();
+
+			if ($invoice_ext->status == 1)
+			{
+				$response = array();
+				$response["message"] = 'La factura '.$invoice_ext->folio.' ya existe.';
+			} 
+			else {
+
+				$Conceptos[] = array();
+
+				//Obtener los conceptos asociados a la factura
+				$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $invoice_ext->id);
+			
+				//$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id)->toArray();
+
+				//Recorrer los conceptos y agregar unicamente la información de utilidad
+				foreach($Concepts as $concept)
+				{
+					array_push(
+						$Conceptos,
+						array(
+							'ClaveProdServ' => $concept -> clave_sat,
+							'Cantidad' => $concept -> cantidad,
+							'ClaveUnidad' => $concept -> claveunidad,
+							'Unidad' => $concept -> unidad,
+							//'Unidad' => 'Unidad de servicio',
+							'ValorUnitario' => $concept -> precio_unitario,
+							'Descripcion' => $concept -> descripcion,
+							'Descuento' => $concept -> descuento,
+							'Impuestos' => [
+								'Traslados' => []
+							],
+						)
+					);
+				}
+				unset($Conceptos[0]);
+				
+				$ch = curl_init();
+				$fields = [
+					"Receptor" => ["UID" => $invoice_ext->uid],
+					"TipoDocumento" => "factura", //modificar
+					"UsoCFDI" => $invoice_ext->uso_cfdi,
+					"Redondeo" => 2,
+					"Conceptos" => $Conceptos,
+					"FormaPago" => $invoice_ext->forma_pago_id,
+					"MetodoPago" => $invoice_ext->metodo_pago,
+					"Moneda" => "MXN",
+					"CondicionesDePago" => $invoice_ext->condicion_pago,
+					"Serie" => $invoice_ext->serie,
+					"EnviarCorreo" => 'true',
+					"InvoiceComments" => "Facturación masiva"
+				];
+
+				$this->returnValueAPI($server_api);
+				$this->Endpoint = '/api/v3/cfdi33/create';
+
+				$jsonfield = json_encode($fields);
+
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $this->Host.$this->Endpoint);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				curl_setopt($ch, CURLOPT_HEADER, FALSE);
+				curl_setopt($ch, CURLOPT_POST, TRUE);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
+
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				"Content-Type: application/json",
+					"F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+					"F-Api-Key: ".$this->apiKey,
+					"F-Secret-Key: ".$this->secretKey
+				));
+
+				$response = curl_exec($ch);
+
+				return die($response);
+
+				curl_close($ch);
+			}//Fin else
+		}
+    }
+
 	/* -------------------------------- Falta depurar ---------------------------------------- */
     public function conexion()
     {

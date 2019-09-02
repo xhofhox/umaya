@@ -75,7 +75,8 @@ class InvoiceExt extends Model
 		'val_uso_cfdi',
 		'val_forma_pago',
 		'val_metodo_pago',
-		'val_producto_servicio'
+		'val_producto_servicio',
+		'val_status'
 	];
     
     function getValUsoCfdiAttribute()
@@ -187,6 +188,26 @@ class InvoiceExt extends Model
 
             default:
                 $name = "Programas de posgrado";
+                break;
+        }
+        return $name;
+    }
+
+	function getValStatusAttribute()
+    {
+        $name;
+        switch($this->status)
+        {
+            case 0:
+                $name = "Pendiente";
+                break;
+            case 1:
+                $name = "Facturado";
+                break;
+				//	...
+
+            default:
+                $name = "Pendiente";
                 break;
         }
         return $name;

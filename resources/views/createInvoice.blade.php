@@ -49,7 +49,7 @@
 									<label for="UsoCFDI">Uso de CFDI:</label>
 									<select class="form-control col-md-8 selection-list" name="UsoCFDI">
 										<option value="selecciona">Selecciona</option>
-										<!-- <option value="{{ $invoice['data']['uso_cfdi'] }}">{{ $invoice['data']['val_uso_cfdi'] }}</option> -->
+										<option value="{{ $invoice['data']['uso_cfdi'] }}">{{ $invoice['data']['val_uso_cfdi'] }}</option>
 										<option value="G01">G01 Adquisición de mercancias</option>
 										<option value="G02">G02 Devoluciones, descuentos o bonificaciones</option>
 										<option value="G03">G03 Gastos en general</option>
@@ -70,7 +70,7 @@
 										<option value="D07">D07 Primas por seguros de gastos médicos.</option>
 										<option value="D08">D08 Gastos de transportación escolar obligatoria.</option>
 										<option value="D09">D09 Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones.</option>
-										<option value="D10" selected="true">D10 Pagos por servicios educativos (colegiaturas)</option>
+										<option value="D10" selected="false">D10 Pagos por servicios educativos (colegiaturas)</option>
 										<option value="P01">P01 Por definir</option>
 									</select>
 								</div>

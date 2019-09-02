@@ -52,6 +52,9 @@ Route::post('invoice/sendCFDI/{server_api}/{cfdi_uid}', 'InvoiceController@sendC
 //Listado de facturas masivas
 Route::get('invoice/massive/{server_api}/{id_massive_invoice}', 'InvoiceController@massive');
 
+//Generar facturacion masiva
+Route::post('invoice/createCFDIMassive/{server_api}/{id_massive_invoice}', 'InvoiceController@createCFDIMassive');
+
 Route::get('invoice/conexion', 'InvoiceController@conexion');
 Route::get('invoice/create/{id}', 'InvoiceController@create');
 Route::get('invoice/mostrarConcepto/{id}', 'InvoiceController@mostrarConcepto');
