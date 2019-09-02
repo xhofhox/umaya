@@ -179,7 +179,7 @@ INSERT INTO public.concepts_invoice(
         Tablas invoice_ext y concepts_invoice actualziadas
         
         
-        CREATE TABLE public.concepts_invoice2
+        CREATE TABLE public.concepts_invoice
 (
   id integer NOT NULL ,
   invoice_ext_id integer NOT NULL,
@@ -200,7 +200,7 @@ INSERT INTO public.concepts_invoice(
   nombre_alumno character varying(60),
   curp character varying(60),
   roev character varying(60),
-  CONSTRAINT concepts_invoice2_pkey PRIMARY KEY (id)
+  CONSTRAINT concepts_invoice_pkey PRIMARY KEY (id)
 )
 
 
@@ -265,6 +265,7 @@ CREATE TABLE public.invoices_ext2
 
 Alter table invoice_ext add column id_massive_invoice int default null
 
+Alter table invoice_ext add column forma_pago varchar
             
 
             actualizar uso clave de producto en tabla concepts_invoice

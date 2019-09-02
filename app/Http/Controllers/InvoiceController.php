@@ -459,7 +459,7 @@ class InvoiceController extends Controller
 					"UsoCFDI" => $invoice_ext->uso_cfdi,
 					"Redondeo" => 2,
 					"Conceptos" => $Conceptos,
-					"FormaPago" => $invoice_ext->forma_pago_id,
+					"FormaPago" => $invoice_ext->forma_pago,
 					"MetodoPago" => $invoice_ext->metodo_pago,
 					"Moneda" => "MXN",
 					"CondicionesDePago" => $invoice_ext->condicion_pago,
