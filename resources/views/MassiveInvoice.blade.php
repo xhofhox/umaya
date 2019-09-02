@@ -83,7 +83,7 @@
 		});*/
 
 		//Envío de las facturas
-		$("#sendAll").on("click", ".send", function(){
+		$(document).on("click", "#sendAll", function(){
 			let item = $(this);
 			
 			//Confirmación de envío

@@ -253,8 +253,6 @@
           contentType: false,
           processData: false,
           beforeSend: function () {
-			 // Show full page Loading Overlay
-             $.LoadingOverlay("show");
 		  },
           success:  function (data) {
             console.log(data);
@@ -333,8 +331,6 @@
             }
           },
 		  complete: function () {
-			// Hide full page Loading Overlay
-			$.LoadingOverlay("hide");
 		  }
       });
     });
