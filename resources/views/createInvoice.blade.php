@@ -252,7 +252,10 @@
           data: formData, 
           contentType: false,
           processData: false,
-          beforeSend: function () {},
+          beforeSend: function () {
+			 // Show full page Loading Overlay
+             $.LoadingOverlay("show");
+		  },
           success:  function (data) {
             console.log(data);
             var responseInvoice = JSON.parse(data);
@@ -328,7 +331,11 @@
                 timer: 1000
               });
             }
-          }
+          },
+		  complete: function () {
+			// Hide full page Loading Overlay
+			$.LoadingOverlay("hide");
+		  }
       });
     });
 

@@ -12,6 +12,8 @@
 		<!-- Scripts -->
 		<script src="{{ asset('js/app.js') }}" defer></script>
 		<script src="{{ asset('js/materialize.js') }}" defer></script>
+		<script src="{{ asset('js/loadingoverlay.js') }}" defer></script>
+		<script src="{{ asset('js/loadingoverlay.min.js') }}" defer></script>
     
 		<script src="{{ asset('js/jquery-3.3.1.js') }}" defer></script>
 		<script src="{{ asset('js/jquery.dataTables.min.js') }}" defer></script>

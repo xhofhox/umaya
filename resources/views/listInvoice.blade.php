@@ -228,40 +228,52 @@
 		//Envío de la factura
 		$("#table-records").on("click", ".send", function(){
 			let item = $(this);
-
-			$.ajax({
-				url: 'http://localhost:8083/invoice/sendCFDI/' + serverId + '/' + item.attr('data-value'),
-				method: 'POST',
-				contentType: false,
-				processData: false,
-				success: function (data) {
-					console.log(result);
-					var result = JSON.parse(data);
-					if(result.response === "success")
-					{
-						swal({
-							title: "¡Éxito!",
-							text: result.message ,
-							type: "success",
-							icon: "success",
-							timer: 10000,
-							button: "OK",
-						});
-					}
-					else
-					{
-						swal({
-							title: "¡Error!",
-							text: result.message ,
-							type: "error",
-							icon: "error",
-							timer: 10000,
-							button: "OK",
-						});
-					}
+			
+			//Confirmación de envío
+			swal({
+				title: "¿Estás seguro de enviar la factura?",
+				text: "Esta acción no se puede deshacer",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true,
+			})
+			.then((willSend) => {
+				if (willSend) {
+					$.ajax({
+						url: 'http://localhost:8083/invoice/sendCFDI/' + serverId + '/' + item.attr('data-value'),
+						method: 'POST',
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							console.log(result);
+							var result = JSON.parse(data);
+							if(result.response === "success")
+							{
+								swal({
+									title: "¡Éxito!",
+									text: result.message ,
+									type: "success",
+									icon: "success",
+									timer: 10000,
+									button: "OK",
+								});
+							}
+							else
+							{
+								swal({
+									title: "¡Error!",
+									text: result.message ,
+									type: "error",
+									icon: "error",
+									timer: 10000,
+									button: "OK",
+								});
+							}
 					
-				},
-				error: function (jqXHR, textStatus, errorThrown) { }
+						},
+						error: function (jqXHR, textStatus, errorThrown) { }
+					});
+				}
 			});
 		});
 
