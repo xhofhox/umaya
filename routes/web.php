@@ -43,8 +43,15 @@ Route::get('invoice/index/{server_api}', 'InvoiceController@index');
 //Descargar factura
 Route::get('invoice/downloadCFDI/{server_api}/{cfdi_uid}/{format}', 'InvoiceController@downloadCFDI');
 
+//Cancelar factura
+Route::post('invoice/cancelCFDI/{server_api}/{cfdi_uid}', 'InvoiceController@cancelCFDI');
 
-Route::get('invoice/massive', 'InvoiceController@massive');
+//Enviar factura
+Route::post('invoice/sendCFDI/{server_api}/{cfdi_uid}', 'InvoiceController@sendCFDI');
+
+//Listado de facturas masivas
+Route::get('invoice/massive/{server_api}/{id_massive_invoice}', 'InvoiceController@massive');
+
 Route::get('invoice/conexion', 'InvoiceController@conexion');
 Route::get('invoice/create/{id}', 'InvoiceController@create');
 Route::get('invoice/mostrarConcepto/{id}', 'InvoiceController@mostrarConcepto');

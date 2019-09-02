@@ -110,26 +110,97 @@ class InvoiceController extends Controller
 		if ($format == "pdf")
 		{
 			header('Content-type: application/pdf');
+			return die ($response);
 		}
 		else {
-			header('Content-type: text/xml');
-			header('Content-Disposition: attachment');
-		}
+			//header('Content-type: application/xml');
+			//header('Content-Disposition: attachment');
+			
+			/*header('Cache-Control', 'public');
+			header('Content-Description', 'File Transfer');
+			header('Content-Disposition', 'attachment; filename=test.xml');
+			header('Content-Transfer-Encoding', 'binary');
+			header('Content-Type', 'text/xml');
+			return die ($response);*/
+			File::put(storage_path().'/file.xml', $response);
 
-        return die ($response);
+			//return Response::make($response, 200)->header('Content-Type', 'application/xml');
+			$headers = array(
+              'Content-Type: application/xml',
+            );
+			return response()->download(storage_path(), 'file.xml', $headers);
+		}
 
         curl_close($ch);
     }
 
-    
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+	/**
+     * Cancelación de CFDI
+	 * @param int $server_api
+	 * @param string $cfdi_uid
+     * @return response
      */
-    public function massive()
+	public function cancelCFDI($server_api, $cfdi_uid)
     {
-        $Invoices = InvoiceExt::all();
+		$this->returnValueAPI($server_api);
+		$this->Endpoint = '/api/v3/cfdi33/'.$cfdi_uid.'/cancel';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->Host.$this->Endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        "Content-Type: application/json",
+            "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+            "F-Api-Key: ".$this->apiKey,
+            "F-Secret-Key: ".$this->secretKey
+        ));
+
+        $response = curl_exec($ch);
+		curl_close($ch);
+
+		return die ($response);
+    }
+
+	/**
+     * Envío de CFDI
+	 * @param int $server_api
+	 * @param string $cfdi_uid
+     * @return response
+     */
+	public function sendCFDI($server_api, $cfdi_uid)
+    {
+		$this->returnValueAPI($server_api);
+		$this->Endpoint = '/api/v3/cfdi33/'.$cfdi_uid.'/email';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->Host.$this->Endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        "Content-Type: application/json",
+            "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+            "F-Api-Key: ".$this->apiKey,
+            "F-Secret-Key: ".$this->secretKey
+        ));
+
+        $response = curl_exec($ch);
+		curl_close($ch);
+
+		return die ($response);
+    }
+
+    /**
+     * Listar CFDI Masivo
+	 * @param int $server_api
+	 * @param string $id_massive_invoice
+     * @return response
+     */
+    public function massive($server_api, $id_massive_invoice)
+    {
+        $Invoices = InvoiceExt::all()->where('id_massive_invoice', '=', $id_massive_invoice);
         return \View::make('MassiveInvoice')->with('Invoices', $Invoices);
     }
     
@@ -205,7 +276,12 @@ class InvoiceController extends Controller
     {
         //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
-		$data->forma_pago_id = "0".(string)$data->forma_pago_id;
+		
+		if($data != null)
+		{
+			$data->forma_pago_id = "0".(string)$data->forma_pago_id;
+		}
+		
         //dd($data);
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
 		//dd($concepts);

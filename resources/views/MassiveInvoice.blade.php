@@ -28,9 +28,10 @@
                      <td>{{ $data['razonsocial'] }}</td>
                      <td>{{ $data['rfc'] }}</td>
                      <td>{{ $data['nombre_alumno'] }}</td>
-                     <td>{{ $data['forma_pago_id'] }}</td>
-                     <td>{{ $data['uso_cfdi'] }}</td>
-                     <td>{{ $data['claveprodserv'] }}</td><!--falta saber de donde obtenemos este dato o a que se refiere-->
+                     <td>{{ $data['val_forma_pago'] }}</td>
+                     <td>{{ $data['val_uso_cfdi'] }}</td>
+                     <td>{{ $data['claveprodserv'] }}</td>
+					 <!-- <td>{{ $data['val_producto_servicio'] }}</td> -->
                      <td>{{ $data['total_facturado'] }}</td>
                      <td width="1%">
                         <button data-value="{{ $data['id'] }}" 

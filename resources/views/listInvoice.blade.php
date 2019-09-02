@@ -46,12 +46,12 @@
 										</button>
 									</td>
 									<td width="1%">
-										<button data-value="{{ $data['UID'] }}" title="Cancelar Factura" class="waves-effect waves-light btn-small red" id="cancel">
+										<button data-value="{{ $data['UID'] }}" title="Cancelar Factura" class="waves-effect waves-light btn-small red cancel" id="cancel">
 											<i class="material-icons center">close</i>
 										</button>
 									</td>
 									<td width="1%">
-										<button data-value="{{ $data['UID'] }}" title="Enviar Factura" class="waves-effect waves-light btn-small amber" id="send_email">
+										<button data-value="{{ $data['UID'] }}" title="Enviar Factura" class="waves-effect waves-light btn-small amber send" id="send_email">
 											<i class="material-icons center">email</i>
 										</button>
 									</td>
@@ -69,6 +69,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
+
+		let pathname = window.location.pathname,
+			serverId = parseInt(pathname.split('/')[pathname.split('/').length - 1]);
 		
 		//Ejecutar Datatable
 		custom.dataTable('#table-records');
@@ -76,8 +79,6 @@
 		//Descargar factura
 		function downloadCFDI(format, item)
 		{
-			let pathname = window.location.pathname,
-				serverId = parseInt(pathname.split('/')[pathname.split('/').length - 1]);
 			console.log(item.attr('data-value'));
 			$.ajax({
 				url: 'http://localhost:8083/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
@@ -103,9 +104,7 @@
 
 		//Impresión de factura en formato PDF
 		$("#table-records").on("click", ".download-pdf", function(){
-			let pathname = window.location.pathname,
-				serverId = parseInt(pathname.split('/')[pathname.split('/').length - 1]),
-				item = $(this),
+			let item = $(this),
 				format = 'pdf';
 
 			$.ajax({
@@ -132,20 +131,31 @@
 
 		//Impresión de factura en formato XML
 		$("#table-records").on("click", ".download-xml", function(){
-			let pathname = window.location.pathname,
-				serverId = parseInt(pathname.split('/')[pathname.split('/').length - 1]),
-				item = $(this),
+			let item = $(this),
 				format = 'xml';
 
 			$.ajax({
 				url: 'http://localhost:8083/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
 				method: 'GET',
-				dataType: 'xml',
+				//dataType: 'xml',
+				contentType: false,
+				processData: false,
+				xhrFields: {
+					responseType: 'blob'
+				},
 				success: function (response) {
-					debugger
+					
+					console.log(response);
+
 					let a = document.createElement('a'),
 						folio = item.parent().parent().find('td#folio').text(),
 						url = window.URL.createObjectURL(response);
+						//url = window.URL.createObjectURL(new blob(response, {type: "text/xml"}));
+						
+					
+					//var foo = xmlDocument.createElement('foo');
+					//foo.appendChild(document.createTextNode('bar'));
+					//xmlDocument.documentElement.appendChild(foo);
 
 					a.href = url;
 					a.download = folio + '.' + format;
@@ -157,5 +167,103 @@
 				error: function (jqXHR, textStatus, errorThrown) { }
 			});
 		});
+
+		 $.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		
+		//Cancelacion de la factura
+		$("#table-records").on("click", ".cancel", function(){
+			let item = $(this);
+
+			//Confirmación de cancelación
+			swal({
+				title: "¿Estás seguro de cancelar la factura?",
+				text: "Esta acción no se puede deshacer",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true,
+			})
+			.then((willCancel) => {
+				if (willCancel) {
+					$.ajax({
+						url: 'http://localhost:8083/invoice/cancelCFDI/' + serverId + '/' + item.attr('data-value'),
+						method: 'POST',
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							console.log(result);
+							var result = JSON.parse(data);
+							if(result.response === "success")
+							{
+								swal({
+									title: "¡Éxito!",
+									text: result.message ,
+									type: "success",
+									icon: "success",
+									timer: 10000,
+									button: "OK",
+								});
+							}
+							else
+							{
+								swal({
+									title: "¡Error!",
+									text: result.message ,
+									type: "error",
+									icon: "error",
+									timer: 10000,
+									button: "OK",
+								});
+							}					
+						},
+						error: function (jqXHR, textStatus, errorThrown) { }
+					});
+				}
+			});
+		});
+
+		//Envío de la factura
+		$("#table-records").on("click", ".send", function(){
+			let item = $(this);
+
+			$.ajax({
+				url: 'http://localhost:8083/invoice/sendCFDI/' + serverId + '/' + item.attr('data-value'),
+				method: 'POST',
+				contentType: false,
+				processData: false,
+				success: function (data) {
+					console.log(result);
+					var result = JSON.parse(data);
+					if(result.response === "success")
+					{
+						swal({
+							title: "¡Éxito!",
+							text: result.message ,
+							type: "success",
+							icon: "success",
+							timer: 10000,
+							button: "OK",
+						});
+					}
+					else
+					{
+						swal({
+							title: "¡Error!",
+							text: result.message ,
+							type: "error",
+							icon: "error",
+							timer: 10000,
+							button: "OK",
+						});
+					}
+					
+				},
+				error: function (jqXHR, textStatus, errorThrown) { }
+			});
+		});
+
 	});
  </script>

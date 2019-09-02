@@ -55,7 +55,7 @@
 					  <ul class="dropdown-menu">
 						<li><a href="http://localhost:8083/invoice/index/1">Listar CFDI's</a></li>
 						<li><a href="http://localhost:8083/invoice/create/0">Crear CFDI</a></li>
-						<li><a href="http://localhost:8083/invoice/massive">Crear CFDI's Masivos</a></li>
+						<li><a href="http://localhost:8083/invoice/massive/1/0">Crear CFDI's Masivos</a></li>
 						<li><a href="http://localhost:8083/invoice/createGlobal/0">Crear CFDI Global</a></li>                    
 					  </ul>
 					</li>

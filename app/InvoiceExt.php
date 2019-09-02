@@ -67,13 +67,15 @@ class InvoiceExt extends Model
 		'curp', 
 		'roev',
 		'status',
-		'uid'
+		'uid',
+		'id_massive_invoice'
 	);
 
 	protected $appends = [
 		'val_uso_cfdi',
 		'val_forma_pago',
-		'val_metodo_pago'
+		'val_metodo_pago',
+		'val_producto_servicio'
 	];
     
     function getValUsoCfdiAttribute()
@@ -129,6 +131,24 @@ class InvoiceExt extends Model
                 break;
             default:
                 $name = "PUE Pago en una sola exhibición";
+                break;
+        }
+        return $name;
+    }
+
+	function getValProductoServicioAttribute()
+    {
+        $name;
+        switch($this->claveprodserv)
+        {
+            case "86121701":
+                $name = "Programas de pregrado";
+                break;
+
+				//	...
+
+            default:
+                $name = "";
                 break;
         }
         return $name;
