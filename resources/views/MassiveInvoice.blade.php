@@ -105,8 +105,33 @@
 						processData: false,
 						success: function (data) {
 							console.log(data);
-							var result = JSON.parse(data);
-							if(result.response === "success")
+							debugger
+							var error = false,
+								detail_error = "";
+
+							for(var i = 1; i < data.length; i++) {
+								console.log(data[i].Response);
+
+								var result = JSON.parse(data[i].Response);
+
+								if (result.response === "error")
+								{
+									detail_error += data[i].RFC + ": " + result.message + "\n";
+								}
+								error = true;
+							}
+							if (error)
+							{
+								swal({
+									title: "¡Error!",
+									text: detail_error,
+									type: "error",
+									icon: "error",
+									timer: 10000,
+									button: "OK",
+								});
+							}
+							else if(result.response === "success")
 							{
 								console.log(result.UUID);
 								swal({
@@ -118,29 +143,6 @@
 									button: "OK",
 								});
 							}
-							else if(result.response === "warning")
-							{
-								swal({
-									title: "¡Advertencia!",
-									text: result.message.message,
-									type: "warning",
-									icon: "warning",
-									timer: 10000,
-									button: "OK",
-								});
-							}
-							else
-							{ 
-								swal({
-									title: "¡Error!",
-									text: result.message.message,
-									type: "error",
-									icon: "error",
-									timer: 10000,
-									button: "OK",
-								});
-							}
-					
 						},
 						error: function (jqXHR, textStatus, errorThrown) { }
 					});

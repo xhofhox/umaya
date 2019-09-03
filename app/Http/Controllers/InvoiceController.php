@@ -201,6 +201,7 @@ class InvoiceController extends Controller
     {
         //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
+		//dd($data);
 		
 		/*if($data != null)
 		{
@@ -408,14 +409,17 @@ class InvoiceController extends Controller
         $Invoices = InvoiceExt::all()
 			->where('id_massive_invoice', '=', $id_massive_invoice)
 			->where('status', '=', 0);
-        
+
+		//Inicializar respuesta
+		$Responses[] = array();
+
 		//Recorrer las facturas para generarlas
 		foreach($Invoices as $invoice_ext)
 		{
-			//dd($invoice);
-			//Verificar si la factura ya existe
+			//dd($invoice);			
 			//$invoice_ext = InvoiceExt::where('id', $invoice->id)->first();
 
+			//Verificar si la factura ya existe
 			if ($invoice_ext->status == 1)
 			{
 				$response = array();
@@ -440,7 +444,6 @@ class InvoiceController extends Controller
 							'Cantidad' => $concept -> cantidad,
 							'ClaveUnidad' => $concept -> claveunidad,
 							'Unidad' => $concept -> unidad,
-							//'Unidad' => 'Unidad de servicio',
 							'ValorUnitario' => $concept -> precio_unitario,
 							'Descripcion' => $concept -> descripcion,
 							'Descuento' => $concept -> descuento,
@@ -488,12 +491,18 @@ class InvoiceController extends Controller
 				));
 
 				$response = curl_exec($ch);
+				array_push(
+					$Responses,
+					array(
+						'Response' => $response,
+						'RFC' => $invoice_ext->rfc
+					)
+				);
 
-				return die($response);
-
-				curl_close($ch);
 			}//Fin else
 		}
+		curl_close($ch);
+		return response()->json($Responses, 200);
     }
 
 	/* -------------------------------- Falta depurar ---------------------------------------- */
