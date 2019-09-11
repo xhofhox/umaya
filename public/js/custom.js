@@ -1,5 +1,5 @@
 /*
- * Funciones globales
+ * Funciones globales personalizados para el 
  * */
 
 custom = new function () {

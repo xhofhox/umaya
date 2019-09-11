@@ -268,26 +268,25 @@ class InvoiceController extends Controller
                     break;
             }
             
-            //Validar Receptor UUID 
-            //$cliente_rfc = $request->input('RFC');
+            //Validar receptor uuid 
+            $cliente_rfc = $request->input('RFC');
             //dd($cliente_rfc);
-            //validarCliente($cliente_rfc, $UrlConsultaCliente, $UrlCrearCliente, $apiKey, $secretKey);
-            // $ch = curl_init();
-            //
-            //curl_setopt($ch, CURLOPT_URL, $UrlConsultaCliente.$cliente_rfc);
-            //curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            //curl_setopt($ch, CURLOPT_HEADER, FALSE);
-            //
-            //curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            //    "Content-Type: application/json",
-            //    "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-            //    "F-Api-Key: ".$apiKey,
-            //    "F-Secret-Key: " .$secretKey
-            //));
-            //$response = curl_exec($ch);
-            //dd($response);
-            //curl_close($ch);
-            //
+            //validarcliente($cliente_rfc, $urlconsultacliente, $urlcrearcliente, $apikey, $secretkey);
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $UrlConsultaCliente.$cliente_rfc);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "content-type: application/json",
+                "f-plugin: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+                "f-api-key: ".$apiKey,
+                "f-secret-key: " .$secretKey
+            ));
+            $response = curl_exec($ch);
+            dd($response);
+            curl_close($ch);
             //var_dump($response);
             
             
@@ -412,12 +411,15 @@ class InvoiceController extends Controller
 
 		//Inicializar respuesta
 		$Responses[] = array();
+		$Conceptos[] = array();
+		$Contador = 0;
 
 		//Recorrer las facturas para generarlas
 		foreach($Invoices as $invoice_ext)
 		{
 			//dd($invoice);			
 			//$invoice_ext = InvoiceExt::where('id', $invoice->id)->first();
+			
 
 			//Verificar si la factura ya existe
 			if ($invoice_ext->status == 1)
@@ -426,17 +428,14 @@ class InvoiceController extends Controller
 				$response["message"] = 'La factura '.$invoice_ext->folio.' ya existe.';
 			} 
 			else {
-
-				$Conceptos[] = array();
-
 				//Obtener los conceptos asociados a la factura
-				$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $invoice_ext->id);
-			
+				$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $invoice_ext->id);			
 				//$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id)->toArray();
 
 				//Recorrer los conceptos y agregar unicamente la información de utilidad
 				foreach($Concepts as $concept)
 				{
+					$Contador ++;
 					array_push(
 						$Conceptos,
 						array(
@@ -453,8 +452,11 @@ class InvoiceController extends Controller
 						)
 					);
 				}
-				unset($Conceptos[0]);
+				if ($Contador == 1){
+					unset($Conceptos[0]);
+				}
 				
+				//var_dump($Conceptos);
 				$ch = curl_init();
 				$fields = [
 					"Receptor" => ["UID" => $invoice_ext->uid],
@@ -475,7 +477,7 @@ class InvoiceController extends Controller
 				$this->Endpoint = '/api/v3/cfdi33/create';
 
 				$jsonfield = json_encode($fields);
-
+				//var_dump($jsonfield);
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, $this->Host.$this->Endpoint);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -498,10 +500,14 @@ class InvoiceController extends Controller
 						'RFC' => $invoice_ext->rfc
 					)
 				);
+				curl_close($ch);
+
+				//Limpiar arreglo
+				unset($Conceptos);
+				$Conceptos = array();
 
 			}//Fin else
-		}
-		curl_close($ch);
+		}//Fin foreach
 		return response()->json($Responses, 200);
     }
 

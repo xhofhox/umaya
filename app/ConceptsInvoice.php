@@ -27,7 +27,7 @@ class ConceptsInvoice extends Model
 		'sku',  
 		'clave_sat',  
 		'cuenta_predial',
-		'valorunitario',
+		//'valorunitario',
 		'nombrealumno',
 		'curp',
 		'roev'

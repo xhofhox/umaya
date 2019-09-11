@@ -105,9 +105,10 @@
 						processData: false,
 						success: function (data) {
 							console.log(data);
-							debugger
+							
 							var error = false,
-								detail_error = "";
+								detail_error = "",
+								detail_success = "";
 
 							for(var i = 1; i < data.length; i++) {
 								console.log(data[i].Response);
@@ -117,8 +118,13 @@
 								if (result.response === "error")
 								{
 									detail_error += data[i].RFC + ": " + result.message + "\n";
+									error = true;
 								}
-								error = true;
+								if (result.response === "success")
+								{
+									detail_success += data[i].RFC + ": " + result.message + "\n";
+									error = false;
+								}	
 							}
 							if (error)
 							{
@@ -136,7 +142,7 @@
 								console.log(result.UUID);
 								swal({
 									title: "¡Éxito!",
-									text: result.message + ". Folio fiscal: ",
+									text: detail_success,
 									type: "success",
 									icon: "success",
 									timer: 10000,
