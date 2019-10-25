@@ -756,7 +756,7 @@ class InvoiceController extends Controller
             $Cantidad = 1;
             $ClaveUnidad = "ACT";
             $ValorUnitario = $request->input('to_pay');
-            $Descripcion = "Recibo: " + $request->input('id');
+            $Descripcion = "Recibo: ".$request->input('id');
             $Descuento = $request->input('discount');
             /*$Impuesto = $request->input('Impuesto');
             $TipoFactor = $request->input('TipoFactor');
