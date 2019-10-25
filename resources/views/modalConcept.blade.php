@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body" style="height: 600px; overflow-y: auto; max-height: 650px;">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-				<input type="" name="conceptId" value="{{ $concept['id'] }}">
+				<input type="hidden" name="conceptId" value="{{ $concept['id'] }}">
                 <div class="row input-field col s12 m6">
                     <div class="col-md-6">
                         <div class="form-group">

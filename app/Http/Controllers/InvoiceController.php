@@ -285,7 +285,7 @@ class InvoiceController extends Controller
                 "f-secret-key: " .$secretKey
             ));
             $response = curl_exec($ch);
-            dd($response);
+            //dd($response);
             curl_close($ch);
             //var_dump($response);
             
@@ -424,8 +424,7 @@ class InvoiceController extends Controller
 			//Verificar si la factura ya existe
 			if ($invoice_ext->status == 1)
 			{
-				$response = array();
-				$response["message"] = 'La factura '.$invoice_ext->folio.' ya existe.';
+				$Responses["message"] = 'La factura '.$invoice_ext->folio.' ya existe.';
 			} 
 			else {
 				//Obtener los conceptos asociados a la factura
@@ -497,7 +496,8 @@ class InvoiceController extends Controller
 					$Responses,
 					array(
 						'Response' => $response,
-						'RFC' => $invoice_ext->rfc
+						'RFC' => $invoice_ext->rfc,
+						'Id' => $invoice_ext->id 
 					)
 				);
 				curl_close($ch);
@@ -509,6 +509,47 @@ class InvoiceController extends Controller
 			}//Fin else
 		}//Fin foreach
 		return response()->json($Responses, 200);
+    }
+
+	/**
+     * Actualizar el registro relacionado a la factura generada
+	 * @param Request $request
+     * @return 
+     */
+	public function actualizarRegistroFactura(Request $request)
+    {
+        $invoice_ext = InvoiceExt::where('id', $request->input('id'))->first();
+
+        if ($invoice_ext != null)
+        {
+            //Insertar en tabla de Invoice_ext
+            $invoice_ext->update(['status' => 1]);
+            $invoice_ext->update(['uuid' => $request->input('uuid')]);
+            $invoice_ext->update(['folio' => $request->input('folio')]);
+            $invoice_ext->update(['fecha_timbrado' => $request->input('fechatimbrado')]);
+            $invoice_ext->update(['num_cert' => $request->input('nocertificadosat')]);
+        }
+    }
+
+	/**
+     * Actualizar los registros relacionados a la facturas generadas
+	 * @param Request $request
+     * @return 
+     */
+	public function actualizarRegistrosFacturas(Request $request)
+    {
+		dd($request);
+        /*$invoice_ext = InvoiceExt::where('id', $request->input('id'))->first();
+
+        if ($invoice_ext != null)
+        {
+            //Insertar en tabla de Invoice_ext            
+            $invoice_ext->update(['status' => 1]);
+            $invoice_ext->update(['uuid' => $request->input('uuid')]);
+            $invoice_ext->update(['folio' => $request->input('folio')]);
+            $invoice_ext->update(['fecha_timbrado' => $request->input('fechatimbrado')]);
+            $invoice_ext->update(['num_cert' => $request->input('nocertificadosat')]);
+        }*/
     }
 
 	/* -------------------------------- Falta depurar ---------------------------------------- */
@@ -603,6 +644,182 @@ class InvoiceController extends Controller
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
         $invoice = ['data' => $data, 'concepts' => $concepts];
         return view('createGlobalInvoice', compact('invoice'));         
+    }
+
+	public function createGlobalDemo($id)
+    {
+        //Obtener datos de la factura y mostrarlo en la vista
+        $data = InvoiceExt::find($id);
+
+        $concepts = PayRecipments::where('id_global_invoice', $id)->get();
+
+        $invoice = ['data' => $data, 'concepts' => $concepts];
+        return view('createInvoiceGlobal', compact('invoice'));
+    }
+
+	/**
+     * Crear CFDI Global
+	 * @param Request $request
+     * @return response
+     */
+	public function crearCFDIGlobal(Request $request)
+    {
+        $id = $request->input('id');
+
+        //Verificar si la factura ya existe
+        $invoice_ext = InvoiceExt::where('id', $id)->first();
+
+        if ($invoice_ext->status == 1)
+        {
+            $response = array();
+            $response["message"] = 'La factura ya fue generada anteriormente.';
+            
+            return response()->json(
+                collect([
+                    'response' => 'warning',
+                    'message' => $response,
+                    
+                ])->toJson()
+            ); 
+        } 
+        else 
+        {
+            //Generar factura
+            $urlFactura;
+            $apiKey;
+            $secretKey;
+            $UrlConsultaCliente;
+            $UrlCrearCliente;
+            $server_api = $request->input('Servidor');
+            
+            //Verificar Servidor para obtener los datos de conexión
+            switch ($server_api) {
+                case "1": //sandbox
+                    $urlFactura = 'http://devfactura.in/api/v3/cfdi33/create';
+                    $UrlConsultaCliente = 'http://devfactura.in/api/v1/clients/';
+                    $UrlCrearCliente = 'http://devfactura.in/api/v1/clients/create/';
+                    $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
+                    $secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
+                    break;
+                case "2": //producción
+                    $urlFactura = 'https://factura.com/api/v3/cfdi33/create';
+                    $UrlConsultaCliente = 'https://factura.com/api/v1/clients/';
+                    $UrlCrearCliente = 'https://factura.com/api/v1/clients/create/';
+                    $apiKey = 'JDJ5JDEwJEtHL0c0RVNSUUVLS09uWDRublg3c3VncURHQklZZEVMRmJuWWFTTHpUakdVVFM0UHdJQUZp';
+                    $secretKey = 'JDJ5JDEwJEpvRDJKbHplNXJwZzh0SWVGWlRoUy50YlpRRWs5cEI2dC4uU0pMck1Ic3hXdU1Tb0p4UC5l';
+                    break;
+            }
+            
+            //Validar receptor uuid 
+            $cliente_rfc = $request->input('RFC');
+            //dd($cliente_rfc);
+            //validarcliente($cliente_rfc, $urlconsultacliente, $urlcrearcliente, $apikey, $secretkey);
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $UrlConsultaCliente.$cliente_rfc);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "content-type: application/json",
+                "f-plugin: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+                "f-api-key: ".$apiKey,
+                "f-secret-key: " .$secretKey
+            ));
+            $response = curl_exec($ch);
+            //dd($response);
+            curl_close($ch);
+            //var_dump($response);
+            
+            
+            //--------------- CREAR CFDI --------------------- //
+            
+            $ClaveProdServ = "86121701";
+            $Cantidad = 1;
+            $ClaveUnidad = "ACT";
+            $ValorUnitario = $request->input('to_pay');
+            $Descripcion = "Recibo: " + $request->input('id');
+            $Descuento = $request->input('discount');
+            /*$Impuesto = $request->input('Impuesto');
+            $TipoFactor = $request->input('TipoFactor');
+            $TasaOCuota = $request->input('TasaOCuota');
+            $Importe = $request->input('Importe');*/
+
+			$Conceptos[] = array();
+
+			//Obtener los conceptos asociados a la factura
+			$Concepts = PayRecipments::all()->where('id_global_invoice', '=', $id);		
+
+			//Recorrer los conceptos y agregar unicamente la información de utilidad
+			foreach($Concepts as $concept)
+			{
+				array_push(
+					$Conceptos,
+					array(
+						'ClaveProdServ' => "86121701",
+						'Cantidad' => '1',
+						'ClaveUnidad' => "ACT",
+						'Unidad' => "Actividad",
+						//'Unidad' => 'Unidad de servicio',
+						'ValorUnitario' => $concept -> to_pay,
+						'Descripcion' => "Recibo: " + $concept -> id,
+						'Descuento' => $concept -> discount,
+						'Impuestos' => [
+							'Traslados' => []
+						],
+					)
+				);
+			}
+
+			unset($Conceptos[0]);
+            
+            $Receptor = $request->input('Receptor');
+            $TipoDocumento = $request->input('TipoDocumento');
+            $UsoCFDI = $request->input('UsoCFDI');
+            $FormaPago = $request->input('FormaPago');
+            $MetodoPago = $request->input('MetodoPago');
+            $Moneda = $request->input('Moneda');
+            $CondicionesDePago = $request->input('CondicionesDePago');
+            $Serie = $request->input('Serie');
+            
+            $ch = curl_init();
+            $fields = [
+                "Receptor" => ["UID" => $Receptor],
+                "TipoDocumento" => $TipoDocumento,
+                "UsoCFDI" => $UsoCFDI,
+                "Redondeo" => 2,
+                "Conceptos" => $Conceptos,
+                "FormaPago" => $FormaPago,
+                "MetodoPago" => $MetodoPago,
+                "Moneda" => $Moneda,
+                "CondicionesDePago" => $CondicionesDePago,
+                "Serie" => $Serie,
+                "EnviarCorreo" => 'true',
+                "InvoiceComments" => "Factura Global"
+            ];
+
+            $jsonfield = json_encode($fields);
+            
+            curl_setopt($ch, CURLOPT_URL, $urlFactura);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_HEADER, FALSE);
+            curl_setopt($ch, CURLOPT_POST, TRUE);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
+            
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Content-Type: application/json",
+                "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+                "F-Api-Key: ".$apiKey,
+                "F-Secret-Key: " .$secretKey
+            ));
+            
+            $response = curl_exec($ch);
+            
+            return die($response);
+            
+            curl_close($ch);
+            
+        }
     }
 
     /**
@@ -714,24 +931,7 @@ class InvoiceController extends Controller
         ); 
 	}
     
-    public function actualizarRegistroFactura(Request $request)
-    {
-          //dd ($request);  
-        $invoice_ext = InvoiceExt::where('id', $request->input('id'))
-                                    ->first();
-                                
-        //dd($invoice_ext);
-        if ($invoice_ext != null)
-        {
-            //Insertar en tabla de Invoice_ext            
-            $invoice_ext->update(['status' => 1]);
-           $invoice_ext->update(['uuid' => $request->input('uuid')]);
-            $invoice_ext->update(['folio' => $request->input('folio')]);
-              $invoice_ext->update(['fecha_timbrado' => $request->input('fechatimbrado')]);
-            $invoice_ext->update(['num_cert' => $request->input('nocertificadosat')]);
 
-        }          
-    }
 
 
     // public function descargarPDF(Request $request)
