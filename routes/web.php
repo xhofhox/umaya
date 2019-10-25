@@ -61,14 +61,21 @@ Route::post('invoice/actualizarRegistroFactura', 'InvoiceController@actualizarRe
 //Actualizar información referente a  la facturación masiva
 Route::post('invoice/actualizarRegistrosFacturas', 'InvoiceController@actualizarRegistrosFacturas');
 
+//Generacion CFDI Global
+Route::post('invoice/crearCFDIGlobal', 'InvoiceController@crearCFDIGlobal');
+
+//Actualizar información de los recibos
+Route::post('invoice/actualizarRegistroRecibos', 'InvoiceController@actualizarRegistroRecibos');
+
 Route::get('invoice/conexion', 'InvoiceController@conexion');
 Route::get('invoice/create/{id}', 'InvoiceController@create');
 Route::get('invoice/mostrarConcepto/{id}', 'InvoiceController@mostrarConcepto');
 
 Route::get('invoice/editMassive/{id}', 'InvoiceController@editMassive');
 Route::get('invoice/createGlobal/{id}', 'InvoiceController@createGlobal');
-Route::get('invoice/createGlobalDemo/{id}', 'InvoiceController@createGlobalDemo');
 
+
+Route::get('invoice/createGlobalDemo/{id}', 'InvoiceController@createGlobalDemo');
 
 Route::post('storage/save', 'StorageController@save');
 Route::post('invoice/crearCFDI', 'InvoiceController@crearCFDI');

@@ -85,7 +85,7 @@
 								<div class="form-group">
 									<label for="Receptor">RFC CLIENTE/RECEPTOR</label>
 									<input class="form-control" name="RFC" value="{{ $invoice['data']['rfc'] }}"/>
-									 <input class="form-control hide" name="Receptor" value="{{ $invoice['data']['uid'] }}"/>  
+									<input class="form-control hide" name="Receptor" value="{{ $invoice['data']['uid'] }}"/>  
 									<!-- <input class="form-control hide" name="Receptor" value="5d4122f4120a4"/> -->
 								</div>
 							</div>
@@ -269,7 +269,6 @@
           
               else if (responseInvoice.response === "error")
               {
-              
                 swal({
                   title: "¡Ocurrió un error!",
                   text: responseInvoice.message.message ,
@@ -294,6 +293,7 @@
                 data.append('nocertificadosat',responseInvoice.SAT.NoCertificadoSAT);
                 //aqui van los demas campos
                 
+				//Actualizar el registro de factura para indicar que se ha generado
                 $.ajax({
                     type: 'POST',
                     url: 'http://localhost:8083/invoice/actualizarRegistroFactura',
@@ -305,7 +305,22 @@
                       
                       console.log(response);
                     }
-                });      
+                });
+
+				//Actualizar el registro de recibos facturados
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:8083/invoice/actualizarRegistroRecibos',
+                    data: data, 
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {},
+                    success:  function (response) {
+                      
+                      console.log(response);
+                    }
+                });
+
                 // Fin inserción de datos
                 swal({
                   title: "¡Éxito!",
@@ -315,7 +330,7 @@
                   timer: 10000,
                   button: "OK",
                 });
-              }           
+              }
             }
             else{
               swal({

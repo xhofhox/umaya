@@ -7,6 +7,7 @@ use App\Student;
 use App\ViewStudent;
 use App\InvoiceExt;
 use App\ConceptsInvoice;
+use App\PayRecipments;
 use DB;
 use Alert;
 use Codedge\Fpdf\Facades\Fpdf;
@@ -532,6 +533,23 @@ class InvoiceController extends Controller
     }
 
 	/**
+     * Actualizar los registros de los recibos facturados
+	 * @param Request $request
+     * @return 
+     */
+	public function actualizarRegistroRecibos(Request $request)
+    {
+		//Obtener los recibos asociados a la factura
+		$Concepts = PayRecipments::all()->where('id_global_invoice', '=', $request->input('id'));		
+
+		//Recorrer los conceptos y agregar unicamente la información de utilidad
+		foreach($Concepts as $concept)
+		{
+			$concept->update(['invoiced' => TRUE]);
+		}
+    }
+
+	/**
      * Actualizar los registros relacionados a la facturas generadas
 	 * @param Request $request
      * @return 
@@ -637,16 +655,16 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createGlobal($id)
+    /*public function createGlobal($id)
     {
         //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
         $invoice = ['data' => $data, 'concepts' => $concepts];
         return view('createGlobalInvoice', compact('invoice'));         
-    }
+    }*/
 
-	public function createGlobalDemo($id)
+	public function createGlobal($id)
     {
         //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
@@ -711,10 +729,10 @@ class InvoiceController extends Controller
             }
             
             //Validar receptor uuid 
-            $cliente_rfc = $request->input('RFC');
+            //$cliente_rfc = $request->input('RFC');
             //dd($cliente_rfc);
             //validarcliente($cliente_rfc, $urlconsultacliente, $urlcrearcliente, $apikey, $secretkey);
-            $ch = curl_init();
+            /*$ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, $UrlConsultaCliente.$cliente_rfc);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -727,8 +745,8 @@ class InvoiceController extends Controller
                 "f-secret-key: " .$secretKey
             ));
             $response = curl_exec($ch);
-            //dd($response);
-            curl_close($ch);
+            dd($response);
+            curl_close($ch);*/
             //var_dump($response);
             
             
@@ -760,9 +778,8 @@ class InvoiceController extends Controller
 						'Cantidad' => '1',
 						'ClaveUnidad' => "ACT",
 						'Unidad' => "Actividad",
-						//'Unidad' => 'Unidad de servicio',
 						'ValorUnitario' => $concept -> to_pay,
-						'Descripcion' => "Recibo: " + $concept -> id,
+						'Descripcion' => "Recibo: ".$concept -> id,
 						'Descuento' => $concept -> discount,
 						'Impuestos' => [
 							'Traslados' => []

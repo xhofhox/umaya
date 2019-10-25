@@ -9,6 +9,8 @@ class PayRecipments extends Model
     //
         protected $table = "pay_recipments";
 
+		protected $primaryKey = 'id';
+
 		protected $fillable = array
 		(
 			'id',
