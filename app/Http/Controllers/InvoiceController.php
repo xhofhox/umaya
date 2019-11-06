@@ -529,6 +529,8 @@ class InvoiceController extends Controller
             $invoice_ext->update(['folio' => $request->input('folio')]);
             $invoice_ext->update(['fecha_timbrado' => $request->input('fechatimbrado')]);
             $invoice_ext->update(['num_cert' => $request->input('nocertificadosat')]);
+			$invoice_ext->update(['tipo_comprobante' => $request->input('serie')]);
+			
         }
     }
 
@@ -540,8 +542,8 @@ class InvoiceController extends Controller
 	public function actualizarRegistroRecibos(Request $request)
     {
 		//Obtener los recibos asociados a la factura
-		$Concepts = PayRecipments::all()->where('id_global_invoice', '=', $request->input('id'));		
-
+		//$Concepts = PayRecipments::all()->where('id_global_invoice', '=', $request->input('id'));		
+			$Concepts = PayRecipments::all()->where('invoice_ext_id', '=', $request->input('id'));	
 		//Recorrer los conceptos y agregar unicamente la información de utilidad
 		foreach($Concepts as $concept)
 		{
@@ -669,8 +671,8 @@ class InvoiceController extends Controller
         //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
 
-        $concepts = PayRecipments::where('id_global_invoice', $id)->get();
-
+        //$concepts = PayRecipments::where('id_global_invoice', $id)->get();
+			$concepts = PayRecipments::where('invoice_ext_id', $id)->get();
         $invoice = ['data' => $data, 'concepts' => $concepts];
         return view('createInvoiceGlobal', compact('invoice'));
     }
@@ -766,20 +768,21 @@ class InvoiceController extends Controller
 			$Conceptos[] = array();
 
 			//Obtener los conceptos asociados a la factura
-			$Concepts = PayRecipments::all()->where('id_global_invoice', '=', $id);		
-
+			//$Concepts = PayRecipments::all()->where('id_global_invoice', '=', $id);		
+				$Concepts = PayRecipments::all()->where('invoice_ext_id', '=', $id);
 			//Recorrer los conceptos y agregar unicamente la información de utilidad
 			foreach($Concepts as $concept)
 			{
 				array_push(
 					$Conceptos,
 					array(
-						'ClaveProdServ' => "86121701",
+						//'ClaveProdServ' => "86121701",
+						'ClaveProdServ' => $concept -> clave_sat,
 						'Cantidad' => '1',
 						'ClaveUnidad' => "ACT",
 						'Unidad' => "Actividad",
 						'ValorUnitario' => $concept -> to_pay,
-						'Descripcion' => "Recibo: ".$concept -> id,
+						'Descripcion' => "NO. Recibo: ".$concept -> folio,
 						'Descuento' => $concept -> discount,
 						'Impuestos' => [
 							'Traslados' => []

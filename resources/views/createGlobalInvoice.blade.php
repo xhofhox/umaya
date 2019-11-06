@@ -8,7 +8,7 @@
 <div>
  <div class="col-md-12 col-md-offset-1">
    <div class="panel panel-default">
-     <div class="panel-heading"><h3>Nuevo CFDI Global</h3></div>
+     <div class="panel-heading"><h3>Nuevo CFDI Global 123</h3></div>
        <div class="panel-body">
          <form method="POST" 
                action="http://localhost:8083/invoice/crearCFDI"
@@ -83,7 +83,7 @@
                        <option value="D07">D07 Primas por seguros de gastos médicos.</option>
                        <option value="D08">D08 Gastos de transportación escolar obligatoria.</option>
                        <option value="D09">D09 Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones.</option>
-                       <option value="D10"  selected="true">D10 Pagos por servicios educativos (colegiaturas)</option>
+                       <option value="D10">D10 Pagos por servicios educativos (colegiaturas)</option>
                        <option value="P01" selected="true" >P01 Por definir</option>
                 </select>
               </div>
