@@ -227,6 +227,7 @@
 
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
 <script>
   $(document).ready(function(){
     $.ajaxSetup({
@@ -250,8 +251,6 @@
           contentType: false,
           processData: false,
           beforeSend: function () {
-				// Show full page Loading Overlay
-				$.LoadingOverlay("show");
 		  },
           success:  function (data) {
             console.log(data);
@@ -345,9 +344,7 @@
             }
           },
 		  complete: function () {
-                // Hide full page Loading Overlay
-                $.LoadingOverlay("hide");
-		  },
+		  }
       });
     });
 
