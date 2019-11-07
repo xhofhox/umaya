@@ -10,7 +10,7 @@
      <div class="panel-heading"><h3>Detalle CFDI</h3></div>
        <div class="panel-body">
          <form method="POST" 
-               action="http://localhost:8083/invoice/crearCFDI"
+               action="/invoice/crearCFDI"
                accept-charset="UTF-8" 
                id="form-invoice">            
            <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -314,6 +314,7 @@
        }
    });
    var formId = '#form-invoice';
+   var host = location.origin;
 
    //Ejecutar facturación
    $(formId).on('submit', function(e){
@@ -321,7 +322,7 @@
      var formData = new FormData($(this)[0]);
      $.ajax({
          type: $(formId).attr('method'),
-         url: $(formId).attr('action'),
+         url: host + $(formId).attr('action'),
          data: formData, 
          contentType: false,
          processData: false,
@@ -370,7 +371,7 @@
                
                $.ajax({
                    type: 'POST',
-                   url: 'http://localhost:8083/invoice/actualizarRegistroFactura',
+                   url: host + '/invoice/actualizarRegistroFactura',
                    data: data, 
                    contentType: false,
                    processData: false,
@@ -406,7 +407,7 @@
    //Modal de conceptos de la factura
    $('#updateConcept').click(function() {
      $.ajax({
-         url : 'http://localhost:8083/invoice/mostrarConcepto/1',
+         url : host + '/invoice/mostrarConcepto/1',
          type : 'GET',
          dataType : 'html',
          success : function(respuesta) {

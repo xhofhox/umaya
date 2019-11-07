@@ -11,7 +11,7 @@
         <div class="panel-heading">Listar CFDI</div>
           <div class="panel-body">
             <form method="POST" 
-                  action="http://localhost:8083/invoice/listarCFDI"
+                  action="/invoice/listarCFDI"
                   accept-charset="UTF-8" 
                   id="list-invoice">
               <input type="hidden" name="_token" value="{{ csrf_token() }}">

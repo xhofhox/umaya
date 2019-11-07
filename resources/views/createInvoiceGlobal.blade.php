@@ -11,7 +11,7 @@
 			<div class="panel-heading"><h4>Nuevo CFDI Global</h4></div>
 				<div class="panel-body">
 					<form method="POST" 
-						action="http://localhost:8083/invoice/crearCFDIGlobal"
+						action="/invoice/crearCFDIGlobal"
 						accept-charset="UTF-8" 
 						id="form-invoice">            
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -73,8 +73,8 @@
 										<option value="D07">D07 Primas por seguros de gastos médicos.</option>
 										<option value="D08">D08 Gastos de transportación escolar obligatoria.</option>
 										<option value="D09">D09 Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones.</option>
-										<option value="D10">D10 Pagos por servicios educativos (colegiaturas)</option>
-										<option value="P01" selected="true"> P01 Por definir</option>
+										<option value="D10" selected="false">D10 Pagos por servicios educativos (colegiaturas)</option>
+										<option value="P01">P01 Por definir</option>
 									</select>
 								</div>
 							</div>
@@ -205,10 +205,10 @@
 							<tbody>
 								@foreach($invoice['concepts'] as $concept)
 								<tr>
-									 <td>{{ $concept['clave_sat'] }}</td>
+									 <td>86121701</td>
 									 <td>1</td>
 									 <td>ACT</td>
-									 <td>Recibo {{ $concept['folio'] }}</td>
+									 <td>Recibo {{ $concept['id'] }}</td>
 									 <td>{{ $concept['to_pay'] }}</td>
 									 <td>{{ $concept['to_pay'] }}</td>
 								</tr>
@@ -236,6 +236,8 @@
         }
     });
     var formId = '#form-invoice';
+	var host = location.origin;
+	console.log(host);
 
     //Ejecutar facturación
     $(formId).on('submit', function(e){
@@ -244,7 +246,7 @@
 	  
       $.ajax({
           type: $(formId).attr('method'),
-          url: $(formId).attr('action'),
+          url: host + $(formId).attr('action'),
           data: formData, 
           contentType: false,
           processData: false,
@@ -291,13 +293,12 @@
                 data.append('folio',responseInvoice.INV.Folio);
                 data.append('fechatimbrado',responseInvoice.SAT.FechaTimbrado);
                 data.append('nocertificadosat',responseInvoice.SAT.NoCertificadoSAT);
-                data.append('serie', responseInvoice.INV.Serie);
                 //aqui van los demas campos
                 
 				//Actualizar el registro de factura para indicar que se ha generado
                 $.ajax({
                     type: 'POST',
-                    url: 'http://localhost:8083/invoice/actualizarRegistroFactura',
+                    url: host + '/invoice/actualizarRegistroFactura',
                     data: data, 
                     contentType: false,
                     processData: false,
@@ -311,7 +312,7 @@
 				//Actualizar el registro de recibos facturados
                 $.ajax({
                     type: 'POST',
-                    url: 'http://localhost:8083/invoice/actualizarRegistroRecibos',
+                    url: host + '/invoice/actualizarRegistroRecibos',
                     data: data, 
                     contentType: false,
                     processData: false,

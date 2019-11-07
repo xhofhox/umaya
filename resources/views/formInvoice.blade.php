@@ -11,7 +11,7 @@
       <div class="panel-heading">Formulario</div>
         <div class="panel-body">
           <form method="POST" 
-                action="http://localhost:8083/invoice/conexion"
+                action="/invoice/conexion"
                 accept-charset="UTF-8" 
                 id="form-invoice">
             
@@ -50,13 +50,14 @@
         }
     });
     var formId = '#form-invoice';
+	var host = location.origin;
 
     $(formId).on('submit', function(e){
       e.preventDefault();
       var formData = new FormData($(this)[0]);
       $.ajax({
           type: $(formId).attr('method'),
-          url: $(formId).attr('action'),
+          url: host + $(formId).attr('action'),
           data: formData, //$(formId).serialize(),
           // dataType: "html",
           // cache:false,

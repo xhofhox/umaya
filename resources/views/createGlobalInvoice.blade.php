@@ -11,7 +11,7 @@
      <div class="panel-heading"><h3>Nuevo CFDI Global 123</h3></div>
        <div class="panel-body">
          <form method="POST" 
-               action="http://localhost:8083/invoice/crearCFDI"
+               action="/invoice/crearCFDI"
                accept-charset="UTF-8" 
                id="form-invoice">            
            <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -368,7 +368,7 @@
                
                $.ajax({
                    type: 'POST',
-                   url: 'http://localhost:8083/invoice/actualizarRegistroFactura',
+                   url: '/invoice/actualizarRegistroFactura',
                    data: data, 
                    contentType: false,
                    processData: false,
@@ -404,7 +404,7 @@
    //Modal de conceptos de la factura
    $('#updateConcept').click(function() {
      $.ajax({
-         url : 'http://localhost:8083/invoice/mostrarConcepto/1',
+         url : '/invoice/mostrarConcepto/1',
          type : 'GET',
          dataType : 'html',
          success : function(respuesta) {

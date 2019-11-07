@@ -73,6 +73,8 @@
 		let pathname = window.location.pathname,
 			serverId = parseInt(pathname.split('/')[pathname.split('/').length - 1]);
 		
+		let host = location.origin;
+		
 		//Ejecutar Datatable
 		custom.dataTable('#table-records');
 
@@ -81,7 +83,7 @@
 		{
 			console.log(item.attr('data-value'));
 			$.ajax({
-				url: 'http://localhost:8083/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
+				url: host + '/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
 				method: 'GET',
 				xhrFields: {
 					responseType: 'blob'
@@ -108,7 +110,7 @@
 				format = 'pdf';
 
 			$.ajax({
-				url: 'http://localhost:8083/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
+				url: host + '/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
 				method: 'GET',
 				xhrFields: {
 					responseType: 'blob'
@@ -135,7 +137,7 @@
 				format = 'xml';
 
 			$.ajax({
-				url: 'http://localhost:8083/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
+				url: host + '/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
 				method: 'GET',
 				//dataType: 'xml',
 				contentType: false,
@@ -189,7 +191,7 @@
 			.then((willCancel) => {
 				if (willCancel) {
 					$.ajax({
-						url: 'http://localhost:8083/invoice/cancelCFDI/' + serverId + '/' + item.attr('data-value'),
+						url: host + '/invoice/cancelCFDI/' + serverId + '/' + item.attr('data-value'),
 						method: 'POST',
 						contentType: false,
 						processData: false,
@@ -240,7 +242,7 @@
 			.then((willSend) => {
 				if (willSend) {
 					$.ajax({
-						url: 'http://localhost:8083/invoice/sendCFDI/' + serverId + '/' + item.attr('data-value'),
+						url: host + '/invoice/sendCFDI/' + serverId + '/' + item.attr('data-value'),
 						method: 'POST',
 						contentType: false,
 						processData: false,

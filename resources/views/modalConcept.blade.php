@@ -1,5 +1,5 @@
 <div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1"  id="updateConcept{{ $concept['id'] }}">
-  <form class="form-horizontal" method="POST" action="http://localhost:8083/invoice/saveConcept" id="form-modal-invoice">
+  <form class="form-horizontal" method="POST" action="/invoice/saveConcept" id="form-modal-invoice">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">

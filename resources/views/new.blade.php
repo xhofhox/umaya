@@ -11,7 +11,7 @@
       <div class="panel-heading">Agregar archivos</div>
         <div class="panel-body">
           <form method="POST" 
-                action="http://localhost:8083/storage/save"
+                action="/storage/save"
                 accept-charset="UTF-8" 
                 enctype="multipart/form-data"
                 id="form-bank">
@@ -92,13 +92,14 @@
         }
     });
     var formId = '#form-bank';
+	var host = location.origin;
 
     $(formId).on('submit', function(e){
       e.preventDefault();
       var formData = new FormData($(this)[0]);
       $.ajax({
           type: $(formId).attr('method'),
-          url: $(formId).attr('action'),
+          url: host + $(formId).attr('action'),
           data: formData,
           contentType: false,
           processData: false,

@@ -11,7 +11,7 @@
 			<div class="panel-heading"><h4>Nuevo CFDI Individual</h4></div>
 				<div class="panel-body">
 					<form method="POST" 
-						action="http://localhost:8083/invoice/crearCFDI"
+						action="/invoice/crearCFDI"
 						accept-charset="UTF-8" 
 						id="form-invoice">            
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -241,6 +241,7 @@
         }
     });
     var formId = '#form-invoice';
+	var host = location.origin;
 
     //Ejecutar facturación
     $(formId).on('submit', function(e){
@@ -249,7 +250,7 @@
 	  
       $.ajax({
           type: $(formId).attr('method'),
-          url: $(formId).attr('action'),
+          url: host + $(formId).attr('action'),
           data: formData, 
           contentType: false,
           processData: false,
@@ -301,7 +302,7 @@
                 
                 $.ajax({
                     type: 'POST',
-                    url: 'http://localhost:8083/invoice/actualizarRegistroFactura',
+                    url: host + '/invoice/actualizarRegistroFactura',
                     data: data, 
                     contentType: false,
                     processData: false,

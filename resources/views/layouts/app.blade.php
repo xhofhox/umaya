@@ -20,6 +20,8 @@
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
+		<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
+
 		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -50,18 +52,18 @@
 					<a class="navbar-brand" href="#">Control Pagos</a>
 				  </div>
 				  <ul class="nav navbar-nav">
-					<li class="active"><a href="http://localhost:8083/formulario">Pago por depósito</a></li>
+					<li class="active"><a href="{{ '/formulario' }}">Pago por depósito</a></li>
 					<li class="dropdown">
 					  <a class="dropdown-toggle" data-toggle="dropdown" href="#">Facturación
 					  <span class="caret"></span></a>
 					  <ul class="dropdown-menu">
-						<li><a href="http://localhost:8083/invoice/index/1">Listar CFDI's</a></li>
-						<li><a href="http://localhost:8083/invoice/create/0">Crear CFDI</a></li>
-						<li><a href="http://localhost:8083/invoice/massive/1/0">Crear CFDI's Masivos</a></li>
-						<li><a href="http://localhost:8083/invoice/createGlobal/0">Crear CFDI Global</a></li>                    
+						<li><a href="{{ '/invoice/index/1' }}">Listar CFDI's</a></li>
+						<li><a href="{{ '/invoice/create/0' }}">Crear CFDI</a></li>
+						<li><a href="{{ '/invoice/massive/1/0' }}">Crear CFDI's Masivos</a></li>
+						<li><a href="{{ '/invoice/createGlobal/0' }}">Crear CFDI Global</a></li>
 					  </ul>
 					</li>
-					<li class="active"><a href="http://localhost:8083/invoice/creditNote/0">Nota de Crédito</a></li>
+					<li class="active"><a href="{{ '/invoice/creditNote/0' }}">Nota de Crédito</a></li>
 				</ul>
 			</div>
 			</nav>

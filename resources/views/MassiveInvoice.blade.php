@@ -64,6 +64,8 @@
 			serverId = parseInt(pathname.split('/')[pathname.split('/').length - 2]),
 			key = parseInt(pathname.split('/')[pathname.split('/').length - 1]);
 
+		let host = location.origin;
+
 		console.log(pathname);
 		console.log(serverId);
 		console.log(key);
@@ -74,7 +76,7 @@
 		//Evento al botón de editar
 		$('.edit').on( "click", function() {
 			let id = $(this).attr('data-value');
-			window.location = 'http://localhost:8083/invoice/editMassive/' + id;    
+			window.location = host + '/invoice/editMassive/' + id;    
 		});
 
 
@@ -99,7 +101,7 @@
 			.then((willSend) => {
 				if (willSend) {
 					$.ajax({
-						url: 'http://localhost:8083/invoice/createCFDIMassive/' + serverId + '/' + key,
+						url:  host + '/invoice/createCFDIMassive/' + serverId + '/' + key,
 						method: 'POST',
 						contentType: false,
 						processData: false,
@@ -108,10 +110,10 @@
 							
 							var error = false,
 								detail_error = "",
-								detail_success = "";
+								detail_success = "",
+								arrayData = [];
 
 							for(var i = 1; i < data.length; i++) {
-								console.log(data[i].Response);
 
 								var result = JSON.parse(data[i].Response);
 
@@ -124,7 +126,8 @@
 								{
 									detail_success += data[i].RFC + ": " + result.message + "\n";
 									error = false;
-								}	
+								}
+								arrayData.push(data);
 							}
 							if (error)
 							{
@@ -139,7 +142,31 @@
 							}
 							else if(result.response === "success")
 							{
-								console.log(result.UUID);
+								
+								let formData = new FormData();
+
+								//Enviar datos de las facturas al controlador
+								for (i = 0; i < arrayData.length; i++)
+								{
+									formData.append('id', arrayData[i].Id);
+									formData.append('uuid', arrayData[i].Response.UUID);
+									formData.append('folio', arrayData[i].Response.INV.Folio);
+									formData.append('fechatimbrado', arrayData[i].Response.SAT.FechaTimbrado);
+									formData.append('nocertificadosat', arrayData[i].Response.SAT.NoCertificadoSAT);
+								}
+								debugger
+								$.ajax({
+									type: 'POST',
+									url: host + '/invoice/actualizarRegistrosFacturas',
+									data: formData, 
+									contentType: false,
+									processData: false,
+									beforeSend: function () {},
+									success:  function (response) {
+                      
+									  console.log(response);
+									}
+								});   
 								swal({
 									title: "¡Éxito!",
 									text: detail_success,
