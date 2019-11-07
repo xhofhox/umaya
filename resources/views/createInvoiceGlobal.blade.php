@@ -73,8 +73,8 @@
 										<option value="D07">D07 Primas por seguros de gastos médicos.</option>
 										<option value="D08">D08 Gastos de transportación escolar obligatoria.</option>
 										<option value="D09">D09 Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones.</option>
-										<option value="D10" selected="false">D10 Pagos por servicios educativos (colegiaturas)</option>
-										<option value="P01">P01 Por definir</option>
+										<option value="D10">D10 Pagos por servicios educativos (colegiaturas)</option>
+										<option value="P01" selected="true">P01 Por definir</option>
 									</select>
 								</div>
 							</div>
@@ -205,10 +205,10 @@
 							<tbody>
 								@foreach($invoice['concepts'] as $concept)
 								<tr>
-									 <td>86121701</td>
+									 <td>{{ $concept['clave_sat'] }}</td>
 									 <td>1</td>
 									 <td>ACT</td>
-									 <td>Recibo {{ $concept['id'] }}</td>
+									 <td>Recibo {{ $concept['folio'] }}</td>
 									 <td>{{ $concept['to_pay'] }}</td>
 									 <td>{{ $concept['to_pay'] }}</td>
 								</tr>
@@ -250,7 +250,9 @@
           data: formData, 
           contentType: false,
           processData: false,
-          beforeSend: function () {
+           beforeSend: function () {
+				// Show full page Loading Overlay
+				$.LoadingOverlay("show");
 		  },
           success:  function (data) {
             console.log(data);
@@ -293,7 +295,7 @@
                 data.append('folio',responseInvoice.INV.Folio);
                 data.append('fechatimbrado',responseInvoice.SAT.FechaTimbrado);
                 data.append('nocertificadosat',responseInvoice.SAT.NoCertificadoSAT);
-                //aqui van los demas campos
+                data.append('serie', responseInvoice.INV.Serie);
                 
 				//Actualizar el registro de factura para indicar que se ha generado
                 $.ajax({
@@ -344,6 +346,7 @@
             }
           },
 		  complete: function () {
+				$.LoadingOverlay("hide");
 		  }
       });
     });
