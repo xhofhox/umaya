@@ -269,10 +269,8 @@ class InvoiceController extends Controller
                     break;
             }
             
-            //Validar receptor uuid 
+            //Validar existencia de receptor UID 
             $cliente_rfc = $request->input('RFC');
-            //dd($cliente_rfc);
-            //validarcliente($cliente_rfc, $urlconsultacliente, $urlcrearcliente, $apikey, $secretkey);
             $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, $UrlConsultaCliente.$cliente_rfc);
@@ -286,100 +284,99 @@ class InvoiceController extends Controller
                 "f-secret-key: " .$secretKey
             ));
             $response = curl_exec($ch);
-            //dd($response);
-            curl_close($ch);
-            //var_dump($response);
-            
-            
-            //--------------- CREAR CFDI --------------------- //
-            
-            $ClaveProdServ = $request->input('ClaveProdServ');
-            $Cantidad = $request->input('Cantidad');
-            $ClaveUnidad = $request->input('ClaveUnidad');
-            $ValorUnitario = $request->input('ValorUnitario');
-            $Descripcion = $request->input('Descripcion');
-            $Descuento = $request->input('Descuento');
-            $Impuesto = $request->input('Impuesto');
-            $TipoFactor = $request->input('TipoFactor');
-            $TasaOCuota = $request->input('TasaOCuota');
-            $Importe = $request->input('Importe');
 
-			$Conceptos[] = array();
+			$json = json_decode($response);
 
-			//Obtener los conceptos asociados a la factura
-			$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id);
-			
-			//$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id)->toArray();
-
-			//Recorrer los conceptos y agregar unicamente la información de utilidad
-			foreach($Concepts as $concept)
-			{
-				array_push(
-					$Conceptos,
-					array(
-						'ClaveProdServ' => $concept -> clave_sat,
-						'Cantidad' => $concept -> cantidad,
-						'ClaveUnidad' => $concept -> claveunidad,
-						'Unidad' => $concept -> unidad,
-						//'Unidad' => 'Unidad de servicio',
-						'ValorUnitario' => $concept -> precio_unitario,
-						'Descripcion' => $concept -> descripcion,
-						'Descuento' => $concept -> descuento,
-						'Impuestos' => [
-							'Traslados' => []
-						],
-					)
-				);
+			if ($json->status == "error") {
+				curl_close($ch);
+				return die($response);
 			}
+			else {
+				$Receptor = $json->Data->UID;			
+				curl_close($ch);
+				//--------------- CREAR CFDI --------------------- //
+            
+				$ClaveProdServ = $request->input('ClaveProdServ');
+				$Cantidad = $request->input('Cantidad');
+				$ClaveUnidad = $request->input('ClaveUnidad');
+				$ValorUnitario = $request->input('ValorUnitario');
+				$Descripcion = $request->input('Descripcion');
+				$Descuento = $request->input('Descuento');
+				$Impuesto = $request->input('Impuesto');
+				$TipoFactor = $request->input('TipoFactor');
+				$TasaOCuota = $request->input('TasaOCuota');
+				$Importe = $request->input('Importe');
+				$Conceptos[] = array();
 
-			unset($Conceptos[0]);
-            
-            $Receptor = $request->input('Receptor');
-            $TipoDocumento = $request->input('TipoDocumento');
-            $UsoCFDI = $request->input('UsoCFDI');
-            $FormaPago = $request->input('FormaPago');
-            $MetodoPago = $request->input('MetodoPago');
-            $Moneda = $request->input('Moneda');
-            $CondicionesDePago = $request->input('CondicionesDePago');
-            $Serie = $request->input('Serie');
-            
-            $ch = curl_init();
-            $fields = [
-                "Receptor" => ["UID" => $Receptor],
-                "TipoDocumento" => $TipoDocumento,
-                "UsoCFDI" => $UsoCFDI,
-                "Redondeo" => 2,
-                "Conceptos" => $Conceptos,
-                "FormaPago" => $FormaPago,
-                "MetodoPago" => $MetodoPago,
-                "Moneda" => $Moneda,
-                "CondicionesDePago" => $CondicionesDePago,
-                "Serie" => $Serie,
-                "EnviarCorreo" => 'true',
-                "InvoiceComments" => "Prueba"
-            ];
+				//Obtener los conceptos asociados a la factura
+				$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id);
+				//$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id)->toArray();
 
-            $jsonfield = json_encode($fields);
+				//Recorrer los conceptos y agregar unicamente la información de utilidad
+				foreach($Concepts as $concept)
+				{
+					array_push(
+						$Conceptos,
+						array(
+							'ClaveProdServ' => $concept -> clave_sat,
+							'Cantidad' => $concept -> cantidad,
+							'ClaveUnidad' => $concept -> claveunidad,
+							'Unidad' => $concept -> unidad,
+							'ValorUnitario' => $concept -> precio_unitario,
+							'Descripcion' => $concept -> descripcion,
+							'Descuento' => $concept -> descuento,
+							'Impuestos' => [
+								'Traslados' => []
+							],
+						)
+					);
+				}
+				unset($Conceptos[0]);
             
-            curl_setopt($ch, CURLOPT_URL, $urlFactura);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($ch, CURLOPT_HEADER, FALSE);
-            curl_setopt($ch, CURLOPT_POST, TRUE);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
+				//$Receptor = $request->input('Receptor');
+				$TipoDocumento = $request->input('TipoDocumento');
+				$UsoCFDI = $request->input('UsoCFDI');
+				$FormaPago = $request->input('FormaPago');
+				$MetodoPago = $request->input('MetodoPago');
+				$Moneda = $request->input('Moneda');
+				$CondicionesDePago = $request->input('CondicionesDePago');
+				$Serie = $request->input('Serie');
             
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                "Content-Type: application/json",
-                "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-                "F-Api-Key: ".$apiKey,
-                "F-Secret-Key: " .$secretKey
-            ));
+				$ch = curl_init();
+				$fields = [
+					"Receptor" => ["UID" => $Receptor],
+					"TipoDocumento" => $TipoDocumento,
+					"UsoCFDI" => $UsoCFDI,
+					"Redondeo" => 2,
+					"Conceptos" => $Conceptos,
+					"FormaPago" => $FormaPago,
+					"MetodoPago" => $MetodoPago,
+					"Moneda" => $Moneda,
+					"CondicionesDePago" => $CondicionesDePago,
+					"Serie" => $Serie,
+					"EnviarCorreo" => 'true',
+					"InvoiceComments" => "Prueba"
+				];
+
+				$jsonfield = json_encode($fields);
             
-            $response = curl_exec($ch);
+				curl_setopt($ch, CURLOPT_URL, $urlFactura);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				curl_setopt($ch, CURLOPT_HEADER, FALSE);
+				curl_setopt($ch, CURLOPT_POST, TRUE);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
             
-            return die($response);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+					"Content-Type: application/json",
+					"F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+					"F-Api-Key: ".$apiKey,
+					"F-Secret-Key: " .$secretKey
+				));
             
-            curl_close($ch);
-            
+				$response = curl_exec($ch);
+				return die($response);
+				curl_close($ch);
+			}
         }
     }
 
@@ -418,96 +415,132 @@ class InvoiceController extends Controller
 		//Recorrer las facturas para generarlas
 		foreach($Invoices as $invoice_ext)
 		{
-			//dd($invoice);			
-			//$invoice_ext = InvoiceExt::where('id', $invoice->id)->first();
-			
-
 			//Verificar si la factura ya existe
 			if ($invoice_ext->status == 1)
 			{
 				$Responses["message"] = 'La factura '.$invoice_ext->folio.' ya existe.';
 			} 
 			else {
-				//Obtener los conceptos asociados a la factura
-				$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $invoice_ext->id);			
-				//$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id)->toArray();
+				//Validar existencia de receptor UID 
+				$cliente_rfc = $invoice_ext->rfc;
+				//dd($cliente_rfc);
+				$this->returnValueAPI($server_api);
+				$UrlConsultaCliente;
 
-				//Recorrer los conceptos y agregar unicamente la información de utilidad
-				foreach($Concepts as $concept)
-				{
-					$Contador ++;
+				//Verificar Servidor para obtener los datos de conexión
+				switch ($server_api) {
+					case "1": //sandbox
+						$UrlConsultaCliente = 'http://devfactura.in/api/v1/clients/';
+						break;
+					case "2": //producción
+						$UrlConsultaCliente = 'https://factura.com/api/v1/clients/';
+						break;
+				}
+
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $UrlConsultaCliente.$cliente_rfc);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_HEADER, false);
+
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+					"content-type: application/json",
+					"f-plugin: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+					"f-api-key: ".$this->apiKey,
+					"f-secret-key: " .$this->secretKey
+				));
+				$res = curl_exec($ch);
+
+				$json = json_decode($res);
+
+				if ($json->status == "error") {
+					curl_close($ch);
 					array_push(
-						$Conceptos,
+						$Responses,
 						array(
-							'ClaveProdServ' => $concept -> clave_sat,
-							'Cantidad' => $concept -> cantidad,
-							'ClaveUnidad' => $concept -> claveunidad,
-							'Unidad' => $concept -> unidad,
-							'ValorUnitario' => $concept -> precio_unitario,
-							'Descripcion' => $concept -> descripcion,
-							'Descuento' => $concept -> descuento,
-							'Impuestos' => [
-								'Traslados' => []
-							],
+							'Response' =>  $res,
+							'RFC' => $invoice_ext->rfc,
+							'Id' => $invoice_ext->id 
 						)
 					);
 				}
-				if ($Contador == 1){
-					unset($Conceptos[0]);
+				else {
+					//Obtener los conceptos asociados a la factura
+					$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $invoice_ext->id);
+
+					//Recorrer los conceptos y agregar unicamente la información de utilidad
+					foreach($Concepts as $concept)
+					{
+						$Contador ++;
+						array_push(
+							$Conceptos,
+							array(
+								'ClaveProdServ' => $concept -> clave_sat,
+								'Cantidad' => $concept -> cantidad,
+								'ClaveUnidad' => $concept -> claveunidad,
+								'Unidad' => $concept -> unidad,
+								'ValorUnitario' => $concept -> precio_unitario,
+								'Descripcion' => $concept -> descripcion,
+								'Descuento' => $concept -> descuento,
+								'Impuestos' => [
+									'Traslados' => []
+								],
+							)
+						);
+					}
+					if ($Contador == 1){
+						unset($Conceptos[0]);
+					}
+
+					$ch = curl_init();
+					$fields = [
+						"Receptor" => ["UID" => $json->Data->UID],
+						"TipoDocumento" => "factura", //modificar
+						"UsoCFDI" => $invoice_ext->uso_cfdi,
+						"Redondeo" => 2,
+						"Conceptos" => $Conceptos,
+						"FormaPago" => $invoice_ext->forma_pago,
+						"MetodoPago" => $invoice_ext->metodo_pago,
+						"Moneda" => "MXN",
+						"CondicionesDePago" => $invoice_ext->condicion_pago,
+						"Serie" => $invoice_ext->serie,
+						"EnviarCorreo" => 'true',
+						"InvoiceComments" => "Facturación masiva"
+					];
+
+					$this->Endpoint = '/api/v3/cfdi33/create';
+
+					$jsonfield = json_encode($fields);
+					//var_dump($jsonfield);
+					$ch = curl_init();
+					curl_setopt($ch, CURLOPT_URL, $this->Host.$this->Endpoint);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+					curl_setopt($ch, CURLOPT_HEADER, FALSE);
+					curl_setopt($ch, CURLOPT_POST, TRUE);
+					curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
+
+					curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+					"Content-Type: application/json",
+						"F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+						"F-Api-Key: ".$this->apiKey,
+						"F-Secret-Key: ".$this->secretKey
+					));
+
+					$response = curl_exec($ch);
+					array_push(
+						$Responses,
+						array(
+							'Response' => $response,
+							'RFC' => $invoice_ext->rfc,
+							'Id' => $invoice_ext->id 
+						)
+					);
+					curl_close($ch);
+					//Limpiar arreglo
+					unset($Conceptos);
+					$Conceptos = array();
 				}
-				
-				//var_dump($Conceptos);
-				$ch = curl_init();
-				$fields = [
-					"Receptor" => ["UID" => $invoice_ext->uid],
-					"TipoDocumento" => "factura", //modificar
-					"UsoCFDI" => $invoice_ext->uso_cfdi,
-					"Redondeo" => 2,
-					"Conceptos" => $Conceptos,
-					"FormaPago" => $invoice_ext->forma_pago,
-					"MetodoPago" => $invoice_ext->metodo_pago,
-					"Moneda" => "MXN",
-					"CondicionesDePago" => $invoice_ext->condicion_pago,
-					"Serie" => $invoice_ext->serie,
-					"EnviarCorreo" => 'true',
-					"InvoiceComments" => "Facturación masiva"
-				];
-
-				$this->returnValueAPI($server_api);
-				$this->Endpoint = '/api/v3/cfdi33/create';
-
-				$jsonfield = json_encode($fields);
-				//var_dump($jsonfield);
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $this->Host.$this->Endpoint);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-				curl_setopt($ch, CURLOPT_HEADER, FALSE);
-				curl_setopt($ch, CURLOPT_POST, TRUE);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
-
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				"Content-Type: application/json",
-					"F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-					"F-Api-Key: ".$this->apiKey,
-					"F-Secret-Key: ".$this->secretKey
-				));
-
-				$response = curl_exec($ch);
-				array_push(
-					$Responses,
-					array(
-						'Response' => $response,
-						'RFC' => $invoice_ext->rfc,
-						'Id' => $invoice_ext->id 
-					)
-				);
-				curl_close($ch);
-
-				//Limpiar arreglo
-				unset($Conceptos);
-				$Conceptos = array();
-
 			}//Fin else
+			//dd($Responses);
 		}//Fin foreach
 		return response()->json($Responses, 200);
     }
@@ -672,7 +705,7 @@ class InvoiceController extends Controller
         $data = InvoiceExt::find($id);
 
         //$concepts = PayRecipments::where('id_global_invoice', $id)->get();
-			$concepts = PayRecipments::where('invoice_ext_id', $id)->get();
+		$concepts = PayRecipments::where('invoice_ext_id', $id)->get();
         $invoice = ['data' => $data, 'concepts' => $concepts];
         return view('createInvoiceGlobal', compact('invoice'));
     }
@@ -689,7 +722,7 @@ class InvoiceController extends Controller
         //Verificar si la factura ya existe
         $invoice_ext = InvoiceExt::where('id', $id)->first();
 
-        if ($invoice_ext->status == 1)
+        if ($invoice_ext->status == 10)
         {
             $response = array();
             $response["message"] = 'La factura ya fue generada anteriormente.';
@@ -730,11 +763,9 @@ class InvoiceController extends Controller
                     break;
             }
             
-            //Validar receptor uuid 
-            //$cliente_rfc = $request->input('RFC');
-            //dd($cliente_rfc);
-            //validarcliente($cliente_rfc, $urlconsultacliente, $urlcrearcliente, $apikey, $secretkey);
-            /*$ch = curl_init();
+            //Validar existencia de receptor UID 
+            $cliente_rfc = $request->input('RFC');
+            $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, $UrlConsultaCliente.$cliente_rfc);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -747,98 +778,100 @@ class InvoiceController extends Controller
                 "f-secret-key: " .$secretKey
             ));
             $response = curl_exec($ch);
-            dd($response);
-            curl_close($ch);*/
-            //var_dump($response);
-            
-            
-            //--------------- CREAR CFDI --------------------- //
-            
-            $ClaveProdServ = "86121701";
-            $Cantidad = 1;
-            $ClaveUnidad = "ACT";
-            $ValorUnitario = $request->input('to_pay');
-            $Descripcion = "Recibo: ".$request->input('id');
-            $Descuento = $request->input('discount');
-            /*$Impuesto = $request->input('Impuesto');
-            $TipoFactor = $request->input('TipoFactor');
-            $TasaOCuota = $request->input('TasaOCuota');
-            $Importe = $request->input('Importe');*/
 
-			$Conceptos[] = array();
+			$json = json_decode($response);
 
-			//Obtener los conceptos asociados a la factura
-			//$Concepts = PayRecipments::all()->where('id_global_invoice', '=', $id);		
-				$Concepts = PayRecipments::all()->where('invoice_ext_id', '=', $id);
-			//Recorrer los conceptos y agregar unicamente la información de utilidad
-			foreach($Concepts as $concept)
-			{
-				array_push(
-					$Conceptos,
-					array(
-						//'ClaveProdServ' => "86121701",
-						'ClaveProdServ' => $concept -> clave_sat,
-						'Cantidad' => '1',
-						'ClaveUnidad' => "ACT",
-						'Unidad' => "Actividad",
-						'ValorUnitario' => $concept -> to_pay,
-						'Descripcion' => "NO. Recibo: ".$concept -> folio,
-						'Descuento' => $concept -> discount,
-						'Impuestos' => [
-							'Traslados' => []
-						],
-					)
-				);
+			if ($json->status == "error") {
+				curl_close($ch);
+				return die($response);
 			}
+			else {
+				//--------------- CREAR CFDI --------------------- //
+				$ClaveProdServ = "86121701";
+				$Cantidad = 1;
+				$ClaveUnidad = "ACT";
+				$ValorUnitario = $request->input('to_pay');
+				$Descripcion = "Recibo: ".$request->input('id');
+				$Descuento = $request->input('discount');
+				/*$Impuesto = $request->input('Impuesto');
+				$TipoFactor = $request->input('TipoFactor');
+				$TasaOCuota = $request->input('TasaOCuota');
+				$Importe = $request->input('Importe');*/
 
-			unset($Conceptos[0]);
-            
-            $Receptor = $request->input('Receptor');
-            $TipoDocumento = $request->input('TipoDocumento');
-            $UsoCFDI = $request->input('UsoCFDI');
-            $FormaPago = $request->input('FormaPago');
-            $MetodoPago = $request->input('MetodoPago');
-            $Moneda = $request->input('Moneda');
-            $CondicionesDePago = $request->input('CondicionesDePago');
-            $Serie = $request->input('Serie');
-            
-            $ch = curl_init();
-            $fields = [
-                "Receptor" => ["UID" => $Receptor],
-                "TipoDocumento" => $TipoDocumento,
-                "UsoCFDI" => $UsoCFDI,
-                "Redondeo" => 2,
-                "Conceptos" => $Conceptos,
-                "FormaPago" => $FormaPago,
-                "MetodoPago" => $MetodoPago,
-                "Moneda" => $Moneda,
-                "CondicionesDePago" => $CondicionesDePago,
-                "Serie" => $Serie,
-                "EnviarCorreo" => 'true',
-                "InvoiceComments" => "Factura Global"
-            ];
+				$Conceptos[] = array();
 
-            $jsonfield = json_encode($fields);
+				//Obtener los conceptos asociados a la factura
+				//$Concepts = PayRecipments::all()->where('id_global_invoice', '=', $id);		
+				$Concepts = PayRecipments::all()->where('invoice_ext_id', '=', $id);
+				//Recorrer los conceptos y agregar unicamente la información de utilidad
+				foreach($Concepts as $concept)
+				{
+					array_push(
+						$Conceptos,
+						array(
+							//'ClaveProdServ' => "86121701",
+							'ClaveProdServ' => $concept -> clave_sat,
+							'Cantidad' => '1',
+							'ClaveUnidad' => "ACT",
+							'Unidad' => "Actividad",
+							'ValorUnitario' => $concept -> to_pay,
+							'Descripcion' => "NO. Recibo: ".$concept -> folio,
+							'Descuento' => $concept -> discount,
+							'Impuestos' => [
+								'Traslados' => []
+							],
+						)
+					);
+				}
+
+				unset($Conceptos[0]);
             
-            curl_setopt($ch, CURLOPT_URL, $urlFactura);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($ch, CURLOPT_HEADER, FALSE);
-            curl_setopt($ch, CURLOPT_POST, TRUE);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
+				$Receptor = $request->input('Receptor');
+				$TipoDocumento = $request->input('TipoDocumento');
+				$UsoCFDI = $request->input('UsoCFDI');
+				$FormaPago = $request->input('FormaPago');
+				$MetodoPago = $request->input('MetodoPago');
+				$Moneda = $request->input('Moneda');
+				$CondicionesDePago = $request->input('CondicionesDePago');
+				$Serie = $request->input('Serie');
             
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                "Content-Type: application/json",
-                "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-                "F-Api-Key: ".$apiKey,
-                "F-Secret-Key: " .$secretKey
-            ));
+				$ch = curl_init();
+				$fields = [
+					"Receptor" => ["UID" => $Receptor],
+					"TipoDocumento" => $TipoDocumento,
+					"UsoCFDI" => $UsoCFDI,
+					"Redondeo" => 2,
+					"Conceptos" => $Conceptos,
+					"FormaPago" => $FormaPago,
+					"MetodoPago" => $MetodoPago,
+					"Moneda" => $Moneda,
+					"CondicionesDePago" => $CondicionesDePago,
+					"Serie" => $Serie,
+					"EnviarCorreo" => 'true',
+					"InvoiceComments" => "Factura Global"
+				];
+
+				$jsonfield = json_encode($fields);
             
-            $response = curl_exec($ch);
+				curl_setopt($ch, CURLOPT_URL, $urlFactura);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				curl_setopt($ch, CURLOPT_HEADER, FALSE);
+				curl_setopt($ch, CURLOPT_POST, TRUE);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
             
-            return die($response);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+					"Content-Type: application/json",
+					"F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+					"F-Api-Key: ".$apiKey,
+					"F-Secret-Key: " .$secretKey
+				));
             
-            curl_close($ch);
+				$response = curl_exec($ch);
             
+				return die($response);
+            
+				curl_close($ch);
+			}
         }
     }
 

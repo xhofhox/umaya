@@ -105,6 +105,12 @@
 						method: 'POST',
 						contentType: false,
 						processData: false,
+						beforeSend: function () {
+							$.LoadingOverlay("show");
+						},
+						complete: function () {
+							$.LoadingOverlay("hide");
+						},
 						success: function (data) {
 							console.log(data);
 							
@@ -114,17 +120,23 @@
 								arrayData = [];
 
 							for(var i = 1; i < data.length; i++) {
-
+								debugger
 								var result = JSON.parse(data[i].Response);
+								
+								if (result.status === "error")
+								{
+									detail_error += "Id :" + data[i].Id + ":" + data[i].RFC + ": " + result.message + "\n";
+									error = true;
+								}
 
 								if (result.response === "error")
 								{
-									detail_error += data[i].RFC + ": " + result.message + "\n";
+									detail_error += "Id :" + data[i].Id + ":" + data[i].RFC + ": " + result.message + "\n";
 									error = true;
 								}
 								if (result.response === "success")
 								{
-									detail_success += data[i].RFC + ": " + result.message + "\n";
+									detail_success += "Id :" + data[i].Id + ":" + data[i].RFC + ": " + result.message + "\n";
 									error = false;
 								}
 								arrayData.push(data);
@@ -136,7 +148,7 @@
 									text: detail_error,
 									type: "error",
 									icon: "error",
-									timer: 10000,
+									timer: 30000,
 									button: "OK",
 								});
 							}
@@ -154,7 +166,7 @@
 									formData.append('fechatimbrado', arrayData[i].Response.SAT.FechaTimbrado);
 									formData.append('nocertificadosat', arrayData[i].Response.SAT.NoCertificadoSAT);
 								}
-								debugger
+								
 								$.ajax({
 									type: 'POST',
 									url: host + '/invoice/actualizarRegistrosFacturas',
@@ -162,8 +174,7 @@
 									contentType: false,
 									processData: false,
 									beforeSend: function () {},
-									success:  function (response) {
-                      
+									success:  function (response) {                      
 									  console.log(response);
 									}
 								});   
@@ -172,7 +183,7 @@
 									text: detail_success,
 									type: "success",
 									icon: "success",
-									timer: 10000,
+									timer: 30000,
 									button: "OK",
 								});
 							}

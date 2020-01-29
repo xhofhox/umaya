@@ -256,32 +256,44 @@
 		  },
           success:  function (data) {
             console.log(data);
+			$.LoadingOverlay("hide");
             var responseInvoice = JSON.parse(data);
             if (!undefined)
             {
-              if (responseInvoice.response === "warning")
-              {
-                swal({
-                  title: "¡Advertencia!",
-                  text: responseInvoice.message.message ,
-                  type: "warning",
-                  icon: "warning",
-                  timer: 10000,
-                  button: "OK",
-                });
-              }
+				if (responseInvoice.status === "error")
+				  {
+					swal({
+					  title: "¡Advertencia!",
+					  text: responseInvoice.message ,
+					  type: "error",
+					  icon: "error",
+					  timer: 10000,
+					  button: "OK",
+					});
+				 }
+				  if (responseInvoice.response === "warning")
+				  {
+					swal({
+					  title: "¡Advertencia!",
+					  text: responseInvoice.message.message ,
+					  type: "warning",
+					  icon: "warning",
+					  timer: 10000,
+					  button: "OK",
+					});
+				  }
           
-              else if (responseInvoice.response === "error")
-              {
-                swal({
-                  title: "¡Ocurrió un error!",
-                  text: responseInvoice.message.message ,
-                  type: "error",
-                  icon: "error",
-                  timer: 10000,
-                  button: "OK",
-                });
-              }
+				  else if (responseInvoice.response === "error")
+				  {
+					swal({
+					  title: "¡Ocurrió un error!",
+					  text: responseInvoice.message.message ,
+					  type: "error",
+					  icon: "error",
+					  timer: 10000,
+					  button: "OK",
+					});
+				  }
 
               else
               {

@@ -13,7 +13,7 @@
 					<form method="POST" 
 						action="/invoice/crearCFDI"
 						accept-charset="UTF-8" 
-						id="form-invoice">            
+						id="form-invoice">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<input type="hidden" name="id" value=" {{ $invoice['data']['id'] }}">
 						<div class="form-group">
@@ -255,12 +255,25 @@
           contentType: false,
           processData: false,
           beforeSend: function () {
+			$.LoadingOverlay("show");
 		  },
           success:  function (data) {
             console.log(data);
+			$.LoadingOverlay("hide");
             var responseInvoice = JSON.parse(data);
             if (!undefined)
             {
+			  if (responseInvoice.status === "error")
+              {
+                swal({
+                  title: "¡Advertencia!",
+                  text: responseInvoice.message ,
+                  type: "error",
+                  icon: "error",
+                  timer: 10000,
+                  button: "OK",
+                });
+              }
               if (responseInvoice.response === "warning")
               {
                 swal({
@@ -333,6 +346,7 @@
             }
           },
 		  complete: function () {
+			$.LoadingOverlay("hide");
 		  }
       });
     });
