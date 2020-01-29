@@ -765,6 +765,7 @@ class InvoiceController extends Controller
             
             //Validar existencia de receptor UID 
             $cliente_rfc = $request->input('RFC');
+			
             $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, $UrlConsultaCliente.$cliente_rfc);
@@ -780,6 +781,7 @@ class InvoiceController extends Controller
             $response = curl_exec($ch);
 
 			$json = json_decode($response);
+			//dd($cliente_rfc);
 
 			if ($json->status == "error") {
 				curl_close($ch);
@@ -826,7 +828,7 @@ class InvoiceController extends Controller
 
 				unset($Conceptos[0]);
             
-				$Receptor = $request->input('Receptor');
+				//$Receptor = $request->input('Receptor');
 				$TipoDocumento = $request->input('TipoDocumento');
 				$UsoCFDI = $request->input('UsoCFDI');
 				$FormaPago = $request->input('FormaPago');
@@ -837,7 +839,7 @@ class InvoiceController extends Controller
             
 				$ch = curl_init();
 				$fields = [
-					"Receptor" => ["UID" => $Receptor],
+					"Receptor" => ["UID" => $json->Data->UID],
 					"TipoDocumento" => $TipoDocumento,
 					"UsoCFDI" => $UsoCFDI,
 					"Redondeo" => 2,

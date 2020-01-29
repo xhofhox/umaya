@@ -13,7 +13,7 @@
           <form method="POST" 
                 action="/invoice/crearCFDI"
                 accept-charset="UTF-8" 
-                id="form-invoice">            
+                id="form-invoice">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="id" value=" {{ $invoice['data']['id'] }}">
             <div class="form-group">

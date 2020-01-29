@@ -76,7 +76,7 @@
 		//Evento al botón de editar
 		$('.edit').on( "click", function() {
 			let id = $(this).attr('data-value');
-			window.location = host + '/invoice/editMassive/' + id;    
+			window.location = host + '/invoice/editMassive/' + id;
 		});
 
 
@@ -113,78 +113,61 @@
 						},
 						success: function (data) {
 							console.log(data);
-							
+							$.LoadingOverlay("hide");
 							var error = false,
-								detail_error = "",
-								detail_success = "",
-								arrayData = [];
+								detail_info = "";
 
 							for(var i = 1; i < data.length; i++) {
-								debugger
-								var result = JSON.parse(data[i].Response);
 								
+								var result = JSON.parse(data[i].Response);
+
+								//Verificar validación cliente
 								if (result.status === "error")
 								{
-									detail_error += "Id :" + data[i].Id + ":" + data[i].RFC + ": " + result.message + "\n";
-									error = true;
+									detail_info += "Id :" + data[i].Id + ":" + data[i].RFC + ": " + result.message + "\n";
 								}
 
 								if (result.response === "error")
 								{
-									detail_error += "Id :" + data[i].Id + ":" + data[i].RFC + ": " + result.message + "\n";
-									error = true;
+									detail_info += "Id :" + data[i].Id + ":" + data[i].RFC + ": " + result.message + "\n";
 								}
+
 								if (result.response === "success")
 								{
-									detail_success += "Id :" + data[i].Id + ":" + data[i].RFC + ": " + result.message + "\n";
-									error = false;
-								}
-								arrayData.push(data);
-							}
-							if (error)
-							{
-								swal({
-									title: "¡Error!",
-									text: detail_error,
-									type: "error",
-									icon: "error",
-									timer: 30000,
-									button: "OK",
-								});
-							}
-							else if(result.response === "success")
-							{
-								
-								let formData = new FormData();
+									detail_info += "Id :" + data[i].Id + ":" + data[i].RFC + ": " + result.message + "\n";
 
-								//Enviar datos de las facturas al controlador
-								for (i = 0; i < arrayData.length; i++)
-								{
-									formData.append('id', arrayData[i].Id);
-									formData.append('uuid', arrayData[i].Response.UUID);
-									formData.append('folio', arrayData[i].Response.INV.Folio);
-									formData.append('fechatimbrado', arrayData[i].Response.SAT.FechaTimbrado);
-									formData.append('nocertificadosat', arrayData[i].Response.SAT.NoCertificadoSAT);
-								}
+									var formData = new FormData();
+
+									//Enviar datos de las facturas al controlador
+									formData.append('id', data[i].Id);
+									formData.append('uuid', result.UUID);
+									formData.append('folio', result.INV.Folio);
+									formData.append('fechatimbrado', result.SAT.FechaTimbrado);
+									formData.append('nocertificadosat', result.SAT.NoCertificadoSAT);
+									formData.append('serie', result.INV.Serie);
 								
-								$.ajax({
-									type: 'POST',
-									url: host + '/invoice/actualizarRegistrosFacturas',
-									data: formData, 
-									contentType: false,
-									processData: false,
-									beforeSend: function () {},
-									success:  function (response) {                      
-									  console.log(response);
-									}
-								});   
+									$.ajax({
+										type: 'POST',
+										url: host + '/invoice/actualizarRegistroFactura',
+										data: formData, 
+										contentType: false,
+										processData: false,
+										beforeSend: function () {},
+										success:  function (response) {
+											console.log(response);
+										}
+									});
+								}
+								//Notificación
 								swal({
-									title: "¡Éxito!",
-									text: detail_success,
-									type: "success",
-									icon: "success",
+									title: "¡Hecho!",
+									text: detail_info,
+									type: "info",
+									icon: "info",
 									timer: 30000,
 									button: "OK",
+								}).then((value) => {
+									location.reload();
 								});
 							}
 						},
