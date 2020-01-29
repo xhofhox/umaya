@@ -722,7 +722,7 @@ class InvoiceController extends Controller
         //Verificar si la factura ya existe
         $invoice_ext = InvoiceExt::where('id', $id)->first();
 
-        if ($invoice_ext->status == 10)
+        if ($invoice_ext->status == 1)
         {
             $response = array();
             $response["message"] = 'La factura ya fue generada anteriormente.';
