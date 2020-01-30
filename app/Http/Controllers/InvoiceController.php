@@ -381,6 +381,168 @@ class InvoiceController extends Controller
     }
 
 	/**
+     * Crear CFDI 
+	 * @param Request $request
+     * @return response
+     */
+	public function crearCFDICreditNote(Request $request)
+    {
+         $id = $request->input('id');
+
+        //Verificar si la factura ya existe
+        $invoice_ext = InvoiceExt::where('id', $id)->first();
+
+        if ($invoice_ext->status == 1)
+        {
+            $response = array();
+            $response["message"] = 'La factura ya fue generada anteriormente.';
+            
+            return response()->json(
+                collect([
+                    'response' => 'warning',
+                    'message' => $response,
+                    
+                ])->toJson()
+            ); 
+        } 
+        else 
+        {
+            //Generar factura
+            $urlFactura;
+            $apiKey;
+            $secretKey;
+            $UrlConsultaCliente;
+            $UrlCrearCliente;
+            $server_api = $request->input('Servidor');
+            
+            //Verificar Servidor para obtener los datos de conexión
+            switch ($server_api) {
+                case "1": //sandbox
+                    $urlFactura = 'http://devfactura.in/api/v3/cfdi33/create';
+                    $UrlConsultaCliente = 'http://devfactura.in/api/v1/clients/';
+                    $UrlCrearCliente = 'http://devfactura.in/api/v1/clients/create/';
+                    $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
+                    $secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
+                    break;
+                case "2": //producción
+                    $urlFactura = 'https://factura.com/api/v3/cfdi33/create';
+                    $UrlConsultaCliente = 'https://factura.com/api/v1/clients/';
+                    $UrlCrearCliente = 'https://factura.com/api/v1/clients/create/';
+                    $apiKey = 'JDJ5JDEwJEtHL0c0RVNSUUVLS09uWDRublg3c3VncURHQklZZEVMRmJuWWFTTHpUakdVVFM0UHdJQUZp';
+                    $secretKey = 'JDJ5JDEwJEpvRDJKbHplNXJwZzh0SWVGWlRoUy50YlpRRWs5cEI2dC4uU0pMck1Ic3hXdU1Tb0p4UC5l';
+                    break;
+            }
+            
+            //Validar existencia de receptor UID 
+            $cliente_rfc = $request->input('RFC');
+			
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $UrlConsultaCliente.$cliente_rfc);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "content-type: application/json",
+                "f-plugin: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+                "f-api-key: ".$apiKey,
+                "f-secret-key: " .$secretKey
+            ));
+            $response = curl_exec($ch);
+
+			$json = json_decode($response);
+			//dd($cliente_rfc);
+
+			if ($json->status == "error") {
+				curl_close($ch);
+				return die($response);
+			}
+			else {
+				//--------------- CREAR CFDI --------------------- //
+				$Conceptos[] = array();
+
+				//Obtener los conceptos asociados a la factura
+				$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id);
+
+				//Recorrer los conceptos y agregar unicamente la información de utilidad
+				foreach($Concepts as $concept)
+				{
+					//dd($concept);
+					array_push(
+						$Conceptos,
+						array(
+							'ClaveProdServ' => $concept -> clave_sat,
+							'Cantidad' => $concept -> cantidad,
+							'ClaveUnidad' => $concept -> claveunidad,
+							'Unidad' => $concept -> unidad,
+							'ValorUnitario' => $concept -> precio_unitario,
+							'Descripcion' => $concept -> descripcion,
+							'Descuento' => $concept -> descuento,
+							'Impuestos' => [
+								'Traslados' => []
+							],
+						)
+					);
+				}
+				unset($Conceptos[0]);
+
+
+				$TipoDocumento = $request->input('TipoDocumento');
+				$UsoCFDI = $request->input('UsoCFDI');
+				$FormaPago = $request->input('FormaPago');
+				$MetodoPago = $request->input('MetodoPago');
+				$Moneda = $request->input('Moneda');
+				$CondicionesDePago = $request->input('CondicionesDePago');
+				$Serie = $request->input('Serie');
+
+				$ch = curl_init();
+				$fields = [
+					"Receptor" => ["UID" => $json->Data->UID],
+					"TipoDocumento" => $TipoDocumento,
+					"UsoCFDI" => $UsoCFDI,
+					"Redondeo" => 2,
+					"Conceptos" => $Conceptos,
+					"FormaPago" => $FormaPago,
+					"MetodoPago" => $MetodoPago,
+					"Moneda" => $Moneda,
+					"CondicionesDePago" => $CondicionesDePago,
+					"Serie" => $Serie,
+					"EnviarCorreo" => 'true',
+					"InvoiceComments" => "Nota de crédito",
+					"CfdiRelacionados" => [
+						"TipoRelacion" => $request->input('relation_type'),
+						"UUID" => [
+							$request->input('CFDIRel')
+						]
+					]
+				];
+
+				$jsonfield = json_encode($fields);
+            
+				curl_setopt($ch, CURLOPT_URL, $urlFactura);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				curl_setopt($ch, CURLOPT_HEADER, FALSE);
+				curl_setopt($ch, CURLOPT_POST, TRUE);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
+            
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+					"Content-Type: application/json",
+					"F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+					"F-Api-Key: ".$apiKey,
+					"F-Secret-Key: " .$secretKey
+				));
+            
+				$response = curl_exec($ch);
+            
+				return die($response);
+            
+				curl_close($ch);
+			}
+        }
+    }
+
+
+	/**
      * Listar CFDI Masivo
 	 * @param int $server_api
 	 * @param string $id_massive_invoice
@@ -696,8 +858,8 @@ class InvoiceController extends Controller
         $data = InvoiceExt::find($id);
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
         $invoice = ['data' => $data, 'concepts' => $concepts];
-        return view('createGlobalInvoice', compact('invoice'));         
-    }*/
+        return view('createGlobalInvoice', compact('invoice'));
+	}*/
 
 	public function createGlobal($id)
     {
@@ -781,7 +943,6 @@ class InvoiceController extends Controller
             $response = curl_exec($ch);
 
 			$json = json_decode($response);
-			//dd($cliente_rfc);
 
 			if ($json->status == "error") {
 				curl_close($ch);
@@ -817,7 +978,7 @@ class InvoiceController extends Controller
 							'ClaveUnidad' => "ACT",
 							'Unidad' => "Actividad",
 							'ValorUnitario' => $concept -> to_pay,
-							'Descripcion' => "NO. Recibo: ".$concept -> folio,
+							'Descripcion' => "No. Recibo: ".$concept -> folio,
 							'Descuento' => $concept -> discount,
 							'Impuestos' => [
 								'Traslados' => []

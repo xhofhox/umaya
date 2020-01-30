@@ -67,29 +67,23 @@ Route::post('invoice/crearCFDIGlobal', 'InvoiceController@crearCFDIGlobal');
 //Actualizar información de los recibos
 Route::post('invoice/actualizarRegistroRecibos', 'InvoiceController@actualizarRegistroRecibos');
 
+//Generar nota de crédito
+Route::post('invoice/crearCFDICreditNote', 'InvoiceController@crearCFDICreditNote');
+
 Route::get('invoice/conexion', 'InvoiceController@conexion');
 Route::get('invoice/create/{id}', 'InvoiceController@create');
 Route::get('invoice/mostrarConcepto/{id}', 'InvoiceController@mostrarConcepto');
-
 Route::get('invoice/editMassive/{id}', 'InvoiceController@editMassive');
 Route::get('invoice/createGlobal/{id}', 'InvoiceController@createGlobal');
-
-
 Route::get('invoice/createGlobalDemo/{id}', 'InvoiceController@createGlobalDemo');
-
 Route::post('storage/save', 'StorageController@save');
 Route::post('invoice/crearCFDI', 'InvoiceController@crearCFDI');
 Route::post('invoice/saveConcept', 'InvoiceController@saveConcept');
-
 Route::post('invoice/listarCFDI', 'InvoiceController@listarCFDI');
-
 Route::get('invoice/creditNote/{id}', 'InvoiceController@creditNote');
-
 Route::get('invoice/descargarPDFx/{cfdi_uid}', 'InvoiceController@descargarPDFx');
 //Route::get('invoice/descargarPDF/{cfdi_uid}', 'InvoiceController@descargarPDF');
 Route::post('invoice/descargarXML', 'InvoiceController@descargarXML');
-
-
 
 Route::get('pdf/{archivo}', function($archivo){
   Fpdf::AddPage();

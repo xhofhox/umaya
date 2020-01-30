@@ -14,7 +14,7 @@ class PayRecipments extends Model
 		protected $fillable = array
 		(
 			'id',
-                        'folio',
+			'folio',
 			'payment_id',
 			'to_pay',
 			'discount',
@@ -22,10 +22,10 @@ class PayRecipments extends Model
 			'created_at',
 			'updated_at',
 			'scholarship_validation',
-                        'invoiced',
+			'invoiced',
 			//'id_global_invoice'
-                        'invoice_ext_id',
-                        'clave_sat',
+			'invoice_ext_id',
+			'clave_sat',
 			
 		);	
 }

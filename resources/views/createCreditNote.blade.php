@@ -11,7 +11,7 @@
       <div class="panel-heading"><h3>Nueva Nota de Crédito</h3></div>
         <div class="panel-body">
           <form method="POST" 
-                action="/invoice/crearCFDI"
+                action="/invoice/crearCFDICreditNote"
                 accept-charset="UTF-8" 
                 id="form-invoice">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -162,24 +162,18 @@
              <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                 <label for="Moneda">Número de cuenta:</label>
-                 <input class="form-control" name="Cuenta" placeholder="Últimos 4 dígitos de la tarjeta o cuenta bancaria del cliente."/>
+					 <label for="folio">Folio:</label>
+					 <input class="form-control" name="folio" placeholder=""/>
                </div>
               </div>
-              
-              
-              
-                       
-              
-              
               <div class="col-md-6">
-                <div class="form-group">  
+                <div class="form-group">
+					<label for="Cuenta">Número de cuenta:</label>
+					<input class="form-control" name="Cuenta" placeholder="Últimos 4 dígitos de la tarjeta o cuenta bancaria del cliente."/>
                 </div>
               </div>
-             </div>   
-             
-             
-             
+             </div>
+
               <h4>CFDI Relacionado</h4>
              <div class="row">
               <div class="col-md-2">
@@ -192,42 +186,34 @@
                        
                  </select>
                 </div>
-              </div>         
-              
-              
-              <div class="col-md-5">
+              </div>
+			  <div class="col-md-5">
                <div class="form-group">
-                 <label for="NivelEducativo">Tipo de Relación:</label>
-                 <select class="form-control col-md-8 selection-list" name="NivelEducativo">
+                 <label for="relation_type">Tipo de Relación:</label>
+                 <select class="form-control col-md-8 selection-list" name="relation_type">
                        <option value="selecciona">Selecciona</option>
-                       <option value="1" selected="true">Nota de cédito de los documentos relacionados</option>
-                       <option value="2">Nota de débito de los documentos relacionados</option>
-                       <option value="3">Devocución de marcancías sobre facturas o traslados previos</option>
-                       <option value="4">Sustitución de los FDI previos</option>
-                       <option value="5">Traslados de mercacías facturados previamente</option>
-                       <option value="6">Factura generada por los traslados previos</option>
-                       <option value="7">CFDI por aplicación de anticipo</option>
-                       <option value="8">Factura generada por pagos en parcialidades</option>
-                       <option value="9">Factura generada por pagos diferidos</option>
+					   <option value="{{ $invoice['data']['relation_type'] }}">{{ $invoice['data']['relation_type'] }}</option>
+                       <option value="01" selected="false">Nota de crédito de los documentos relacionados</option>
+                       <option value="02">Nota de débito de los documentos relacionados</option>
+                       <option value="03">Devocución de marcancías sobre facturas o traslados previos</option>
+                       <option value="04">Sustitución de los FDI previos</option>
+                       <option value="05">Traslados de mercacías facturados previamente</option>
+                       <option value="06">Factura generada por los traslados previos</option>
+                       <option value="07">CFDI por aplicación de anticipo</option>
+                       <option value="08">Factura generada por pagos en parcialidades</option>
+                       <option value="09">Factura generada por pagos diferidos</option>
                  </select>
                 </div>
               </div>
-              
-              
-              
+
               <div class="col-md-5">
                <div class="form-group">
                   <label for="CFDIRel">CFDI Relacionado:</label>
-                 <input class="form-control" name="CFDIRel" value="{{ $invoice['data']['rfc'] }}"/>
+                 <input class="form-control" name="CFDIRel" value="{{ $invoice['data']['relateduuid'] }}"/>
                 </div>
               </div>
              </div>
-             
-              
-             
-             
-             
-             
+            
              <h4>Conceptos</h4>
              <hr/>
             <table class="table table-striped">
@@ -263,8 +249,8 @@
                   @include('modalConcept') 
                   @endforeach
               </tbody>
-          </table>           
-           
+          </table>
+		  
            <!-- 
            <h4>Complementos</h4>
              <div class="row">
@@ -309,20 +295,9 @@
               </div>
              </div> 
              -->
-             
-             
-             
-             
-       
-
-
-             
-             
-             
-             
              <h4>Impuestos</h4>
-             <div class="row">              
-              <div class="col-md-3">
+             <div class="row">
+			 <div class="col-md-3">
                  <div class="form-group">
                   <label for="Impuesto">Impuesto:</label>
                   <select class="form-control col-md-8 selection-list" name="Impuesto">
@@ -387,36 +362,48 @@
           data: formData, 
           contentType: false,
           processData: false,
-          beforeSend: function () {},
+          beforeSend: function () {
+			$.LoadingOverlay("show");
+		  },
           success:  function (data) {
             console.log(data);
+			$.LoadingOverlay("hide");
             var responseInvoice = JSON.parse(data);
             if (!undefined)
             {
-              if (responseInvoice.response === "warning")
-              {
-                swal({
-                  title: "¡Advertencia!",
-                  text: responseInvoice.message.message ,
-                  type: "warning",
-                  icon: "warning",
-                  timer: 10000,
-                  button: "OK",
-                });
-              }
-          
-              else if (responseInvoice.response === "error")
-              {
-              
-                swal({
-                  title: "¡Ocurrió un error!",
-                  text: responseInvoice.message.message ,
-                  type: "error",
-                  icon: "error",
-                  timer: 10000,
-                  button: "OK",
-                });
-              }
+				if (responseInvoice.status === "error")
+				{
+					swal({
+						title: "¡Advertencia!",
+						text: responseInvoice.message ,
+						type: "error",
+						icon: "error",
+						timer: 10000,
+						button: "OK",
+					});
+				}
+				if (responseInvoice.response === "warning")
+				{
+					swal({
+						title: "¡Advertencia!",
+						text: responseInvoice.message.message ,
+						type: "warning",
+						icon: "warning",
+						timer: 10000,
+						button: "OK",
+					});
+				}          
+				else if (responseInvoice.response === "error")
+				{              
+					swal({
+						title: "¡Ocurrió un error!",
+						text: responseInvoice.message.message ,
+						type: "error",
+						icon: "error",
+						timer: 10000,
+						button: "OK",
+					});
+				}
 
               else
               {
