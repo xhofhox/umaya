@@ -291,7 +291,7 @@ class InvoiceController extends Controller
 				$Descripcion = $request->input('Descripcion');
 				$Descuento = $request->input('Descuento');
 				$Impuesto = $request->input('Impuesto');
-				$TipoFactor = $request->input('TipoFactor');
+                $TipoFactor = $request->input('TipoFactor');
 				$TasaOCuota = $request->input('TasaOCuota');
 				$Importe = $request->input('Importe');
 				$Conceptos[] = array();
@@ -314,7 +314,9 @@ class InvoiceController extends Controller
 							'Descripcion' => $concept -> descripcion,
 							'Descuento' => $concept -> descuento,
 							'Impuestos' => [
-								'Traslados' => []
+								'Traslados' => [
+                                    ['Base' => '100', 'Impuesto' => '002', 'TipoFactor' => 'Exento', 'TasaOCuota' => '0.00', 'Importe' => '00'],
+                                ]
 							],
 						)
 					);
@@ -467,7 +469,9 @@ class InvoiceController extends Controller
 							'Descripcion' => $concept -> descripcion,
 							'Descuento' => $concept -> descuento,
 							'Impuestos' => [
-								'Traslados' => []
+								'Traslados' => [
+                                    ['Base' => '100', 'Impuesto' => '002', 'TipoFactor' => 'Exento', 'TasaOCuota' => '0.00', 'Importe' => '00'],
+                                ]
 							],
 						)
 					);
@@ -632,7 +636,9 @@ class InvoiceController extends Controller
 								'Descripcion' => $concept -> descripcion,
 								'Descuento' => $concept -> descuento,
 								'Impuestos' => [
-									'Traslados' => []
+									'Traslados' => [
+                                        ['Base' => '100', 'Impuesto' => '002', 'TipoFactor' => 'Exento', 'TasaOCuota' => '0.00', 'Importe' => '00'],
+                                    ]
 								],
 							)
 						);
@@ -969,7 +975,9 @@ class InvoiceController extends Controller
 							'Descripcion' => "No. Recibo: ".$concept -> folio,
 							'Descuento' => $concept -> discount,
 							'Impuestos' => [
-								'Traslados' => []
+								'Traslados' => [
+                                    ['Base' => '100', 'Impuesto' => '002', 'TipoFactor' => 'Exento', 'TasaOCuota' => '0.00', 'Importe' => '00'],
+                                ]
 							],
 						)
 					);
