@@ -83,7 +83,7 @@ class InvoiceController extends Controller
     }
 
 	/**
-     * Descargar fatura en formato PDF/XML
+     * Descargar factura en formato PDF/XML
 	 * @param int $server_api
 	 * @param string $cfdi_uid
 	 * @param string $format
@@ -107,32 +107,20 @@ class InvoiceController extends Controller
         ));
 
         $response = curl_exec($ch);
-
 		if ($format == "pdf")
 		{
 			header('Content-type: application/pdf');
 			return die ($response);
 		}
 		else {
-			//header('Content-type: application/xml');
-			//header('Content-Disposition: attachment');
-			
-			/*header('Cache-Control', 'public');
-			header('Content-Description', 'File Transfer');
-			header('Content-Disposition', 'attachment; filename=test.xml');
-			header('Content-Transfer-Encoding', 'binary');
-			header('Content-Type', 'text/xml');
-			return die ($response);*/
-			File::put(storage_path().'/file.xml', $response);
-
-			//return Response::make($response, 200)->header('Content-Type', 'application/xml');
-			$headers = array(
-              'Content-Type: application/xml',
-            );
-			return response()->download(storage_path(), 'file.xml', $headers);
+            $filename = 'F450';
+            
+            header('Content-type: application/json');
+            $data = array(base64_encode($response));
+            return die (json_encode($data));
 		}
-
         curl_close($ch);
+        
     }
 
 	/**
@@ -1217,71 +1205,72 @@ class InvoiceController extends Controller
         
     }*/
 
-    public function descargarPDFx($cfdi_uid)
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://devfactura.in/api/v3/cfdi33/'.$cfdi_uid.'/pdf');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    // public function descargarPDFx($cfdi_uid)
+    // {
+    //     $ch = curl_init();
+    //     curl_setopt($ch, CURLOPT_URL, 'http://devfactura.in/api/v3/cfdi33/'.$cfdi_uid.'/pdf');
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    //     curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        "Content-Type: application/json",
-            "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-            "F-Api-Key: ". 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh',
-            "F-Secret-Key: " . 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5'
-        ));
+    //     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    //     "Content-Type: application/json",
+    //         "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+    //         "F-Api-Key: ". 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh',
+    //         "F-Secret-Key: " . 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5'
+    //     ));
 
-        $response = curl_exec($ch);
+    //     $response = curl_exec($ch);
 
-        header('Content-type: application/pdf');
-        return die ($response);
+    //     header('Content-type: application/pdf');
+    //     dd($response);
+    //     return die ($response);
 
-        curl_close($ch);
-    }
+    //     curl_close($ch);
+    // }
 
 
 
-    public function descargarXML(Request $request)
-    {
-        //dd($request);
-        $urlDownloadCFDI;
-        $apiKey;
-        $secretKey;
-        $server_api = $request->input('servidor');
-        $cfdi_uid = $request->input('cfdi_uid');
+    // public function descargarXML(Request $request)
+    // {
+    //     //dd($request);
+    //     $urlDownloadCFDI;
+    //     $apiKey;
+    //     $secretKey;
+    //     $server_api = $request->input('servidor');
+    //     $cfdi_uid = $request->input('cfdi_uid');
         
-        //Verificar Servidor para obtener los datos de conexión
-        switch ($server_api) {
-            case "1": //sandbox
-                $urlDownloadCFDI = 'http://devfactura.in/api/v3/cfdi33/'.$cfdi_uid.'/xml';
-                $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
-                $secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
-                break;
-            case "2": //producción
-                $urlDownloadCFDI = 'https://factura.com/api/v3/cfdi33/' + $cfdi_uid + '/xml';
-                $apiKey = 'JDJ5JDEwJEtHL0c0RVNSUUVLS09uWDRublg3c3VncURHQklZZEVMRmJuWWFTTHpUakdVVFM0UHdJQUZp';
-                $secretKey = 'JDJ5JDEwJEpvRDJKbHplNXJwZzh0SWVGWlRoUy50YlpRRWs5cEI2dC4uU0pMck1Ic3hXdU1Tb0p4UC5l';
-                break;
-        }
-        //dd($urlDownloadCFDI);
-        $ch = curl_init();
+    //     //Verificar Servidor para obtener los datos de conexión
+    //     switch ($server_api) {
+    //         case "1": //sandbox
+    //             $urlDownloadCFDI = 'http://devfactura.in/api/v3/cfdi33/'.$cfdi_uid.'/xml';
+    //             $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
+    //             $secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
+    //             break;
+    //         case "2": //producción
+    //             $urlDownloadCFDI = 'https://factura.com/api/v3/cfdi33/' + $cfdi_uid + '/xml';
+    //             $apiKey = 'JDJ5JDEwJEtHL0c0RVNSUUVLS09uWDRublg3c3VncURHQklZZEVMRmJuWWFTTHpUakdVVFM0UHdJQUZp';
+    //             $secretKey = 'JDJ5JDEwJEpvRDJKbHplNXJwZzh0SWVGWlRoUy50YlpRRWs5cEI2dC4uU0pMck1Ic3hXdU1Tb0p4UC5l';
+    //             break;
+    //     }
+    //     //dd($urlDownloadCFDI);
+    //     $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $urlDownloadCFDI);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    //     curl_setopt($ch, CURLOPT_URL, $urlDownloadCFDI);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    //     curl_setopt($ch, CURLOPT_HEADER, FALSE);
         
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            "Content-Type: application/json",
-            "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-            "F-Api-Key: ".$apiKey,
-            "F-Secret-Key: " .$secretKey
-        ));
+    //     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    //         "Content-Type: application/json",
+    //         "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+    //         "F-Api-Key: ".$apiKey,
+    //         "F-Secret-Key: " .$secretKey
+    //     ));
         
-        $response = curl_exec($ch);
-        curl_close($ch);
-        
-        var_dump($response);
-    }
+    //     $response = curl_exec($ch);
+    //     curl_close($ch);
+    //     dd($response);
+    //     var_dump($response);
+    // }
 
 
 }

@@ -139,32 +139,47 @@
 			$.ajax({
 				url: host + '/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
 				method: 'GET',
-				//dataType: 'xml',
-				contentType: false,
-				processData: false,
-				xhrFields: {
-					responseType: 'blob'
-				},
+				// dataType: 'xml',
+				// contentType: false,
+				// processData: false,
+				// xhrFields: {
+				// 	responseType: 'blob'
+				// },
 				success: function (response) {
-					
+					debugger
 					console.log(response);
 
-					let a = document.createElement('a'),
-						folio = item.parent().parent().find('td#folio').text(),
-						url = window.URL.createObjectURL(response);
-						//url = window.URL.createObjectURL(new blob(response, {type: "text/xml"}));
+					var b64 = response.toString();
+
+					// Decodificar la cadena para mostrar contenido pdf
+					// var bin = atob(b64);
+
+					// Insertar el link que contendrá el archivo pdf
+					var link = document.createElement('a');
+
+					folio = item.parent().parent().find('td#folio').text();
+					link.download = folio + '.xml';
+
+					link.href = 'data:application/octet-stream;base64,' + b64;
+					document.body.appendChild(link);
+					link.click();
+
+					// let a = document.createElement('a'),
+					// 	folio = item.parent().parent().find('td#folio').text(),
+					// 	url = window.URL.createObjectURL(response);
+					// 	url = window.URL.createObjectURL(new Blob(response, {type: "text/xml"}));
 						
 					
-					//var foo = xmlDocument.createElement('foo');
-					//foo.appendChild(document.createTextNode('bar'));
-					//xmlDocument.documentElement.appendChild(foo);
+					// //var foo = xmlDocument.createElement('foo');
+					// //foo.appendChild(document.createTextNode('bar'));
+					// //xmlDocument.documentElement.appendChild(foo);
 
-					a.href = url;
-					a.download = folio + '.' + format;
-					document.body.append(a);
-					a.click();
-					a.remove();
-					window.URL.revokeObjectURL(url);
+					// a.href = url;
+					// a.download = folio + '.' + format;
+					// document.body.append(a);
+					// a.click();
+					// a.remove();
+					// window.URL.revokeObjectURL(url);
 				},
 				error: function (jqXHR, textStatus, errorThrown) { }
 			});
