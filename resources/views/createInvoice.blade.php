@@ -99,8 +99,7 @@
 								<div class="form-group">
 									<label for="FormaPago">Forma de pago: </label>
 									<select class="form-control col-md-8 selection-list" name="FormaPago">
-										<option value="selecciona">Selecciona</option>
-										
+										<option value="selecciona">Selecciona</option>										
 										<option value="{{ $invoice['data']['forma_pago'] }}" selected="true">{{ $invoice['data']['val_forma_pago'] }}</option>
 										<option value="01"> 01 Efectivo </option>
 										<option value="02">02 Cheque nominativo</option>
@@ -213,16 +212,28 @@
 											class="btn-floating btn-small waves-effect waves-light blue"
 											data-target="#updateConcept{{ $concept['id'] }}"
 											data-toggle="modal">
-											<i class="material-icons">mode_edit</i>
+											<i class="material-icons">visibility</i>
 										</a>
 									</td>
 								</tr>
 								@include('modalConcept') 
 								@endforeach
 							</tbody>
+							<?php $totalConcepts = 0; ?>
+							@foreach($invoice['concepts'] as $concept)
+								<?php $totalConcepts += $concept['importe']; ?>
+							@endforeach 							
 						</table>
+						<div style="text-align: right; -webkit-text-stroke-width: medium;"> Total conceptos: ${{ $totalConcepts }}</div>
 						@include('sweet::alert')
+						@include('previewInvoice') 
 						<button id="btn-save-invoice" type="submit" class="btn btn-primary">Enviar</button>
+						<a href="#" 
+							class="btn btn-primary"
+							data-target="#preview{{ $invoice['data']['id'] }}"
+							data-toggle="modal">
+							Previsualizar
+						</a>
 					</form>
 				</div>
 			</div>
@@ -266,8 +277,8 @@
 			  if (responseInvoice.status === "error")
               {
                 swal({
-                  title: "¡Advertencia!",
-                  text: responseInvoice.message ,
+                  title: responseInvoice.message.message,
+                  text: responseInvoice.message.messageDetail,
                   type: "error",
                   icon: "error",
                   timer: 10000,
@@ -277,10 +288,10 @@
               if (responseInvoice.response === "warning")
               {
                 swal({
-                  title: "¡Advertencia!",
-                  text: responseInvoice.message.message ,
-                  type: "warning",
-                  icon: "warning",
+                  title: responseInvoice.message.message,
+                  text: responseInvoice.message.messageDetail,
+                  type: "error",
+                  icon: "error",
                   timer: 10000,
                   button: "OK",
                 });
@@ -288,10 +299,9 @@
           
               else if (responseInvoice.response === "error")
               {
-              
                 swal({
-                  title: "¡Ocurrió un error!",
-                  text: responseInvoice.message.message ,
+                  title: responseInvoice.message.message,
+                  text: responseInvoice.message.messageDetail,
                   type: "error",
                   icon: "error",
                   timer: 10000,

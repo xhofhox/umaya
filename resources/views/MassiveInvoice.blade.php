@@ -41,7 +41,7 @@
 										<button data-value="{{ $data['id'] }}" 
 											title="Editar factura" 
 											class="edit waves-effect waves-light btn-small" >
-											<i class="material-icons center">mode_edit</i>
+											<i class="material-icons center">visibility</i>
 										</button>
 									</td>
 								</tr>

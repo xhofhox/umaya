@@ -76,7 +76,7 @@ class InvoiceController extends Controller
         ));
         
         $response = curl_exec($ch);
-		//dd(json_decode($response, true));
+		
         curl_close($ch);
 
         return view('listInvoice')->with('list', json_decode($response, true));
@@ -113,8 +113,6 @@ class InvoiceController extends Controller
 			return die ($response);
 		}
 		else {
-            $filename = 'F450';
-            
             header('Content-type: application/json');
             $data = array(base64_encode($response));
             return die (json_encode($data));
@@ -147,7 +145,8 @@ class InvoiceController extends Controller
         ));
 
         $response = curl_exec($ch);
-		curl_close($ch);
+        curl_close($ch);
+        dd($response);
 
 		return die ($response);
     }
@@ -244,14 +243,14 @@ class InvoiceController extends Controller
                 case "1": //sandbox
                     $urlFactura = 'http://devfactura.in/api/v3/cfdi33/create';
                     $UrlConsultaCliente = 'http://devfactura.in/api/v1/clients/';
-                    $UrlCrearCliente = 'http://devfactura.in/api/v1/clients/create/';
+                    $UrlCrearCliente = 'http://devfactura.in/api/v1/clients/create';
                     $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
                     $secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
                     break;
                 case "2": //producción
                     $urlFactura = 'https://factura.com/api/v3/cfdi33/create';
                     $UrlConsultaCliente = 'https://factura.com/api/v1/clients/';
-                    $UrlCrearCliente = 'https://factura.com/api/v1/clients/create/';
+                    $UrlCrearCliente = 'https://factura.com/api/v1/clients/create';
                     $apiKey = 'JDJ5JDEwJEtHL0c0RVNSUUVLS09uWDRublg3c3VncURHQklZZEVMRmJuWWFTTHpUakdVVFM0UHdJQUZp';
                     $secretKey = 'JDJ5JDEwJEpvRDJKbHplNXJwZzh0SWVGWlRoUy50YlpRRWs5cEI2dC4uU0pMck1Ic3hXdU1Tb0p4UC5l';
                     break;
@@ -272,101 +271,151 @@ class InvoiceController extends Controller
                 "f-secret-key: " .$secretKey
             ));
             $response = curl_exec($ch);
-
 			$json = json_decode($response);
 
 			if ($json->status == "error") {
-				curl_close($ch);
-				return die($response);
+                curl_close($ch);
+
+				//Crear cliente
+                $ch = curl_init();
+                $fields = [
+                    "nombre" => $invoice_ext->Nombre,
+                    "apellidos" => $invoice_ext->Apellidos,
+                    "email" => $invoice_ext->email,
+                    "email2" => "",
+                    "email3" => "",
+                    "telefono" => $invoice_ext->Telefono,
+                    "razons" => $request->input('razonsocial'),
+                    "rfc" => $request->input('RFC'),
+                    "calle" => $invoice_ext->Calle,
+                    "numero_exterior" => $invoice_ext->Numero,
+                    "numero_interior" => $invoice_ext->Interior,
+                    "codpos" => $invoice_ext->CodigoPosal,
+                    "colonia" => $invoice_ext->Colonia,
+                    "estado" => $invoice_ext->Estado,
+                    "ciudad" => $invoice_ext->Ciudad,
+                ];
+
+                $jsonfield = json_encode($fields);
+
+                curl_setopt($ch, CURLOPT_URL, $UrlCrearCliente);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($ch, CURLOPT_HEADER, FALSE);
+                curl_setopt($ch, CURLOPT_POST, TRUE);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
+
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    "Content-Type: application/json",
+                    "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+                    "f-api-key: ".$apiKey,
+                    "f-secret-key: " .$secretKey
+                ));
+
+                $responseCreate = curl_exec($ch);
+                $json = json_decode($responseCreate);               
+
+                if ($json->status == "error") {
+                    curl_close($ch);
+                    return die($responseCreate);
+                }
+
 			}
-			else {
-				$Receptor = $json->Data->UID;			
-				curl_close($ch);
-				//--------------- CREAR CFDI --------------------- //
+            $Receptor = $json->Data->UID;		
+            curl_close($ch);
+            //--------------- CREAR CFDI --------------------- //
+        
+            $ClaveProdServ = $request->input('ClaveProdServ');
+            $Cantidad = $request->input('Cantidad');
+            $ClaveUnidad = $request->input('ClaveUnidad');
+            $ValorUnitario = $request->input('ValorUnitario');
+            $Descripcion = $request->input('Descripcion');
+            $Descuento = $request->input('Descuento');
+            $Impuesto = $request->input('Impuesto');
+            $TipoFactor = $request->input('TipoFactor');
+            $TasaOCuota = $request->input('TasaOCuota');
+            $Importe = $request->input('Importe');
             
-				$ClaveProdServ = $request->input('ClaveProdServ');
-				$Cantidad = $request->input('Cantidad');
-				$ClaveUnidad = $request->input('ClaveUnidad');
-				$ValorUnitario = $request->input('ValorUnitario');
-				$Descripcion = $request->input('Descripcion');
-				$Descuento = $request->input('Descuento');
-				$Impuesto = $request->input('Impuesto');
-                $TipoFactor = $request->input('TipoFactor');
-				$TasaOCuota = $request->input('TasaOCuota');
-				$Importe = $request->input('Importe');
-				$Conceptos[] = array();
+            $Conceptos[] = array();
 
-				//Obtener los conceptos asociados a la factura
-				$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id);
-				//$Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id)->toArray();
+            //Obtener los conceptos asociados a la factura
+            $Concepts = ConceptsInvoice::all()->where('invoice_ext_id', '=', $id);
+            
+            //Recorrer los conceptos y agregar unicamente la información de utilidad
+            foreach($Concepts as $concept)
+            {
+                array_push(
+                    $Conceptos,
+                    array(
+                        'ClaveProdServ' => $concept -> clave_sat,
+                        'Cantidad' => $concept -> cantidad,
+                        'ClaveUnidad' => $concept -> claveunidad,
+                        'Unidad' => $concept -> unidad,
+                        'ValorUnitario' => $concept -> precio_unitario,
+                        'Descripcion' => $concept -> descripcion,
+                        'Descuento' => $concept -> descuento,
+                        'Impuestos' => [
+                            'Traslados' => [
+                                ['Base' => '100', 'Impuesto' => '002', 'TipoFactor' => 'Exento', 'TasaOCuota' => '0.00', 'Importe' => '00'],
+                            ]
+                        ],
+                        'Complemento' => [
+                            0 => [
+                                'typeComplement' => 'iedu',
+                                'nombreAlumno' => $request->input('NombreAlumno'),
+                                'CURP' => $request->input('Curp'),
+                                'nivelEducativo' => $request->input('NivelEducativo'),
+                                'autRVOE' => $request->input('RVOE'),
+                                'rfcPago' => $request->input('RFCPago'),               
+                            ]
+                        ]
+                    )
+                );
+            }
+            unset($Conceptos[0]);
+        
+            //$Receptor = $request->input('Receptor');
+            $TipoDocumento = $request->input('TipoDocumento');
+            $UsoCFDI = $request->input('UsoCFDI');
+            $FormaPago = $request->input('FormaPago');
+            $MetodoPago = $request->input('MetodoPago');
+            $Moneda = $request->input('Moneda');
+            $CondicionesDePago = $request->input('CondicionesDePago');
+            $Serie = $request->input('Serie');
+        
+            $ch = curl_init();
+            $fields = [
+                "Receptor" => ["UID" => $Receptor],
+                "TipoDocumento" => $TipoDocumento,
+                "UsoCFDI" => $UsoCFDI,
+                "Redondeo" => 2,
+                "Conceptos" => $Conceptos,
+                "FormaPago" => $FormaPago,
+                "MetodoPago" => $MetodoPago,
+                "Moneda" => $Moneda,
+                "CondicionesDePago" => $CondicionesDePago,
+                "Serie" => $Serie,
+                "EnviarCorreo" => 'true',
+                "InvoiceComments" => ""
+            ];
 
-				//Recorrer los conceptos y agregar unicamente la información de utilidad
-				foreach($Concepts as $concept)
-				{
-					array_push(
-						$Conceptos,
-						array(
-							'ClaveProdServ' => $concept -> clave_sat,
-							'Cantidad' => $concept -> cantidad,
-							'ClaveUnidad' => $concept -> claveunidad,
-							'Unidad' => $concept -> unidad,
-							'ValorUnitario' => $concept -> precio_unitario,
-							'Descripcion' => $concept -> descripcion,
-							'Descuento' => $concept -> descuento,
-							'Impuestos' => [
-								'Traslados' => [
-                                    ['Base' => '100', 'Impuesto' => '002', 'TipoFactor' => 'Exento', 'TasaOCuota' => '0.00', 'Importe' => '00'],
-                                ]
-							],
-						)
-					);
-				}
-				unset($Conceptos[0]);
-            
-				//$Receptor = $request->input('Receptor');
-				$TipoDocumento = $request->input('TipoDocumento');
-				$UsoCFDI = $request->input('UsoCFDI');
-				$FormaPago = $request->input('FormaPago');
-				$MetodoPago = $request->input('MetodoPago');
-				$Moneda = $request->input('Moneda');
-				$CondicionesDePago = $request->input('CondicionesDePago');
-				$Serie = $request->input('Serie');
-            
-				$ch = curl_init();
-				$fields = [
-					"Receptor" => ["UID" => $Receptor],
-					"TipoDocumento" => $TipoDocumento,
-					"UsoCFDI" => $UsoCFDI,
-					"Redondeo" => 2,
-					"Conceptos" => $Conceptos,
-					"FormaPago" => $FormaPago,
-					"MetodoPago" => $MetodoPago,
-					"Moneda" => $Moneda,
-					"CondicionesDePago" => $CondicionesDePago,
-					"Serie" => $Serie,
-					"EnviarCorreo" => 'true',
-					"InvoiceComments" => "Prueba"
-				];
-
-				$jsonfield = json_encode($fields);
-            
-				curl_setopt($ch, CURLOPT_URL, $urlFactura);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-				curl_setopt($ch, CURLOPT_HEADER, FALSE);
-				curl_setopt($ch, CURLOPT_POST, TRUE);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
-            
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-					"Content-Type: application/json",
-					"F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-					"F-Api-Key: ".$apiKey,
-					"F-Secret-Key: " .$secretKey
-				));
-            
-				$response = curl_exec($ch);
-				return die($response);
-				curl_close($ch);
-			}
+            $jsonfield = json_encode($fields);
+        
+            curl_setopt($ch, CURLOPT_URL, $urlFactura);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_HEADER, FALSE);
+            curl_setopt($ch, CURLOPT_POST, TRUE);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonfield);
+        
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Content-Type: application/json",
+                "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
+                "F-Api-Key: ".$apiKey,
+                "F-Secret-Key: " .$secretKey
+            ));
+        
+            $response = curl_exec($ch);
+            return die($response);
+            curl_close($ch);
         }
     }
 
@@ -477,8 +526,6 @@ class InvoiceController extends Controller
 					);
 				}
 				unset($Conceptos[0]);
-
-
 				$TipoDocumento = $request->input('TipoDocumento');
 				$UsoCFDI = $request->input('UsoCFDI');
 				$FormaPago = $request->input('FormaPago');
@@ -524,10 +571,8 @@ class InvoiceController extends Controller
 					"F-Secret-Key: " .$secretKey
 				));
             
-				$response = curl_exec($ch);
-            
-				return die($response);
-            
+				$response = curl_exec($ch);            
+				return die($response);            
 				curl_close($ch);
 			}
         }
@@ -696,7 +741,6 @@ class InvoiceController extends Controller
 					$Conceptos = array();
 				}
 			}//Fin else
-			//dd($Responses);
 		}//Fin foreach
 		return response()->json($Responses, 200);
     }
@@ -1142,143 +1186,4 @@ class InvoiceController extends Controller
             ])->toJson()
         ); 
 	}
-    
-
-
-
-    // public function descargarPDF(Request $request)
-    // {
-    //     //dd($request);
-    //     $urlDownloadCFDI;
-    //     $apiKey;
-    //     $secretKey;
-    //     $server_api = $request->input('servidor');
-    //     $cfdi_uid = $request->input('cfdi_uid');
-        
-    //     //Verificar Servidor para obtener los datos de conexión
-    //     switch ($server_api) {
-    //         case "1": //sandbox
-    //             $urlDownloadCFDI = 'http://devfactura.in/api/v3/cfdi33/'.$cfdi_uid.'/pdf';
-    //             $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
-    //             $secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
-    //             break;
-    //         case "2": //producción
-    //             $urlDownloadCFDI = 'https://factura.com/api/v3/cfdi33/'.$cfdi_uid.'/pdf';
-    //             $apiKey = 'JDJ5JDEwJEtHL0c0RVNSUUVLS09uWDRublg3c3VncURHQklZZEVMRmJuWWFTTHpUakdVVFM0UHdJQUZp';
-    //             $secretKey = 'JDJ5JDEwJEpvRDJKbHplNXJwZzh0SWVGWlRoUy50YlpRRWs5cEI2dC4uU0pMck1Ic3hXdU1Tb0p4UC5l';
-    //             break;
-    //     }
-    //     $ch = curl_init();
-
-    //     curl_setopt($ch, CURLOPT_URL, $urlDownloadCFDI);
-    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    //     curl_setopt($ch, CURLOPT_HEADER, FALSE);
-        
-    //     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    //         "Content-Type: application/json",
-    //         "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-    //         "F-Api-Key: ".$apiKey,
-    //         "F-Secret-Key: " .$secretKey
-    //     ));
-        
-    //     $response = curl_exec($ch);
-
-    //     header('Content-type: application/pdf');
-    //     return die ($response);
-
-    //     curl_close($ch);
-    // }
-
-	/*
-    public function descargarPDF($cfdi_uid)
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://devfactura.in/api/v3/cfdi33/'.$cfdi_uid.'/pdf');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        "Content-Type: application/json",
-            "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-            "F-Api-Key: ". 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh',
-            "F-Secret-Key: " . 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5'
-        ));
-
-        $response = curl_exec($ch);
-
-        header('Content-type: application/pdf');
-        // return die ($response);
-        return response()->download($response);
-        curl_close($ch);
-        
-    }*/
-
-    // public function descargarPDFx($cfdi_uid)
-    // {
-    //     $ch = curl_init();
-    //     curl_setopt($ch, CURLOPT_URL, 'http://devfactura.in/api/v3/cfdi33/'.$cfdi_uid.'/pdf');
-    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    //     curl_setopt($ch, CURLOPT_HEADER, FALSE);
-
-    //     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    //     "Content-Type: application/json",
-    //         "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-    //         "F-Api-Key: ". 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh',
-    //         "F-Secret-Key: " . 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5'
-    //     ));
-
-    //     $response = curl_exec($ch);
-
-    //     header('Content-type: application/pdf');
-    //     dd($response);
-    //     return die ($response);
-
-    //     curl_close($ch);
-    // }
-
-
-
-    // public function descargarXML(Request $request)
-    // {
-    //     //dd($request);
-    //     $urlDownloadCFDI;
-    //     $apiKey;
-    //     $secretKey;
-    //     $server_api = $request->input('servidor');
-    //     $cfdi_uid = $request->input('cfdi_uid');
-        
-    //     //Verificar Servidor para obtener los datos de conexión
-    //     switch ($server_api) {
-    //         case "1": //sandbox
-    //             $urlDownloadCFDI = 'http://devfactura.in/api/v3/cfdi33/'.$cfdi_uid.'/xml';
-    //             $apiKey = 'JDJ5JDEwJEkuQVdxdk1XOWJBVDd3NVNBbXlYTHVBa0k2YmdVTVVKZUJJU3locVUwQ2JmQ2RmN0REaVhh';
-    //             $secretKey = 'JDJ5JDEwJHFya0dMTFlnei5DQmkzZjhpRGg3N3VSWFhEMkNVMk1COGgxdmlWSEd4WnBtTTVkdEl4TWx5';
-    //             break;
-    //         case "2": //producción
-    //             $urlDownloadCFDI = 'https://factura.com/api/v3/cfdi33/' + $cfdi_uid + '/xml';
-    //             $apiKey = 'JDJ5JDEwJEtHL0c0RVNSUUVLS09uWDRublg3c3VncURHQklZZEVMRmJuWWFTTHpUakdVVFM0UHdJQUZp';
-    //             $secretKey = 'JDJ5JDEwJEpvRDJKbHplNXJwZzh0SWVGWlRoUy50YlpRRWs5cEI2dC4uU0pMck1Ic3hXdU1Tb0p4UC5l';
-    //             break;
-    //     }
-    //     //dd($urlDownloadCFDI);
-    //     $ch = curl_init();
-
-    //     curl_setopt($ch, CURLOPT_URL, $urlDownloadCFDI);
-    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    //     curl_setopt($ch, CURLOPT_HEADER, FALSE);
-        
-    //     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    //         "Content-Type: application/json",
-    //         "F-PLUGIN: " . '9d4095c8f7ed5785cb14c0e3b033eeb8252416ed',
-    //         "F-Api-Key: ".$apiKey,
-    //         "F-Secret-Key: " .$secretKey
-    //     ));
-        
-    //     $response = curl_exec($ch);
-    //     curl_close($ch);
-    //     dd($response);
-    //     var_dump($response);
-    // }
-
-
 }

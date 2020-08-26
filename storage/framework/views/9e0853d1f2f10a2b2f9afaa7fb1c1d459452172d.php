@@ -203,7 +203,7 @@
                             class="btn-floating btn-small waves-effect waves-light blue"
                             data-target="#updateConcept<?php echo e($concept['id']); ?>"
                             data-toggle="modal">
-                            <i class="material-icons">mode_edit</i>
+                            <i class="material-icons">visibility</i>
                         </a>
                       </td>
                   </tr>

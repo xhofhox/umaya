@@ -50,7 +50,7 @@
         }
     });
     var formId = '#form-invoice';
-	var host = location.origin;
+	  var host = location.origin;
 
     $(formId).on('submit', function(e){
       e.preventDefault();

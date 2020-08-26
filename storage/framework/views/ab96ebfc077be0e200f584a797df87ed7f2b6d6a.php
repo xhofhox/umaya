@@ -4,117 +4,271 @@
  <?php $__env->startSection('content'); ?>
 
 <div class="container">
-  <div>
-    <div class="col-md-12 col-md-offset-1">
-      <div class="panel panel-default">
-        <div class="panel-heading"><h3>Listado CFDI</h3></div>
-          <!-- Filtro
-          <div class="row">
-            <form class="col s12">
-              <div class="row">
-                <div class="input-field col s6">
-                  <input id="rfc" type="text" class="validate">
-                  <label for="rfc">RFC</label>
-                </div>
-                <div class="input-field col s6">
-                  <input id="folio" type="text" class="validate">
-                  <label for="folio">FOLIO</label>
-                </div>
-              </div>
-
-              <div class="row hidden">
-                <div class="input-field col s6">
-                  <button id="show-list" type="submit" class="waves-effect waves-light btn-small cyan">Filtrar</button>
-                </div>
-              </div>
-            </form>
-          </div>
-               Filtro-->
-        
-          <div class="panel-body">
-           <table class="table table-striped" id="table-records" style="font-size:12px;"> 
-                <thead>
-                  <tr bgcolor="FFFDC1">
-                    <th>Razón social</th>
-                    <th>Folio</th>
-                    <th>RFC</th>
-                    <th>Total</th>
-                    <th>FechaTimbrado</th>
-                    <th>Estado</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php $__currentLoopData = $list['data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <tr>
-                      <td><?php echo e($data['RazonSocialReceptor']); ?></td>
-                      <td><?php echo e($data['Folio']); ?></td>
-                      <td><?php echo e($data['Receptor']); ?></td>
-                      <td><?php echo e($data['Total']); ?></td>
-                      <td><?php echo e($data['FechaTimbrado']); ?></td>
-                      <td><?php echo e($data['Status']); ?></td>
-                      <td width="1%">
-                        <button data-value="' + response.data[i].UID + '" title="Descargar PDF" class="waves-effect waves-light btn-small" id="download-pdf">
-                          <i class="material-icons center">picture_as_pdf</i>
-                        </button>
-                      </td>
-                      <td width="1%">
-                        <button data-value="' + response.data[i].UID + '" title="Descargar XML" class="waves-effect waves-light btn-small light-blue darken-4" id="download-xml">
-                          <i class="material-icons center">insert_drive_file</i></button>
-                      </td>
-                      <td width="1%">
-                        <button data-value="' + response.data[i].UID + '" title="Cancelar Factura" class="waves-effect waves-light btn-small red" id="cancel">
-                          <i class="material-icons center">close</i></button>
-                      </td>
-                      <td width="1%">
-                        <button data-value="' + response.data[i].UID + '" title="Enviar Factura" class="waves-effect waves-light btn-small amber" id="send_email">
-                          <i class="material-icons center">email</i></button>
-                      </td>
-                    </tr>
-                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                </tbody>
-              </table>
-
-          </div>
-        </div>
-    </div>
-  </div>
-
+	<div>
+		<div class="col-md-12 col-md-offset-1">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3>Listado CFDI</h3>
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped" id="table-records" style="font-size:12px;"> 
+						<thead>
+							<tr bgcolor="FFFDC1">
+								<th>Razón social</th>
+								<th>Folio</th>
+								<th>RFC</th>
+								<th>Total</th>
+								<th>FechaTimbrado</th>
+								<th>Estado</th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php $__currentLoopData = $list['data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+								<tr>
+									<td><?php echo e($data['RazonSocialReceptor']); ?></td>
+									<td id="folio"><?php echo e($data['Folio']); ?></td>
+									<td><?php echo e($data['Receptor']); ?></td>
+									<td><?php echo e($data['Total']); ?></td>
+									<td><?php echo e($data['FechaTimbrado']); ?></td>
+									<td><?php echo e($data['Status']); ?></td>
+									<td width="1%">
+										<button data-value="<?php echo e($data['UID']); ?>" title="Descargar PDF" class="waves-effect waves-light btn-small download-pdf">
+											<i class="material-icons center">picture_as_pdf</i>
+										</button>
+									</td>
+									<td width="1%">
+										<button data-value="<?php echo e($data['UID']); ?>" title="Descargar XML" class="waves-effect waves-light btn-small light-blue darken-4 download-xml">
+											<i class="material-icons center">insert_drive_file</i>
+										</button>
+									</td>
+									<td width="1%">
+										<button data-value="<?php echo e($data['UID']); ?>" title="Cancelar Factura" class="waves-effect waves-light btn-small red cancel" id="cancel">
+											<i class="material-icons center">close</i>
+										</button>
+									</td>
+									<td width="1%">
+										<button data-value="<?php echo e($data['UID']); ?>" title="Enviar Factura" class="waves-effect waves-light btn-small amber send" id="send_email">
+											<i class="material-icons center">email</i>
+										</button>
+									</td>
+								</tr>
+							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-
 <?php $__env->stopSection(); ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
-  $(document).ready(function() {
-    $('#table-records').DataTable({
-      language: {
-                "decimal": "",
-                "fixedHeader": true,
-                "responsive": true,
-                "emptyTable": "No hay información",
-                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                "infoPostFix": "",
-                "thousands": ",",
-                "lengthMenu": "Mostrar _MENU_ Entradas",
-                "loadingRecords": "Cargando...",
-                "processing": "Procesando...",
-                "search": "Buscar:",
-                "zeroRecords": "Sin resultados encontrados",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Ultimo",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
-                }
-            }
-    });
-  });
+	$(document).ready(function() {
+
+		let pathname = window.location.pathname,
+			serverId = parseInt(pathname.split('/')[pathname.split('/').length - 1]);
+		
+		let host = location.origin;
+		
+		//Ejecutar Datatable
+		custom.dataTable('#table-records');
+
+		//Descargar factura
+		function downloadCFDI(format, item)
+		{
+			console.log(item.attr('data-value'));
+			$.ajax({
+				url: host + '/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
+				method: 'GET',
+				xhrFields: {
+					responseType: 'blob'
+				},
+				success: function (response) {
+					let a = document.createElement('a'),
+						folio = item.parent().parent().find('td#folio').text(),
+						url = window.URL.createObjectURL(response);
+
+					a.href = url;
+					a.download = folio + '.' + format;
+					document.body.append(a);
+					a.click();
+					a.remove();
+					window.URL.revokeObjectURL(url);
+				},
+				error: function (jqXHR, textStatus, errorThrown) { }
+			});
+		};
+
+		//Impresión de factura en formato PDF
+		$("#table-records").on("click", ".download-pdf", function(){
+			let item = $(this),
+				format = 'pdf';
+
+			$.ajax({
+				url: host + '/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
+				method: 'GET',
+				xhrFields: {
+					responseType: 'blob'
+				},
+				success: function (response) {
+					let a = document.createElement('a'),
+						folio = item.parent().parent().find('td#folio').text(),
+						url = window.URL.createObjectURL(response);
+
+					a.href = url;
+					a.download = folio + '.' + format;
+					document.body.append(a);
+					a.click();
+					a.remove();
+					window.URL.revokeObjectURL(url);
+				},
+				error: function (jqXHR, textStatus, errorThrown) { }
+			});
+		});
+
+		//Impresión de factura en formato XML
+		$("#table-records").on("click", ".download-xml", function(){
+			let item = $(this),
+				format = 'xml';
+
+			$.ajax({
+				url: host + '/invoice/downloadCFDI/' + serverId + '/' + item.attr('data-value') + '/' + format,
+				method: 'GET',
+				success: function (response) {
+					debugger
+					console.log(response);
+
+					var b64 = response.toString();
+
+					// Insertar el link que contendrá el archivo pdf
+					var link = document.createElement('a');
+
+					folio = item.parent().parent().find('td#folio').text();
+					link.download = folio + '.xml';
+
+					link.href = 'data:application/octet-stream;base64,' + b64;
+					document.body.appendChild(link);
+					link.click();
+				},
+				error: function (jqXHR, textStatus, errorThrown) { }
+			});
+		});
+
+		 $.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		
+		//Cancelacion de la factura
+		$("#table-records").on("click", ".cancel", function(){
+			let item = $(this);
+
+			//Confirmación de cancelación
+			swal({
+				title: "¿Estás seguro de cancelar la factura?",
+				text: "Esta acción no se puede deshacer",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true,
+			})
+			.then((willCancel) => {
+				if (willCancel) {
+					$.ajax({
+						url: host + '/invoice/cancelCFDI/' + serverId + '/' + item.attr('data-value'),
+						method: 'POST',
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							console.log(data);
+							var result = JSON.parse(data);
+							if(result.response === "success")
+							{
+								swal({
+									title: "¡Éxito!",
+									text: result.message ,
+									type: "success",
+									icon: "success",
+									timer: 10000,
+									button: "OK",
+								});
+							}
+							else
+							{
+								swal({
+									title: "¡Error!",
+									text: result.message ,
+									type: "error",
+									icon: "error",
+									timer: 10000,
+									button: "OK",
+								});
+							}					
+						},
+						error: function (jqXHR, textStatus, errorThrown) { }
+					});
+				}
+			});
+		});
+
+		//Envío de la factura
+		$("#table-records").on("click", ".send", function(){
+			let item = $(this);
+			
+			//Confirmación de envío
+			swal({
+				title: "¿Estás seguro de enviar la factura?",
+				text: "Esta acción no se puede deshacer",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true,
+			})
+			.then((willSend) => {
+				if (willSend) {
+					$.ajax({
+						url: host + '/invoice/sendCFDI/' + serverId + '/' + item.attr('data-value'),
+						method: 'POST',
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							console.log(result);
+							var result = JSON.parse(data);
+							if(result.response === "success")
+							{
+								swal({
+									title: "¡Éxito!",
+									text: result.message ,
+									type: "success",
+									icon: "success",
+									timer: 10000,
+									button: "OK",
+								});
+							}
+							else
+							{
+								swal({
+									title: "¡Error!",
+									text: result.message ,
+									type: "error",
+									icon: "error",
+									timer: 10000,
+									button: "OK",
+								});
+							}
+					
+						},
+						error: function (jqXHR, textStatus, errorThrown) { }
+					});
+				}
+			});
+		});
+
+	});
  </script>
 
 <?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

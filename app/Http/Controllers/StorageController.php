@@ -30,7 +30,6 @@ class StorageController extends Controller
     */
     public function save(Request $request)
     {
-        // dd($request);
         $directorio ='';
         switch ($request->input('bank_name')) {
             case "1":
@@ -43,18 +42,15 @@ class StorageController extends Controller
 
 
         //Obtenemos el campo file definido en el formulario
-        $file =$request->file('file'); //$request->file('file');
-        // dd($file);
-        // $dataFile = $request->input('file');
+        $file =$request->file('file');
+
         $nombre = $file->getClientOriginalName();
 
         //indicamos que queremos guardar un nuevo archivo en el disco local
-        // \Storage::disk('local')->put($nombre,  \File::get($file));\Storage::disk('local')->put($nombre,  \File::get($file));
         \Storage::disk('local')->put($directorio.$nombre,  file_get_contents($file));
         
         //Obtenemmos el contenido del archivo
         $contents = File::get($file);
-        //dd(file_get_contents($file));
 
         $public_path = public_path();
         $url = $public_path.'/storage/'.$directorio.$nombre;
@@ -248,20 +244,7 @@ class StorageController extends Controller
                                 case "DEP CHEQUE NO                           ":
                                     $payment->payment_form = 2;
                                     break;
-                                }
-                                ////
-                                /*
-                                if ($miarray["forma_pago"] = "EFECT ATM                           ")
-                                        {
-                                            $payment->payment_form = 1;
-                                        }
-                                        if ($miarray["forma_pago"] = "DEP CHEQUE NO                           ")
-                                        {
-                                            $payment->payment_form = 2;
-                                        }
-                                */
-                                ////
-                                
+                                }                              
                                 
                                 $payment->save();
                                 

@@ -31,13 +31,13 @@ Route::get('storage/{archivo}', function ($archivo) {
  
 });
 
-//Formulario pago por depósito
+//Formulario pago por depï¿½sito
 Route::get('formulario', 'StorageController@index');
 
 //Mostrar alertas
 Route::get('alert/{AlertType}','sweetalertController@alert')->name('alert');
 
-//Mostrar listado de CFDI´s
+//Mostrar listado de CFDIï¿½s
 Route::get('invoice/index/{server_api}', 'InvoiceController@index');
 
 //Descargar factura
@@ -55,19 +55,19 @@ Route::get('invoice/massive/{server_api}/{id_massive_invoice}', 'InvoiceControll
 //Generar facturacion masiva
 Route::post('invoice/createCFDIMassive/{server_api}/{id_massive_invoice}', 'InvoiceController@createCFDIMassive');
 
-//Actualizar información referente a  la factura
+//Actualizar informaciï¿½n referente a  la factura
 Route::post('invoice/actualizarRegistroFactura', 'InvoiceController@actualizarRegistroFactura');
 
-//Actualizar información referente a  la facturación masiva
+//Actualizar informaciï¿½n referente a  la facturaciï¿½n masiva
 Route::post('invoice/actualizarRegistrosFacturas', 'InvoiceController@actualizarRegistrosFacturas');
 
 //Generacion CFDI Global
 Route::post('invoice/crearCFDIGlobal', 'InvoiceController@crearCFDIGlobal');
 
-//Actualizar información de los recibos
+//Actualizar informaciï¿½n de los recibos
 Route::post('invoice/actualizarRegistroRecibos', 'InvoiceController@actualizarRegistroRecibos');
 
-//Generar nota de crédito
+//Generar nota de crï¿½dito
 Route::post('invoice/crearCFDICreditNote', 'InvoiceController@crearCFDICreditNote');
 
 Route::get('invoice/conexion', 'InvoiceController@conexion');

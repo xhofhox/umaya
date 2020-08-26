@@ -215,9 +215,21 @@
 								
 								@endforeach
 							</tbody>
+							<?php $totalConcepts = 0; ?>
+							@foreach($invoice['concepts'] as $concept)
+								<?php $totalConcepts += $concept['to_pay']; ?>
+							@endforeach
 						</table>
+						<div style="text-align: right; -webkit-text-stroke-width: medium;"> Total conceptos: {{ $totalConcepts }}</div>
 						@include('sweet::alert')
+						@include('previewInvoice')
 						<button id="btn-save-invoice" type="submit" class="btn btn-primary">Enviar</button>
+						<a href="#" 
+							class="btn btn-primary"
+							data-target="#preview{{ $invoice['data']['id'] }}"
+							data-toggle="modal">
+							Previsualizar
+						</a>
 					</form>
 				</div>
 			</div>

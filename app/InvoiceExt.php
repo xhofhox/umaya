@@ -41,20 +41,20 @@ class InvoiceExt extends Model
 		'relation_type', 
 		'serie', 
 		'razonsocial', 
-		'RFC', 
-		'Calle', 
-		'Numero', 
-		'Interior', 
-		'Colonia', 
-		'CodigoPosal', 
-		'Ciudad', 
-		'Delegacion', 
-		'Estado', 
-		'NumRegIdTrib', 
-		'Nombre', 
-		'Apellidos', 
-		'Email', 
-		'Telefono', 
+		'rfc', 
+		'calle', 
+		'numero', 
+		'interior', 
+		'colonia', 
+		'codigoposal', 
+		'ciudad', 
+		'delegacion', 
+		'estado', 
+		'numregidtrib', 
+		'nombre', 
+		'apellidos', 
+		'email', 
+		'telefono', 
 		'claveprodserv', 
 		'cantidad', 
 		'ClaveUnidad', 
@@ -87,7 +87,7 @@ class InvoiceExt extends Model
         switch($this->uso_cfdi)
         {
 			case "G01":
-                $name = "G01 Adquisición de mercancias";  break;
+                $name = "G01 Adquisiciï¿½n de mercancias";  break;
 
 				//	...
             case "G02": $name = "G02 Devoluciones, descuentos o bonificaciones"; break;
@@ -97,18 +97,18 @@ class InvoiceExt extends Model
             case "I03": $name = "I03 Equipo de transporte"; break;
             case "I04": $name = "I04 Equipo de computo y accesorios"; break;
             case "I05": $name = "I05 Dados, troqueles, moldes, matrices y herramental"; break;
-            case "I06": $name = "I06 Comunicaciones telefónicas"; break;
+            case "I06": $name = "I06 Comunicaciones telefï¿½nicas"; break;
             case "I07": $name = "I07 Comunicaciones satelitales"; break;
             case "I08": $name = "I08 Otra maquinaria y equipo"; break;
-            case "D01": $name = "D01 Honorarios médicos, dentales y gastos hospitalarios."; break;
-            case "D02": $name = "D02 Gastos médicos por incapacidad o discapacidad"; break;
+            case "D01": $name = "D01 Honorarios mï¿½dicos, dentales y gastos hospitalarios."; break;
+            case "D02": $name = "D02 Gastos mï¿½dicos por incapacidad o discapacidad"; break;
             case "D03": $name = "D03 Gastos funerales."; break;
             case "D04": $name = "D04 Donativos."; break;
-            case "D05": $name = "D05 Intereses reales efectivamente pagados por créditos hipotecarios (casa habitación)."; break;
+            case "D05": $name = "D05 Intereses reales efectivamente pagados por crï¿½ditos hipotecarios (casa habitaciï¿½n)."; break;
             case "D06": $name = "D06 Aportaciones voluntarias al SAR."; break;
-            case "D07": $name = "D07 Primas por seguros de gastos médicos."; break;
-            case "D08": $name = "D08 Gastos de transportación escolar obligatoria."; break;
-            case "D09": $name = "D09 Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones."; break;
+            case "D07": $name = "D07 Primas por seguros de gastos mï¿½dicos."; break;
+            case "D08": $name = "D08 Gastos de transportaciï¿½n escolar obligatoria."; break;
+            case "D09": $name = "D09 Depï¿½sitos en cuentas para el ahorro, primas que tengan como base planes de pensiones."; break;
             case "D10": $name = "D10 Pagos por servicios educativos (colegiaturas)"; break;
             case "P01": $name = "P01 Por definir"; break;
                 // ...
@@ -129,24 +129,24 @@ class InvoiceExt extends Model
           
             case "01": $name = "01 Efectivo"; break;
             case "02": $name = "02 Cheque nominativo"; break;
-            case "03": $name = "03 Transferencia electrónica de fondos"; break;
-            case "04": $name = "04 Tarjeta de crédito"; break;
-            case "05": $name = "05 Monedero electrónico"; break;
-            case "06": $name = "06 Dinero electrónico"; break;
+            case "03": $name = "03 Transferencia electrï¿½nica de fondos"; break;
+            case "04": $name = "04 Tarjeta de crï¿½dito"; break;
+            case "05": $name = "05 Monedero electrï¿½nico"; break;
+            case "06": $name = "06 Dinero electrï¿½nico"; break;
             case "08": $name = "08 Vales de despensa"; break;
-            case "12": $name = "12 Dación en pago"; break;
-            case "13": $name = "13 Pago por subrogación"; break;
-            case "14": $name = "14 Pago por consignación"; break;
-            case "15": $name = "15 Condonación"; break;
-            case "17": $name = "17 Compensación"; break;
-            case "23": $name = "23 Novación"; break;
-            case "24": $name = "24 Confusión"; break;
-            case "25": $name = "25 Remisión de deuda"; break;
-            case "26": $name = "26 Prescripción o caducidad"; break;
-            case "27": $name = "27 A satisfacción del acreedor"; break;
-            case "28": $name = "28 Tarjeta de débito"; break;
+            case "12": $name = "12 Daciï¿½n en pago"; break;
+            case "13": $name = "13 Pago por subrogaciï¿½n"; break;
+            case "14": $name = "14 Pago por consignaciï¿½n"; break;
+            case "15": $name = "15 Condonaciï¿½n"; break;
+            case "17": $name = "17 Compensaciï¿½n"; break;
+            case "23": $name = "23 Novaciï¿½n"; break;
+            case "24": $name = "24 Confusiï¿½n"; break;
+            case "25": $name = "25 Remisiï¿½n de deuda"; break;
+            case "26": $name = "26 Prescripciï¿½n o caducidad"; break;
+            case "27": $name = "27 A satisfacciï¿½n del acreedor"; break;
+            case "28": $name = "28 Tarjeta de dï¿½bito"; break;
             case "29": $name = "29 Tarjeta de servicios"; break;
-            case "30": $name = "30 Aplicación de anticipos"; break;
+            case "30": $name = "30 Aplicaciï¿½n de anticipos"; break;
             case "31": $name = "31 Intermediario pagos"; break;
             case "99": $name = "99 Por definir"; break; 
 
@@ -163,13 +163,13 @@ class InvoiceExt extends Model
         switch($this->metodo_pago)
         {
             case "PUE":
-                $name = "PUE Pago en una sola exhibición";
+                $name = "PUE Pago en una sola exhibiciï¿½n";
                 break;
 			case "PPD":
                 $name = "PPD Pago en parcialidades o diferido";
                 break;
             default:
-                $name = "PUE Pago en una sola exhibición";
+                $name = "PUE Pago en una sola exhibiciï¿½n";
                 break;
         }
         return $name;

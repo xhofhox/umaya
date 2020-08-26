@@ -242,14 +242,19 @@
                             class="btn-floating btn-small waves-effect waves-light blue"
                             data-target="#updateConcept{{ $concept['id'] }}"
                             data-toggle="modal">
-                            <i class="material-icons">mode_edit</i>
+                            <i class="material-icons">visibility</i>
                         </a>
                       </td>
                   </tr>
                   @include('modalConcept') 
                   @endforeach
               </tbody>
+              <?php $totalConcepts = 0; ?>
+							@foreach($invoice['concepts'] as $concept)
+								<?php $totalConcepts += $concept['importe']; ?>
+							@endforeach
           </table>
+          <div style="text-align: right; -webkit-text-stroke-width: medium;"> Total conceptos: {{ $totalConcepts }}</div>
 		  
            <!-- 
            <h4>Complementos</h4>

@@ -172,12 +172,12 @@
 						<div class="form-group">
 							<label for="NivelEducativo">Nivel educativo:</label>
 							<select class="form-control col-md-8 selection-list" name="NivelEducativo">
-								<option value="selecciona">Selecciona</option>
-								<option value="1">Preescolar</option>
-								<option value="2">Primaria</option>
-								<option value="3">Secundaria</option>
-								<option value="4">Profesional técnico</option>
-								<option value="5">Bachillerato o su equivalente</option>
+								<option value="">Selecciona</option>
+								<option value="Preescolar">Preescolar</option>
+								<option value="Primaria">Primaria</option>
+								<option value="Secundaria">Secundaria</option>
+								<option value="Profesional técnico">Profesional técnico</option>
+								<option value="Bachillerato o su equivalente" selected="true">Bachillerato o su equivalente</option>
 							</select>
 						</div>
 					</div>
@@ -200,8 +200,7 @@
 				</div>  
 			</div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="btn-save-concept">Guardar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
             </div>
         </div>
     </div>
