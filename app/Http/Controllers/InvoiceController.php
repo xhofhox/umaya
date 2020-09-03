@@ -189,17 +189,8 @@ class InvoiceController extends Controller
     {
         //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
-		//dd($data);
-		
-		/*if($data != null)
-		{
-			$data->forma_pago_id = "0".(string)$data->forma_pago_id;
-		}*/
-
         $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
-
         $invoice = ['data' => $data, 'concepts' => $concepts];
-
         return view('createInvoice', compact('invoice'));         
     }
 	
@@ -890,23 +881,16 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    /*public function createGlobal($id)
-    {
-        //Obtener datos de la factura y mostrarlo en la vista
-        $data = InvoiceExt::find($id);
-        $concepts = ConceptsInvoice::where('invoice_ext_id', $id)->get();
-        $invoice = ['data' => $data, 'concepts' => $concepts];
-        return view('createGlobalInvoice', compact('invoice'));
-	}*/
-
 	public function createGlobal($id)
     {
         //Obtener datos de la factura y mostrarlo en la vista
         $data = InvoiceExt::find($id);
 
         //$concepts = PayRecipments::where('id_global_invoice', $id)->get();
-		$concepts = PayRecipments::where('invoice_ext_id', $id)->get();
+        $concepts = PayRecipments::where('invoice_ext_id', $id)->get();
+        
         $invoice = ['data' => $data, 'concepts' => $concepts];
+        //dd($invoice);
         return view('createInvoiceGlobal', compact('invoice'));
     }
 

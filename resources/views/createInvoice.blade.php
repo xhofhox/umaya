@@ -224,7 +224,7 @@
 								<?php $totalConcepts += $concept['importe']; ?>
 							@endforeach 							
 						</table>
-						<div style="text-align: right; -webkit-text-stroke-width: medium;"> Total conceptos: ${{ $totalConcepts }}</div>
+						<div style="text-align: right; -webkit-text-stroke-width: medium;"> Total conceptos: $ {{ $totalConcepts }}</div>
 						@include('sweet::alert')
 						@include('previewInvoice') 
 						<button id="btn-save-invoice" type="submit" class="btn btn-primary">Enviar</button>

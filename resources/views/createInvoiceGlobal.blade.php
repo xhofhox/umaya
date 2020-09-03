@@ -220,9 +220,9 @@
 								<?php $totalConcepts += $concept['to_pay']; ?>
 							@endforeach
 						</table>
-						<div style="text-align: right; -webkit-text-stroke-width: medium;"> Total conceptos: {{ $totalConcepts }}</div>
+						<div style="text-align: right; -webkit-text-stroke-width: medium;"> Total conceptos: $ {{ $totalConcepts }}</div>
 						@include('sweet::alert')
-						@include('previewInvoice')
+						@include('previewGlobalInvoice')
 						<button id="btn-save-invoice" type="submit" class="btn btn-primary">Enviar</button>
 						<a href="#" 
 							class="btn btn-primary"

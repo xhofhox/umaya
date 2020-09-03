@@ -87,7 +87,7 @@ class InvoiceExt extends Model
         switch($this->uso_cfdi)
         {
 			case "G01":
-                $name = "G01 Adquisici�n de mercancias";  break;
+                $name = "G01 Adquisición de mercancias";  break;
 
 				//	...
             case "G02": $name = "G02 Devoluciones, descuentos o bonificaciones"; break;
@@ -97,18 +97,18 @@ class InvoiceExt extends Model
             case "I03": $name = "I03 Equipo de transporte"; break;
             case "I04": $name = "I04 Equipo de computo y accesorios"; break;
             case "I05": $name = "I05 Dados, troqueles, moldes, matrices y herramental"; break;
-            case "I06": $name = "I06 Comunicaciones telef�nicas"; break;
+            case "I06": $name = "I06 Comunicaciones telefónicas"; break;
             case "I07": $name = "I07 Comunicaciones satelitales"; break;
             case "I08": $name = "I08 Otra maquinaria y equipo"; break;
-            case "D01": $name = "D01 Honorarios m�dicos, dentales y gastos hospitalarios."; break;
-            case "D02": $name = "D02 Gastos m�dicos por incapacidad o discapacidad"; break;
+            case "D01": $name = "D01 Honorarios médicos, dentales y gastos hospitalarios."; break;
+            case "D02": $name = "D02 Gastos médicos por incapacidad o discapacidad"; break;
             case "D03": $name = "D03 Gastos funerales."; break;
             case "D04": $name = "D04 Donativos."; break;
-            case "D05": $name = "D05 Intereses reales efectivamente pagados por cr�ditos hipotecarios (casa habitaci�n)."; break;
+            case "D05": $name = "D05 Intereses reales efectivamente pagados por créditos hipotecarios (casa habitación)."; break;
             case "D06": $name = "D06 Aportaciones voluntarias al SAR."; break;
-            case "D07": $name = "D07 Primas por seguros de gastos m�dicos."; break;
-            case "D08": $name = "D08 Gastos de transportaci�n escolar obligatoria."; break;
-            case "D09": $name = "D09 Dep�sitos en cuentas para el ahorro, primas que tengan como base planes de pensiones."; break;
+            case "D07": $name = "D07 Primas por seguros de gastos médicos."; break;
+            case "D08": $name = "D08 Gastos de transportación escolar obligatoria."; break;
+            case "D09": $name = "D09 Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones."; break;
             case "D10": $name = "D10 Pagos por servicios educativos (colegiaturas)"; break;
             case "P01": $name = "P01 Por definir"; break;
                 // ...
@@ -129,24 +129,24 @@ class InvoiceExt extends Model
           
             case "01": $name = "01 Efectivo"; break;
             case "02": $name = "02 Cheque nominativo"; break;
-            case "03": $name = "03 Transferencia electr�nica de fondos"; break;
-            case "04": $name = "04 Tarjeta de cr�dito"; break;
-            case "05": $name = "05 Monedero electr�nico"; break;
-            case "06": $name = "06 Dinero electr�nico"; break;
+            case "03": $name = "03 Transferencia electrónica de fondos"; break;
+            case "04": $name = "04 Tarjeta de crédito"; break;
+            case "05": $name = "05 Monedero electrónico"; break;
+            case "06": $name = "06 Dinero electrónico"; break;
             case "08": $name = "08 Vales de despensa"; break;
-            case "12": $name = "12 Daci�n en pago"; break;
-            case "13": $name = "13 Pago por subrogaci�n"; break;
-            case "14": $name = "14 Pago por consignaci�n"; break;
-            case "15": $name = "15 Condonaci�n"; break;
-            case "17": $name = "17 Compensaci�n"; break;
-            case "23": $name = "23 Novaci�n"; break;
-            case "24": $name = "24 Confusi�n"; break;
-            case "25": $name = "25 Remisi�n de deuda"; break;
-            case "26": $name = "26 Prescripci�n o caducidad"; break;
-            case "27": $name = "27 A satisfacci�n del acreedor"; break;
-            case "28": $name = "28 Tarjeta de d�bito"; break;
+            case "12": $name = "12 Dación en pago"; break;
+            case "13": $name = "13 Pago por subrogación"; break;
+            case "14": $name = "14 Pago por consignación"; break;
+            case "15": $name = "15 Condonación"; break;
+            case "17": $name = "17 Compensación"; break;
+            case "23": $name = "23 Novación"; break;
+            case "24": $name = "24 Confusión"; break;
+            case "25": $name = "25 Remisión de deuda"; break;
+            case "26": $name = "26 Prescripción o caducidad"; break;
+            case "27": $name = "27 A satisfacción del acreedor"; break;
+            case "28": $name = "28 Tarjeta de débito"; break;
             case "29": $name = "29 Tarjeta de servicios"; break;
-            case "30": $name = "30 Aplicaci�n de anticipos"; break;
+            case "30": $name = "30 Aplicación de anticipos"; break;
             case "31": $name = "31 Intermediario pagos"; break;
             case "99": $name = "99 Por definir"; break; 
 
@@ -163,13 +163,13 @@ class InvoiceExt extends Model
         switch($this->metodo_pago)
         {
             case "PUE":
-                $name = "PUE Pago en una sola exhibici�n";
+                $name = "PUE Pago en una sola exhibición";
                 break;
 			case "PPD":
                 $name = "PPD Pago en parcialidades o diferido";
                 break;
             default:
-                $name = "PUE Pago en una sola exhibici�n";
+                $name = "PUE Pago en una sola exhibición";
                 break;
         }
         return $name;
